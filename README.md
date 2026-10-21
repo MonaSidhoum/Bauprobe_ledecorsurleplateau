@@ -52,7 +52,7 @@ cd bauprobe-le-decor-sur-le-plateau
 ## Utilisation
 
 1. Ouvrez le projet avec Unity.
-2. Chargez la scène principale située dans ``.<span style="color:red">A RAJOUTER</span>
+2. Chargez la scène principale située dans ``. **A RAJOUTER**
 3. Assurez-vous que votre casque Meta Quest est branché et configuré en mode développeur.
 4. Lancez le Build and Run (via `File > Build Settings`).
 
@@ -67,10 +67,10 @@ Ce projet est réalisé par des élèves de Mines Paris - PSL :
 
 **Commanditaires (Théâtre du Châtelet) :**
 
-* <span style="color:red">A RAJOUTER</span>
+* **A RAJOUTER**
 
-## 📄 Licence
+##  Licence
 
-Ce projet est réalisé dans un cadre académique pour Mines Paris - PSL et le Théâtre du Châtelet. <span style="color:red">licence ?</span>
+Ce projet est réalisé dans un cadre académique pour Mines Paris - PSL et le Théâtre du Châtelet. **A RAJOUTER**
 
 Veuillez noter que le code provenant du [MR Utility Kit Sample](https://github.com/oculus-samples/Unity-MRUtilityKitSample) reste soumis à la licence propre à Oculus/Meta.
