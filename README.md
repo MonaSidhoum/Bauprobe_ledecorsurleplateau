@@ -1,93 +1,76 @@
-# Bauprobe - le décor sur le plateau
+#  Bauprobe Immersive II - Le décor sur le plateau
+
+**Projet MOVIE 2025 - Mines Paris PSL x Théâtre du Châtelet**
+
+![Statut](https://img.shields.io/badge/Statut-En_développement-orange)
+![Platform](https://img.shields.io/badge/Platforme-AR-green)
 
 
+##  À propos du projet
 
-## Getting started
+Ce projet s'inscrit dans le cadre de l'unité d'enseignement MOVIE de **Mines Paris - PSL**, en collaboration directe avec le **Théâtre du Châtelet**.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+L'objectif est de concevoir un outil immersif en Réalité Augmentée (AR) pour améliorer la première version en réalité virtuelle de la **Bauprobe**. 
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### Qu'est-ce qu'une Bauprobe ?
+Au théâtre, la Bauprobe est une étape cruciale qui a lieu plusieurs mois avant l'arrivée du décor final sur le plateau. Elle consiste à simuler l'encombrement spatial du futur décor (historiquement avec des marquages au sol ou des éléments de substitution) afin de :
+* Anticiper le jeu des acteurs et l'espace scénique.
+* Valider les lignes de visibilité depuis la salle (qui compte environ 2000 places avec une configuration complexe à l'italienne).
 
-## Add your files
 
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+Notre solution immersive permet aux metteurs en scène et aux équipes techniques de visualiser les maquettes 3D des décors directement à l'échelle sur le plateau.
 
+## Fonctionnalités 
+
+* **Visualisation 3D à l'échelle 1:1** : Import et affichage de maquettes 3D du décor sur la scène réelle du théâtre.
+* **Vérification des visibilités** : Simulation du point de vue depuis différentes places critiques de la salle (orchestre, balcons, corbeille).
+* **Manipulation en temps réel** : Possibilité de déplacer, ajuster ou masquer des éléments du décor virtuel.
+* **Compatibilité avec le workflow existant** : Interfaçage avec les formats d'export des outils actuellement utilisés par le bureau d'études (AutoCAD, SketchUp, Unreal Engine).
+
+##  Technologies utilisées
+
+* **Moteur 3D / AR** : Unity3D
+* **SDK Réalité Augmentée** : Meta XR Core SDK / Meta MR Utility Kit (MRUK)
+* **Matériel Cible** : Casque Meta Quest 3
+* **Gestion de version** : Git / GitLab
+
+##  Crédits et Assets tiers
+
+* **Détection de QR Code** : Pour le système d'ancrage et de détection spatiale, ce projet intègre et adapte le module de détection de QR Code issu du dépôt officiel [Unity-MRUtilityKitSample](https://github.com/oculus-samples/Unity-MRUtilityKitSample) fourni par Oculus/Meta. Le code source original a été modifié pour répondre aux contraintes spécifiques de l'environnement du Théâtre du Châtelet.
+
+
+##  Installation et Prérequis
+
+Pour cloner et lancer ce projet en local, assurez-vous d'avoir installé Unity 6.3 LTS et Git LFS.
+
+```bash
+git clone https://git.sophia.minesparis.psl.eu/projets-movie-2026/bauprobe-le-decor-sur-le-plateau
+
+cd bauprobe-le-decor-sur-le-plateau
 ```
-cd existing_repo
-git remote add origin https://git.sophia.minesparis.psl.eu/projets-movie-2026/bauprobe-le-decor-sur-le-plateau.git
-git branch -M main
-git push -uf origin main
-```
 
-## Integrate with your tools
+## Utilisation
 
-* [Set up project integrations](https://git.sophia.minesparis.psl.eu/projets-movie-2026/bauprobe-le-decor-sur-le-plateau/-/settings/integrations)
+1. Ouvrez le projet avec Unity.
+2. Chargez la scène principale située dans ``.<span style="color:red">A RAJOUTER</span>
+3. Assurez-vous que votre casque Meta Quest est branché et configuré en mode développeur.
+4. Lancez le Build and Run (via `File > Build Settings`).
 
-## Collaborate with your team
+## L'équipe
 
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+Ce projet est réalisé par des élèves de Mines Paris - PSL :
 
-## Test and Deploy
+* Théophile Boisson de Chazournes
+* Charlotte Guillemoto
+* Violette Lecuyer
+* Mona Sidhoum
 
-Use the built-in continuous integration in GitLab.
+**Commanditaires (Théâtre du Châtelet) :**
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
+* <span style="color:red">A RAJOUTER</span>
 
-***
+## 📄 Licence
 
-# Editing this README
+Ce projet est réalisé dans un cadre académique pour Mines Paris - PSL et le Théâtre du Châtelet. <span style="color:red">licence ?</span>
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Veuillez noter que le code provenant du [MR Utility Kit Sample](https://github.com/oculus-samples/Unity-MRUtilityKitSample) reste soumis à la licence propre à Oculus/Meta.
