@@ -1,0 +1,6 @@
+com.UnityTechnologies.com.unity.template.urpblank
+mipmap app_icon
+mipmap app_icon_round
+mipmap ic_launcher_background
+mipmap ic_launcher_foreground
+string app_name

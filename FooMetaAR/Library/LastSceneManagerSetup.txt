@@ -1,0 +1,5 @@
+sceneSetups:
+- path: Assets/Samples/Meta XR Core SDK/207.0.1/Mixed Reality Sample/MixedReality.unity
+  isLoaded: 1
+  isActive: 1
+  isSubScene: 0
