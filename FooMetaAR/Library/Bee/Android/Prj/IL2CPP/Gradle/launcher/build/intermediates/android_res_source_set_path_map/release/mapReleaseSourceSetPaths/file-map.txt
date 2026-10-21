@@ -1,0 +1,7 @@
+com.UnityTechnologies.com.unity.template.urpblank.launcher-pngs-0 C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\build\generated\res\pngs\release
+com.UnityTechnologies.com.unity.template.urpblank.launcher-updated_navigation_xml-1 C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\build\generated\updated_navigation_xml\release
+com.UnityTechnologies.com.unity.template.urpblank.launcher-packageReleaseResources-2 C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\build\intermediates\incremental\release\packageReleaseResources\merged.dir
+com.UnityTechnologies.com.unity.template.urpblank.launcher-packageReleaseResources-3 C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\build\intermediates\incremental\release\packageReleaseResources\stripped.dir
+com.UnityTechnologies.com.unity.template.urpblank.launcher-release-4 C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\build\intermediates\merged_res\release\mergeReleaseResources
+com.UnityTechnologies.com.unity.template.urpblank.launcher-main-5 C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\res
+com.UnityTechnologies.com.unity.template.urpblank.launcher-release-6 C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\release\res

@@ -1,0 +1,509 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:2:1-7:12
+INJECTED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:2:1-7:12
+INJECTED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:2:1-7:12
+INJECTED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:2:1-7:12
+MERGED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:2:1-149:12
+MERGED from [:RuntimeOptimizer_Plugin:] C:\Users\VR\.gradle\caches\9.3.1\transforms\6fc9d7d2b4c3453555c02a13cb3a10ab\workspace\transformed\jetified-RuntimeOptimizer_Plugin\AndroidManifest.xml:2:1-30:12
+MERGED from [:unityopus:] C:\Users\VR\.gradle\caches\9.3.1\transforms\dc1d3ad2932c8a6fa1ebff27be6b1d8c\workspace\transformed\jetified-unityopus\AndroidManifest.xml:2:1-11:12
+MERGED from [:InteractionSdk:] C:\Users\VR\.gradle\caches\9.3.1\transforms\7658dbf9e1825d314cb5c4f78b3f3506\workspace\transformed\jetified-InteractionSdk\AndroidManifest.xml:2:1-11:12
+MERGED from [:OVRPlugin:] C:\Users\VR\.gradle\caches\9.3.1\transforms\15240a2751f1388f5eef67880a124a1b\workspace\transformed\jetified-OVRPlugin\AndroidManifest.xml:2:1-11:12
+MERGED from [:unityLibrary:xrmanifest.androidlib] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\xrmanifest.androidlib\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\VR\.gradle\caches\9.3.1\transforms\f8e5f85a6ab6509801ce27e9028c9e69\workspace\transformed\constraintlayout-2.1.4\AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\a3acf552d95465ea466908e2c6dec4b0\workspace\transformed\jetified-appcompat-resources-1.6.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.appcompat:appcompat:1.6.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\e69014f3239f854c09fa30c74d5fed67\workspace\transformed\appcompat-1.6.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.fragment:fragment:1.3.6] C:\Users\VR\.gradle\caches\9.3.1\transforms\55b7d3ce9d04d2064193214f5d15230d\workspace\transformed\fragment-1.3.6\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.activity:activity:1.6.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\96aa6557333a65b75f1f8a4c492e07f8\workspace\transformed\jetified-activity-1.6.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\2b9725f6552e6235af05f6780a18bc2c\workspace\transformed\drawerlayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.emoji2:emoji2-views-helper:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ac23d57dc94ce6df9ae533a4cb56278\workspace\transformed\jetified-emoji2-views-helper-1.2.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.emoji2:emoji2:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\ff4db5255f72951b9a23940c4dbb2663\workspace\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\9e4acbd0fb075a6839f13f641516ef0b\workspace\transformed\loader-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.5.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\c92621e060dc2140790eb9221d4cfa38\workspace\transformed\lifecycle-viewmodel-2.5.1\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\d8df2e9aacd3a730b61fe4f0b5a305fe\workspace\transformed\jetified-lifecycle-viewmodel-savedstate-2.5.1\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.core:core-ktx:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\c55a2a19616a79a7a22d2d79d93022a1\workspace\transformed\jetified-core-ktx-1.9.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\9adaab7648c7be678ec2c73290fb9c7c\workspace\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\d828b707ef30bd4d7a694a80a0937cab\workspace\transformed\vectordrawable-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\ec0ed48e50ec01367f3741f45a3620f1\workspace\transformed\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\5df231d89645f61a989eee47ef71c6de\workspace\transformed\customview-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ddc5949567f8977344438ba0c18c96b\workspace\transformed\core-1.9.0\AndroidManifest.xml:17:1-30:12
+MERGED from [androidx.games:games-activity:4.4.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\0cd2b774598c99c2e25cb70828d5fb95\workspace\transformed\jetified-games-activity-4.4.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\102c26784580dd4a09219b4d6083ad9d\workspace\transformed\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\54103a19f80b716c39a8bcfea90fe3b1\workspace\transformed\jetified-lifecycle-process-2.4.1\AndroidManifest.xml:17:1-37:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.5.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\8f0ae04067ca78204d1854833f328d37\workspace\transformed\lifecycle-runtime-2.5.1\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.savedstate:savedstate:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\74adb10398a67e7a4d74b261dcb1ffcd\workspace\transformed\jetified-savedstate-1.2.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\6cb38c8b1e5659591c15cf4d0aa8b12f\workspace\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\ddbaf2172fccc02dc2b9199e875841fc\workspace\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:17:1-33:12
+MERGED from [androidx.tracing:tracing:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\b0716310a9ad55f4fbecff80ebad88f4\workspace\transformed\jetified-tracing-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\725f0516f66c7b225d64cb1e0d474586\workspace\transformed\lifecycle-livedata-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.5.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\47b9449045febe0b998c873f96071ef4\workspace\transformed\lifecycle-livedata-core-2.5.1\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.arch.core:core-runtime:2.1.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\9c9b47c74ad728690002d23367672d94\workspace\transformed\core-runtime-2.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\b7d08a1990b7d519a8951534be9937c2\workspace\transformed\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.annotation:annotation-experimental:1.3.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\c98a5e58b5a95d0b1541ae6ca42158bc\workspace\transformed\jetified-annotation-experimental-1.3.0\AndroidManifest.xml:17:1-22:12
+	package
+		INJECTED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml
+	xmlns:tools
+		ADDED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:2:101-147
+	android:versionCode
+		INJECTED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:2:42-100
+	android:installLocation
+		ADDED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:2:11-41
+application
+ADDED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:3:3-5:17
+INJECTED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:3:3-5:17
+MERGED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:56:5-147:19
+MERGED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:56:5-147:19
+MERGED from [:RuntimeOptimizer_Plugin:] C:\Users\VR\.gradle\caches\9.3.1\transforms\6fc9d7d2b4c3453555c02a13cb3a10ab\workspace\transformed\jetified-RuntimeOptimizer_Plugin\AndroidManifest.xml:9:5-28:19
+MERGED from [:RuntimeOptimizer_Plugin:] C:\Users\VR\.gradle\caches\9.3.1\transforms\6fc9d7d2b4c3453555c02a13cb3a10ab\workspace\transformed\jetified-RuntimeOptimizer_Plugin\AndroidManifest.xml:9:5-28:19
+MERGED from [:InteractionSdk:] C:\Users\VR\.gradle\caches\9.3.1\transforms\7658dbf9e1825d314cb5c4f78b3f3506\workspace\transformed\jetified-InteractionSdk\AndroidManifest.xml:9:5-20
+MERGED from [:InteractionSdk:] C:\Users\VR\.gradle\caches\9.3.1\transforms\7658dbf9e1825d314cb5c4f78b3f3506\workspace\transformed\jetified-InteractionSdk\AndroidManifest.xml:9:5-20
+MERGED from [:OVRPlugin:] C:\Users\VR\.gradle\caches\9.3.1\transforms\15240a2751f1388f5eef67880a124a1b\workspace\transformed\jetified-OVRPlugin\AndroidManifest.xml:9:5-20
+MERGED from [:OVRPlugin:] C:\Users\VR\.gradle\caches\9.3.1\transforms\15240a2751f1388f5eef67880a124a1b\workspace\transformed\jetified-OVRPlugin\AndroidManifest.xml:9:5-20
+MERGED from [:unityLibrary:xrmanifest.androidlib] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\xrmanifest.androidlib\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:7:5-9:19
+MERGED from [:unityLibrary:xrmanifest.androidlib] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\xrmanifest.androidlib\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:7:5-9:19
+MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\VR\.gradle\caches\9.3.1\transforms\f8e5f85a6ab6509801ce27e9028c9e69\workspace\transformed\constraintlayout-2.1.4\AndroidManifest.xml:9:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\VR\.gradle\caches\9.3.1\transforms\f8e5f85a6ab6509801ce27e9028c9e69\workspace\transformed\constraintlayout-2.1.4\AndroidManifest.xml:9:5-20
+MERGED from [androidx.emoji2:emoji2:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\ff4db5255f72951b9a23940c4dbb2663\workspace\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.emoji2:emoji2:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\ff4db5255f72951b9a23940c4dbb2663\workspace\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.core:core:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ddc5949567f8977344438ba0c18c96b\workspace\transformed\core-1.9.0\AndroidManifest.xml:28:5-89
+MERGED from [androidx.core:core:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ddc5949567f8977344438ba0c18c96b\workspace\transformed\core-1.9.0\AndroidManifest.xml:28:5-89
+MERGED from [androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\54103a19f80b716c39a8bcfea90fe3b1\workspace\transformed\jetified-lifecycle-process-2.4.1\AndroidManifest.xml:25:5-35:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\54103a19f80b716c39a8bcfea90fe3b1\workspace\transformed\jetified-lifecycle-process-2.4.1\AndroidManifest.xml:25:5-35:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\6cb38c8b1e5659591c15cf4d0aa8b12f\workspace\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\6cb38c8b1e5659591c15cf4d0aa8b12f\workspace\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\ddbaf2172fccc02dc2b9199e875841fc\workspace\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:25:5-31:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\ddbaf2172fccc02dc2b9199e875841fc\workspace\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:25:5-31:19
+	android:extractNativeLibs
+		INJECTED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml
+		REJECTED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:60:9-41
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ddc5949567f8977344438ba0c18c96b\workspace\transformed\core-1.9.0\AndroidManifest.xml:28:18-86
+	android:label
+		ADDED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:3:48-80
+	android:appCategory
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:58:9-35
+	android:allowBackup
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:57:9-36
+	android:icon
+		ADDED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:3:16-47
+	android:networkSecurityConfig
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:63:9-64
+	android:enableOnBackInvokedCallback
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:59:9-51
+meta-data#com.meta.usedsamples.CoreSDK-MixedReality
+ADDED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:4:5-219
+MERGED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:144:9-146:159
+MERGED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:144:9-146:159
+	android:value
+		ADDED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:4:73-216
+	android:name
+		ADDED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:4:16-72
+supports-screens
+ADDED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:6:3-163
+	android:largeScreens
+		ADDED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:6:78-105
+	android:smallScreens
+		ADDED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:6:21-48
+	android:normalScreens
+		ADDED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:6:49-77
+	android:xlargeScreens
+		ADDED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:6:106-134
+	android:anyDensity
+		ADDED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml:6:135-160
+uses-sdk
+INJECTED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml
+INJECTED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml
+MERGED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:8:5-44
+MERGED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:8:5-44
+MERGED from [:RuntimeOptimizer_Plugin:] C:\Users\VR\.gradle\caches\9.3.1\transforms\6fc9d7d2b4c3453555c02a13cb3a10ab\workspace\transformed\jetified-RuntimeOptimizer_Plugin\AndroidManifest.xml:7:5-47
+MERGED from [:RuntimeOptimizer_Plugin:] C:\Users\VR\.gradle\caches\9.3.1\transforms\6fc9d7d2b4c3453555c02a13cb3a10ab\workspace\transformed\jetified-RuntimeOptimizer_Plugin\AndroidManifest.xml:7:5-47
+MERGED from [:unityopus:] C:\Users\VR\.gradle\caches\9.3.1\transforms\dc1d3ad2932c8a6fa1ebff27be6b1d8c\workspace\transformed\jetified-unityopus\AndroidManifest.xml:7:5-9:41
+MERGED from [:unityopus:] C:\Users\VR\.gradle\caches\9.3.1\transforms\dc1d3ad2932c8a6fa1ebff27be6b1d8c\workspace\transformed\jetified-unityopus\AndroidManifest.xml:7:5-9:41
+MERGED from [:InteractionSdk:] C:\Users\VR\.gradle\caches\9.3.1\transforms\7658dbf9e1825d314cb5c4f78b3f3506\workspace\transformed\jetified-InteractionSdk\AndroidManifest.xml:7:5-47
+MERGED from [:InteractionSdk:] C:\Users\VR\.gradle\caches\9.3.1\transforms\7658dbf9e1825d314cb5c4f78b3f3506\workspace\transformed\jetified-InteractionSdk\AndroidManifest.xml:7:5-47
+MERGED from [:OVRPlugin:] C:\Users\VR\.gradle\caches\9.3.1\transforms\15240a2751f1388f5eef67880a124a1b\workspace\transformed\jetified-OVRPlugin\AndroidManifest.xml:7:5-47
+MERGED from [:OVRPlugin:] C:\Users\VR\.gradle\caches\9.3.1\transforms\15240a2751f1388f5eef67880a124a1b\workspace\transformed\jetified-OVRPlugin\AndroidManifest.xml:7:5-47
+MERGED from [:unityLibrary:xrmanifest.androidlib] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\xrmanifest.androidlib\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:5:5-44
+MERGED from [:unityLibrary:xrmanifest.androidlib] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\xrmanifest.androidlib\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:5:5-44
+MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\VR\.gradle\caches\9.3.1\transforms\f8e5f85a6ab6509801ce27e9028c9e69\workspace\transformed\constraintlayout-2.1.4\AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\VR\.gradle\caches\9.3.1\transforms\f8e5f85a6ab6509801ce27e9028c9e69\workspace\transformed\constraintlayout-2.1.4\AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\a3acf552d95465ea466908e2c6dec4b0\workspace\transformed\jetified-appcompat-resources-1.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\a3acf552d95465ea466908e2c6dec4b0\workspace\transformed\jetified-appcompat-resources-1.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.6.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\e69014f3239f854c09fa30c74d5fed67\workspace\transformed\appcompat-1.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.6.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\e69014f3239f854c09fa30c74d5fed67\workspace\transformed\appcompat-1.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.fragment:fragment:1.3.6] C:\Users\VR\.gradle\caches\9.3.1\transforms\55b7d3ce9d04d2064193214f5d15230d\workspace\transformed\fragment-1.3.6\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.3.6] C:\Users\VR\.gradle\caches\9.3.1\transforms\55b7d3ce9d04d2064193214f5d15230d\workspace\transformed\fragment-1.3.6\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.activity:activity:1.6.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\96aa6557333a65b75f1f8a4c492e07f8\workspace\transformed\jetified-activity-1.6.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.6.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\96aa6557333a65b75f1f8a4c492e07f8\workspace\transformed\jetified-activity-1.6.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\2b9725f6552e6235af05f6780a18bc2c\workspace\transformed\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\2b9725f6552e6235af05f6780a18bc2c\workspace\transformed\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.emoji2:emoji2-views-helper:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ac23d57dc94ce6df9ae533a4cb56278\workspace\transformed\jetified-emoji2-views-helper-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2-views-helper:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ac23d57dc94ce6df9ae533a4cb56278\workspace\transformed\jetified-emoji2-views-helper-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\ff4db5255f72951b9a23940c4dbb2663\workspace\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.emoji2:emoji2:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\ff4db5255f72951b9a23940c4dbb2663\workspace\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\9e4acbd0fb075a6839f13f641516ef0b\workspace\transformed\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\9e4acbd0fb075a6839f13f641516ef0b\workspace\transformed\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.5.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\c92621e060dc2140790eb9221d4cfa38\workspace\transformed\lifecycle-viewmodel-2.5.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.5.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\c92621e060dc2140790eb9221d4cfa38\workspace\transformed\lifecycle-viewmodel-2.5.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\d8df2e9aacd3a730b61fe4f0b5a305fe\workspace\transformed\jetified-lifecycle-viewmodel-savedstate-2.5.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\d8df2e9aacd3a730b61fe4f0b5a305fe\workspace\transformed\jetified-lifecycle-viewmodel-savedstate-2.5.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core-ktx:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\c55a2a19616a79a7a22d2d79d93022a1\workspace\transformed\jetified-core-ktx-1.9.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core-ktx:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\c55a2a19616a79a7a22d2d79d93022a1\workspace\transformed\jetified-core-ktx-1.9.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\9adaab7648c7be678ec2c73290fb9c7c\workspace\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\9adaab7648c7be678ec2c73290fb9c7c\workspace\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\d828b707ef30bd4d7a694a80a0937cab\workspace\transformed\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\d828b707ef30bd4d7a694a80a0937cab\workspace\transformed\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\ec0ed48e50ec01367f3741f45a3620f1\workspace\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\ec0ed48e50ec01367f3741f45a3620f1\workspace\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\5df231d89645f61a989eee47ef71c6de\workspace\transformed\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\5df231d89645f61a989eee47ef71c6de\workspace\transformed\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ddc5949567f8977344438ba0c18c96b\workspace\transformed\core-1.9.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ddc5949567f8977344438ba0c18c96b\workspace\transformed\core-1.9.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.games:games-activity:4.4.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\0cd2b774598c99c2e25cb70828d5fb95\workspace\transformed\jetified-games-activity-4.4.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.games:games-activity:4.4.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\0cd2b774598c99c2e25cb70828d5fb95\workspace\transformed\jetified-games-activity-4.4.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\102c26784580dd4a09219b4d6083ad9d\workspace\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\102c26784580dd4a09219b4d6083ad9d\workspace\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\54103a19f80b716c39a8bcfea90fe3b1\workspace\transformed\jetified-lifecycle-process-2.4.1\AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\54103a19f80b716c39a8bcfea90fe3b1\workspace\transformed\jetified-lifecycle-process-2.4.1\AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.5.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\8f0ae04067ca78204d1854833f328d37\workspace\transformed\lifecycle-runtime-2.5.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.5.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\8f0ae04067ca78204d1854833f328d37\workspace\transformed\lifecycle-runtime-2.5.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.savedstate:savedstate:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\74adb10398a67e7a4d74b261dcb1ffcd\workspace\transformed\jetified-savedstate-1.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.savedstate:savedstate:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\74adb10398a67e7a4d74b261dcb1ffcd\workspace\transformed\jetified-savedstate-1.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\6cb38c8b1e5659591c15cf4d0aa8b12f\workspace\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\6cb38c8b1e5659591c15cf4d0aa8b12f\workspace\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\ddbaf2172fccc02dc2b9199e875841fc\workspace\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\ddbaf2172fccc02dc2b9199e875841fc\workspace\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.tracing:tracing:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\b0716310a9ad55f4fbecff80ebad88f4\workspace\transformed\jetified-tracing-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.tracing:tracing:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\b0716310a9ad55f4fbecff80ebad88f4\workspace\transformed\jetified-tracing-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\725f0516f66c7b225d64cb1e0d474586\workspace\transformed\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\725f0516f66c7b225d64cb1e0d474586\workspace\transformed\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.5.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\47b9449045febe0b998c873f96071ef4\workspace\transformed\lifecycle-livedata-core-2.5.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.5.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\47b9449045febe0b998c873f96071ef4\workspace\transformed\lifecycle-livedata-core-2.5.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.arch.core:core-runtime:2.1.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\9c9b47c74ad728690002d23367672d94\workspace\transformed\core-runtime-2.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.arch.core:core-runtime:2.1.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\9c9b47c74ad728690002d23367672d94\workspace\transformed\core-runtime-2.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\b7d08a1990b7d519a8951534be9937c2\workspace\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\b7d08a1990b7d519a8951534be9937c2\workspace\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.3.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\c98a5e58b5a95d0b1541ae6ca42158bc\workspace\transformed\jetified-annotation-experimental-1.3.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.3.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\c98a5e58b5a95d0b1541ae6ca42158bc\workspace\transformed\jetified-annotation-experimental-1.3.0\AndroidManifest.xml:20:5-44
+	android:targetSdkVersion
+		INJECTED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml
+		MERGED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml
+		MERGED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml
+		MERGED from C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\launcher\src\main\AndroidManifest.xml
+uses-permission#com.oculus.permission.HAND_TRACKING
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:10:5-75
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:10:22-72
+uses-permission#com.oculus.permission.USE_ANCHOR_API
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:11:5-76
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:11:22-73
+uses-permission#com.oculus.permission.IMPORT_EXPORT_IOT_MAP_DATA
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:12:5-88
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:12:22-85
+uses-permission#com.oculus.permission.USE_SCENE
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:13:5-71
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:13:22-68
+uses-permission#android.permission.INTERNET
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:14:5-67
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:14:22-64
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:15:5-79
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:15:22-76
+uses-permission#android.permission.RECORD_AUDIO
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:16:5-71
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:16:22-68
+uses-permission#android.permission.MODIFY_AUDIO_SETTINGS
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:17:5-80
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:17:22-77
+uses-permission#android.permission.BLUETOOTH
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:18:5-68
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:18:22-65
+uses-feature#android.hardware.vr.headtracking
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:20:5-23:31
+	android:version
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:23:9-28
+	android:required
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:22:9-32
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:21:9-56
+uses-feature#oculus.software.handtracking
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:24:5-26:36
+	android:required
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:26:9-33
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:25:9-52
+uses-feature#com.oculus.feature.PASSTHROUGH
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:27:5-29:36
+	android:required
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:29:9-33
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:28:9-54
+uses-feature#0x00030000
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:30:5-54
+	android:glEsVersion
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:30:19-51
+uses-feature#android.hardware.vulkan.version
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:31:5-33:36
+	android:required
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:33:9-33
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:32:9-55
+uses-feature#android.hardware.microphone
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:34:5-36:36
+	android:required
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:36:9-33
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:35:9-51
+uses-feature#android.hardware.touchscreen
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:37:5-39:36
+	android:required
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:39:9-33
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:38:9-52
+uses-feature#android.hardware.touchscreen.multitouch
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:40:5-42:36
+	android:required
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:42:9-33
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:41:9-63
+uses-feature#android.hardware.touchscreen.multitouch.distinct
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:43:5-45:36
+	android:required
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:45:9-33
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:44:9-72
+horizonos:uses-horizonos-sdk
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:47:5-49:44
+	horizonos:minSdkVersion
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:48:9-37
+	horizonos:targetSdkVersion
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:49:9-41
+horizonos:uses-horizonos-supplement
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:51:5-54:39
+	targetSupplementVersion
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:54:9-36
+	name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:52:9-57
+	minSupplementVersion
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:53:9-33
+meta-data#unityplayer.SkipPermissionsDialog
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:64:9-66:37
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:66:13-34
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:65:13-61
+meta-data#com.oculus.ossplash.background
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:67:9-69:54
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:69:13-51
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:68:13-58
+meta-data#com.oculus.telemetry.project_guid
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:70:9-72:68
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:72:13-65
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:71:13-61
+meta-data#com.oculus.supportedDevices
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:73:9-76:45
+	tools:replace
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:76:13-42
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:75:13-67
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:74:13-55
+meta-data#com.oculus.handtracking.frequency
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:77:9-79:35
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:79:13-32
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:78:13-61
+meta-data#unity.splash-mode
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:80:9-82:33
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:82:13-30
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:81:13-45
+meta-data#unity.splash-enable
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:83:9-85:36
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:85:13-33
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:84:13-47
+meta-data#unity.launch-fullscreen
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:86:9-88:36
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:88:13-33
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:87:13-51
+meta-data#unity.render-outside-safearea
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:89:9-91:36
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:91:13-33
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:90:13-57
+meta-data#notch.config
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:92:9-94:50
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:94:13-47
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:93:13-40
+meta-data#unity.auto-report-fully-drawn
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:95:9-97:36
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:97:13-33
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:96:13-57
+meta-data#unity.strip-engine-code
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:98:9-100:36
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:100:13-33
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:99:13-51
+meta-data#unity.run-without-focus
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:101:9-103:36
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:103:13-33
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:102:13-51
+meta-data#unity.auto-set-game-state
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:104:9-106:36
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:106:13-33
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:105:13-53
+activity#com.unity3d.player.UnityPlayerGameActivity
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:108:9-142:20
+MERGED from [:unityLibrary:xrmanifest.androidlib] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\xrmanifest.androidlib\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:8:9-79
+MERGED from [:unityLibrary:xrmanifest.androidlib] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\xrmanifest.androidlib\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:8:9-79
+	android:screenOrientation
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:117:13-50
+	android:enabled
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:111:13-35
+	android:excludeFromRecents
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:112:13-46
+	android:launchMode
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:115:13-44
+	android:hardwareAccelerated
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:114:13-48
+	android:exported
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:113:13-36
+	android:resizeableActivity
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:116:13-46
+	android:configChanges
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:110:13-194
+	android:theme
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:118:13-72
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:109:13-70
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER+category:name:com.oculus.intent.category.VR
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:119:13-124:29
+category#android.intent.category.LAUNCHER
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:120:17-77
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:120:27-74
+category#com.oculus.intent.category.VR
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:121:17-74
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:121:27-71
+action#android.intent.action.MAIN
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:123:17-69
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:123:25-66
+meta-data#com.oculus.vr.focusaware
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:126:13-128:40
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:128:17-37
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:127:17-56
+meta-data#WindowManagerPreference:FreeformWindowSize
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:129:13-131:71
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:131:17-68
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:130:17-74
+meta-data#WindowManagerPreference:FreeformWindowOrientation
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:132:13-134:79
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:134:17-76
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:133:17-81
+meta-data#notch_support
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:135:13-137:40
+	android:value
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:137:17-37
+	android:name
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:136:17-45
+layout
+ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:139:13-141:44
+	android:minWidth
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:141:17-41
+	android:minHeight
+		ADDED from [:unityLibrary] C:\Users\VR\FooMetaAR\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:140:17-42
+uses-native-library
+ADDED from [:RuntimeOptimizer_Plugin:] C:\Users\VR\.gradle\caches\9.3.1\transforms\6fc9d7d2b4c3453555c02a13cb3a10ab\workspace\transformed\jetified-RuntimeOptimizer_Plugin\AndroidManifest.xml:25:9-27:40
+	android:required
+		ADDED from [:RuntimeOptimizer_Plugin:] C:\Users\VR\.gradle\caches\9.3.1\transforms\6fc9d7d2b4c3453555c02a13cb3a10ab\workspace\transformed\jetified-RuntimeOptimizer_Plugin\AndroidManifest.xml:27:13-37
+	android:name
+		ADDED from [:RuntimeOptimizer_Plugin:] C:\Users\VR\.gradle\caches\9.3.1\transforms\6fc9d7d2b4c3453555c02a13cb3a10ab\workspace\transformed\jetified-RuntimeOptimizer_Plugin\AndroidManifest.xml:26:13-43
+provider#androidx.startup.InitializationProvider
+ADDED from [androidx.emoji2:emoji2:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\ff4db5255f72951b9a23940c4dbb2663\workspace\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\54103a19f80b716c39a8bcfea90fe3b1\workspace\transformed\jetified-lifecycle-process-2.4.1\AndroidManifest.xml:26:9-34:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\54103a19f80b716c39a8bcfea90fe3b1\workspace\transformed\jetified-lifecycle-process-2.4.1\AndroidManifest.xml:26:9-34:20
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\ddbaf2172fccc02dc2b9199e875841fc\workspace\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:26:9-30:34
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\ddbaf2172fccc02dc2b9199e875841fc\workspace\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:26:9-30:34
+	tools:node
+		ADDED from [androidx.emoji2:emoji2:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\ff4db5255f72951b9a23940c4dbb2663\workspace\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:28:13-31
+	android:authorities
+		ADDED from [androidx.emoji2:emoji2:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\ff4db5255f72951b9a23940c4dbb2663\workspace\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:26:13-68
+	android:exported
+		ADDED from [androidx.emoji2:emoji2:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\ff4db5255f72951b9a23940c4dbb2663\workspace\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:27:13-37
+	android:name
+		ADDED from [androidx.emoji2:emoji2:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\ff4db5255f72951b9a23940c4dbb2663\workspace\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:25:13-67
+meta-data#androidx.emoji2.text.EmojiCompatInitializer
+ADDED from [androidx.emoji2:emoji2:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\ff4db5255f72951b9a23940c4dbb2663\workspace\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.emoji2:emoji2:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\ff4db5255f72951b9a23940c4dbb2663\workspace\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.emoji2:emoji2:1.2.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\ff4db5255f72951b9a23940c4dbb2663\workspace\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:30:17-75
+permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ddc5949567f8977344438ba0c18c96b\workspace\transformed\core-1.9.0\AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ddc5949567f8977344438ba0c18c96b\workspace\transformed\core-1.9.0\AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ddc5949567f8977344438ba0c18c96b\workspace\transformed\core-1.9.0\AndroidManifest.xml:23:9-81
+permission#com.UnityTechnologies.com.unity.template.urpblank.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ddc5949567f8977344438ba0c18c96b\workspace\transformed\core-1.9.0\AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ddc5949567f8977344438ba0c18c96b\workspace\transformed\core-1.9.0\AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ddc5949567f8977344438ba0c18c96b\workspace\transformed\core-1.9.0\AndroidManifest.xml:23:9-81
+uses-permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ddc5949567f8977344438ba0c18c96b\workspace\transformed\core-1.9.0\AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ddc5949567f8977344438ba0c18c96b\workspace\transformed\core-1.9.0\AndroidManifest.xml:26:22-94
+uses-permission#com.UnityTechnologies.com.unity.template.urpblank.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ddc5949567f8977344438ba0c18c96b\workspace\transformed\core-1.9.0\AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.9.0] C:\Users\VR\.gradle\caches\9.3.1\transforms\7ddc5949567f8977344438ba0c18c96b\workspace\transformed\core-1.9.0\AndroidManifest.xml:26:22-94
+meta-data#androidx.lifecycle.ProcessLifecycleInitializer
+ADDED from [androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\54103a19f80b716c39a8bcfea90fe3b1\workspace\transformed\jetified-lifecycle-process-2.4.1\AndroidManifest.xml:31:13-33:52
+	android:value
+		ADDED from [androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\54103a19f80b716c39a8bcfea90fe3b1\workspace\transformed\jetified-lifecycle-process-2.4.1\AndroidManifest.xml:33:17-49
+	android:name
+		ADDED from [androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\VR\.gradle\caches\9.3.1\transforms\54103a19f80b716c39a8bcfea90fe3b1\workspace\transformed\jetified-lifecycle-process-2.4.1\AndroidManifest.xml:32:17-78
