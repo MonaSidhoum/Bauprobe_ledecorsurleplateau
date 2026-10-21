@@ -1,0 +1,91 @@
+// Copyright (c) Meta Platforms, Inc. and affiliates.
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System;
+using Meta.XR.Samples;
+
+namespace Meta.XR.MRUtilityKitSamples.VirtualHome
+{
+    [MetaCodeSample("MRUKSample-VirtualHome")]
+    [CreateAssetMenu(fileName = "ResizableObjectsList", menuName = "Resizable Objects List", order = 1)]
+    public class ResizableObjectsList : ScriptableObject
+    {
+        public Labels label;
+
+        [System.Serializable]
+        public enum Labels
+        {
+            Generic,
+            Table,
+            Cabinet,
+            Couch,
+            Chair,
+            Window,
+            Door,
+            Screen,
+            Plant,
+            WallArt,
+            Lamp,
+            Misc,
+            Materials,
+            None
+        }
+
+        public List<FurniturePiece> objects;
+        public Dictionary<string, FurniturePiece> book;
+
+        [System.Serializable]
+        public class FurniturePiece
+        {
+            public string objectName = "Object 1";
+            public string creator = "Name Surname";
+            public string GUID = "";
+            public GameObject prefab;
+            public Texture2D thumbnail;
+        }
+
+        public void PopulateBook()
+        {
+            if (book != null && book.Count > 0)
+            {
+                Debug.LogWarning("Book was already populated");
+                book.Clear();
+            }
+            else
+            {
+                book = new Dictionary<string, FurniturePiece>();
+            }
+
+            foreach (FurniturePiece piece in objects)
+            {
+                book[piece.GUID] = piece;
+            }
+        }
+
+#if UNITY_EDITOR
+        public void OnEnable()
+        {
+            bool dirty = false;
+            foreach (FurniturePiece piece in objects)
+            {
+                if (piece.GUID == "")
+                {
+                    piece.GUID = Guid.NewGuid().ToString();
+                    dirty = true;
+                }
+            }
+
+            // These commands are needed in order for Unity to realize that
+            // the scriptable object has changed.
+            if (dirty)
+            {
+                UnityEditor.AssetDatabase.Refresh();
+                UnityEditor.EditorUtility.SetDirty(this);
+                UnityEditor.AssetDatabase.SaveAssets();
+            }
+        }
+#endif
+    }
+}
