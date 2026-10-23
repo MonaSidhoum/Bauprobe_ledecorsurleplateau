@@ -1,8 +1,19 @@
-FooMetaAR/Library/
-FooMetaAR/Temp/
-FooMetaAR/Obj/
-FooMetaAR/Build/
-FooMetaAR/Builds/
-FooMetaAR/Logs/
-FooMetaAR/UserSettings/
-FooMetaAR/.utmp/
+# Compilation et de Cache Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+# Fichiers temporaires Android et Meta Quest
+.utmp/
+.gradle/
+
+# Outils IA et éditeurs de code locaux
+.cursor/
+.roo/
+.aider/
+.clinerules
+.windsurfrules
