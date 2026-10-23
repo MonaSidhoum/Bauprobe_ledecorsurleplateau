@@ -1,4 +1,4 @@
-Library: E:\movie2026\Unity-MRUtilityKitSample\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
+Library: D:\movie2026\Unity-MRUtilityKitSample\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
 --platform=Android
 --minimum-os-version=
 --backend=burst-llvm-21
@@ -9,10 +9,10 @@ Library: E:\movie2026\Unity-MRUtilityKitSample\Temp\BurstOutput\tempburstlibs\ar
 --float-precision=Standard
 --target-framework=NetFramework
 --generate-link-xml=Temp\burst.link.xml
---temp-folder=E:\movie2026\Unity-MRUtilityKitSample\Temp\Burst
+--temp-folder=D:\movie2026\Unity-MRUtilityKitSample\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.3.26f1/Editor/Data/PlaybackEngines/AndroidPlayer
---decode-folder=E:\movie2026\Unity-MRUtilityKitSample\Library\Burst
---output=E:\movie2026\Unity-MRUtilityKitSample\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
+--decode-folder=D:\movie2026\Unity-MRUtilityKitSample\Library\Burst
+--output=D:\movie2026\Unity-MRUtilityKitSample\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=UnityEngine.XR.Hands.Gestures.XRHandOrientationUtility, Unity.XR.Hands, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::GetHandAxisDirection(Unity.Mathematics.float3&, Unity.Mathematics, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|UnityEngine.XR.Hands.Gestures.XRHandAxis, Unity.XR.Hands, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|Unity.Mathematics.quaternion&, Unity.Mathematics, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--0ef4d50576f0f00022da4f79ae773f01
@@ -127,10 +127,10 @@ Library: E:\movie2026\Unity-MRUtilityKitSample\Temp\BurstOutput\tempburstlibs\ar
 --target-framework=NetFramework
 --float-mode=Fast
 --generate-link-xml=Temp\burst.link.xml
---temp-folder=E:\movie2026\Unity-MRUtilityKitSample\Temp\Burst
+--temp-folder=D:\movie2026\Unity-MRUtilityKitSample\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.3.26f1/Editor/Data/PlaybackEngines/AndroidPlayer
---decode-folder=E:\movie2026\Unity-MRUtilityKitSample\Library\Burst
---output=E:\movie2026\Unity-MRUtilityKitSample\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
+--decode-folder=D:\movie2026\Unity-MRUtilityKitSample\Library\Burst
+--output=D:\movie2026\Unity-MRUtilityKitSample\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.ZBinningJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.ZBinningJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--77fc393cb521ac129b1392d4eb94d29a
@@ -145,10 +145,10 @@ Library: E:\movie2026\Unity-MRUtilityKitSample\Temp\BurstOutput\tempburstlibs\ar
 --float-precision=Standard
 --target-framework=NetFramework
 --generate-link-xml=Temp\burst.link.xml
---temp-folder=E:\movie2026\Unity-MRUtilityKitSample\Temp\Burst
+--temp-folder=D:\movie2026\Unity-MRUtilityKitSample\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.3.26f1/Editor/Data/PlaybackEngines/AndroidPlayer
---decode-folder=E:\movie2026\Unity-MRUtilityKitSample\Library\Burst
---output=E:\movie2026\Unity-MRUtilityKitSample\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
+--decode-folder=D:\movie2026\Unity-MRUtilityKitSample\Library\Burst
+--output=D:\movie2026\Unity-MRUtilityKitSample\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=UnityEngine.XR.Hands.Gestures.XRHandRelativeOrientation+TargetCondition, Unity.XR.Hands, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::GetReferenceDirection(Unity.Mathematics.float3&, Unity.Mathematics, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|Unity.Mathematics.float3&, Unity.Mathematics, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|UnityEngine.XR.Hands.Gestures.XRHandTargetRelativeDirection&, Unity.XR.Hands, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|Unity.Mathematics.RigidTransform&, Unity.Mathematics, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|Unity.Mathematics.RigidTransform&, Unity.Mathematics, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null)--67f900686449e40d76e663c85feef18f
