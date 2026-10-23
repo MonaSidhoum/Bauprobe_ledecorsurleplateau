@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 0
+    path: Assets/Scenes/HistoriqueEssais/SampleScene.unity
+    guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 0
+    path: Assets/Scenes/TestMaquetteMiniature.unity
+    guid: fb090f7063202477cbbfcc5eed7467f4
+  - enabled: 1
+    path: Assets/Scenes/scene_propre_menu_bras.unity
+    guid: 40bb9885ef934c64895b249d90e3dd49
+  m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 4c77a265a5d45bd49b53ffdc428d49ba, type: 2}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: bde5ced496d01104bbb9305b0cbb74db, type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: cfeac2a51de5c9d4591b3162b2f04e0b, type: 2}
+  m_UseUCBPForAssetBundles: 0

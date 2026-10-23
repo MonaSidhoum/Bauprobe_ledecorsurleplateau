@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "282911316247",
+    "project_id": "bauprobe-movie",
+    "storage_bucket": "bauprobe-movie.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:282911316247:android:5ed80a1d880352db23ff52",
+        "android_client_info": {
+          "package_name": "com.firebase.movie"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBdfNpzgaeyJD42Aerj_WsBVhdAfLJQwk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
