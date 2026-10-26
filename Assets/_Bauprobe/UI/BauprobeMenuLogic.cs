@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Bauprobe.Decor;
 using Meta.XR.MRUtilityKit;
 using TMPro;
 using UnityEngine;
@@ -20,14 +21,6 @@ namespace Bauprobe.UI
     /// </summary>
     public class BauprobeMenuLogic : MonoBehaviour
     {
-        [System.Serializable]
-        public class ImportItem
-        {
-            public string label = "Cube";
-            [Tooltip("Prefab à faire apparaître. Vide = un cube simple.")]
-            public GameObject prefab;
-        }
-
         [Header("Textes d'état (assignés par le générateur)")]
         public TMP_Text permissionStatus;
         public TMP_Text trackingLabel;
@@ -36,12 +29,8 @@ namespace Bauprobe.UI
 
         [Header("Importer")]
         public GameObject importList;
-        [Tooltip("Un élément par bouton de la liste. L'index correspond à l'argument du onClick du bouton.")]
-        public List<ImportItem> importItems = new List<ImportItem> { new ImportItem() };
-        [Tooltip("Parent des objets créés (ex : StageRoot, qui suit le QR code). Vide = cherche 'StageRoot'.")]
-        public Transform spawnParent;
-        public float spawnSpacing = 0.2f;
-        public float cubeSize = 0.1f;
+        [Tooltip("Crée les objets sur le plateau. Le bouton n°i de la liste importe le décor n°i du catalogue du DecorSpawner.")]
+        public DecorSpawner spawner;
 
         [Header("QR code")]
         public string scenePermission = "com.oculus.permission.USE_SCENE";
@@ -53,12 +42,10 @@ namespace Bauprobe.UI
         public Toggle originalTrackingToggle;
         public bool hideOriginalPanel = true;
 
-        private readonly List<GameObject> _spawned = new List<GameObject>();
         private Canvas _canvas;
         private RectTransform _canvasRect;
         private RectTransform _container;
         private bool _trackingOn;
-        private int _spawnCount;
         private float _nextRefresh;
         private string _lastPayload = "";
         private readonly HashSet<MRUKTrackable> _tracked = new HashSet<MRUKTrackable>();
@@ -198,57 +185,32 @@ namespace Bauprobe.UI
             FitCanvasToMenu();
         }
 
+        /// <summary>Importe le décor n°index du catalogue (argument du onClick du bouton).</summary>
         public void SpawnIndex(int index)
         {
-            if (importItems == null || index < 0 || index >= importItems.Count) { SpawnItem(new ImportItem()); return; }
-            SpawnItem(importItems[index]);
+            if (spawner == null || spawner.Catalog == null)
+            {
+                Debug.LogWarning("[BauprobeMenu] Assigne 'Spawner' (un DecorSpawner avec un catalogue).", this);
+                return;
+            }
+
+            var items = spawner.Catalog.Items;
+            if (index < 0 || index >= items.Count)
+            {
+                Debug.LogWarning($"[BauprobeMenu] Pas de décor n°{index} dans le catalogue.", this);
+                return;
+            }
+
+            var instance = spawner.SpawnInFrontOfUser(items[index]);
+            if (instance != null) Debug.Log("[BauprobeMenu] Objet créé : " + instance.name);
         }
 
-        private void SpawnItem(ImportItem item)
-        {
-            if (spawnParent == null)
-            {
-                var stage = GameObject.Find("StageRoot");
-                if (stage != null) spawnParent = stage.transform;
-            }
-
-            GameObject obj;
-            if (item.prefab != null) obj = Instantiate(item.prefab);
-            else
-            {
-                obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                obj.transform.localScale = Vector3.one * cubeSize;
-            }
-            obj.name = item.label + "_" + _spawnCount;
-
-            if (spawnParent != null)
-            {
-                obj.transform.SetParent(spawnParent, false);
-                obj.transform.localPosition = new Vector3(_spawnCount * spawnSpacing, cubeSize * 0.5f, 0f);
-            }
-            else if (Camera.main != null)
-            {
-                var cam = Camera.main.transform;
-                obj.transform.position = cam.position + cam.forward + cam.right * (_spawnCount * spawnSpacing);
-                Debug.LogWarning("[BauprobeMenu] 'StageRoot' introuvable : objet placé devant toi. Assigne 'Spawn Parent'.", this);
-            }
-            _spawned.Add(obj);
-            _spawnCount++;
-            Debug.Log("[BauprobeMenu] Objet créé : " + obj.name);
-        }
-
-        /// <summary>Supprime tous les objets créés avec Importer.</summary>
+        /// <summary>Supprime tous les objets du plateau.</summary>
         public void DeleteAll()
         {
-            int count = 0;
-            foreach (var obj in _spawned)
-            {
-                if (obj == null) continue;
-                Destroy(obj);
-                count++;
-            }
-            _spawned.Clear();
-            _spawnCount = 0;
+            if (spawner == null) return;
+            int count = spawner.Instances.Count;
+            spawner.Clear();
             Debug.Log("[BauprobeMenu] Supprimer tout : " + count + " objet(s) supprimé(s)");
         }
 

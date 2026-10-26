@@ -57,7 +57,7 @@ Noms de branche : `feature/<module>-<sujet>` (nouveauté), `fix/<sujet>` (correc
 2. **Une personne par module.** Si vous devez toucher au module de quelqu'un d'autre, prévenez-le.
 3. **Ne modifiez pas à plusieurs la même scène.**
    * Chacun teste dans **sa scène** : `Assets/_Bauprobe/Scenes/Sandbox/<Prénom>.unity`.
-   * **Une seule personne** modifie `Main.unity` à la fois (annoncez-le sur le groupe).
+   * **Une seule personne** modifie `MenuGeneral.unity` à la fois (annoncez-le sur le groupe).
    * Travaillez le plus possible dans des **prefabs** : deux personnes qui modifient deux prefabs différents
      n'ont jamais de conflit.
 4. **Toujours committer le `.meta` avec son fichier.** Le `.meta` contient l'identifiant de l'asset :

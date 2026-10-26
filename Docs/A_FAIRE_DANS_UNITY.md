@@ -83,53 +83,46 @@ les réglages Android (plateforme Android, passthrough, scene support...).
 
 ## 3. Vérifier la scène principale
 
-Il y a pour l'instant **deux scènes** :
+La seule scène est `Assets/_Bauprobe/Scenes/MenuGeneral.unity` (anciennement `menu général.unity`).
+Ouvrez-la et vérifiez :
 
-* `Assets/_Bauprobe/Scenes/Main.unity` (anciennement `QRCodeDetection.unity`, avec le cube de test) ;
-* `Assets/_Bauprobe/Scenes/MenuGeneral.unity` (anciennement `menu général.unity`, de la branche de test,
-  avec le menu Bauprobe).
-
-- [ ] Choisir la scène principale. Le plus simple : ouvrir `MenuGeneral.unity` (la plus avancée),
-      y copier le Cube de `Main.unity`, puis la renommer `Main.unity` et supprimer l'ancienne.
+- [ ] **QRAnchor** a le composant **Stage Calibrator** (anciennement *QR Scene Coordinator*),
+      avec *Qr Anchor* = QRAnchor et *Stage Root* = StageRoot.
+- [ ] **StageRoot** a le composant **Stage Space**.
+- [ ] **Managers** a le composant **Decor Spawner**, avec *Stage* = StageRoot et
+      *Catalog* = `Decor/Catalog/DecorCatalog`.
+- [ ] **BauprobeMenu** (composant *Bauprobe Menu Logic*) a *Spawner* = le Decor Spawner de Managers.
+- [ ] Le bouton de la liste « Importer » appelle bien `BauprobeMenuLogic.SpawnIndex` avec `0` (= le Cube).
+      Si l'appel apparaît comme *Missing*, le rebrancher (le script a changé de dossier).
+- [ ] Optionnel : remplir *Expected Payload* (Stage Calibrator) avec le texte du QR code du plateau.
 - [ ] Le prefab Meta `ThirdParty/MetaQRCodeDetection/Prefabs/QRCodeSampleUI.prefab` a été modifié sur la
       branche de test. À terme, sortir le menu Bauprobe dans un prefab à nous (`_Bauprobe/UI/Prefabs/`).
 - [ ] `Assets/UniversalRenderPipelineGlobalSettings 1.asset` est un doublon créé par Unity quand l'original
       était cassé. Une fois l'étape 1 faite, vérifier lequel est utilisé
       (*Project Settings > Graphics*) et supprimer l'autre.
 
-Dans la scène choisie :
+## 4. Mettre en place la manipulation à la manette
 
-- [ ] L'objet **QRAnchor** a le composant **Stage Calibrator** (anciennement *QR Scene Coordinator*),
-      avec *Qr Anchor* = QRAnchor et *Stage Root* = StageRoot.
-- [ ] L'objet **StageRoot** a le composant **Stage Space**.
-- [ ] Le **Cube** de test est toujours enfant de StageRoot (son prefab est maintenant dans `_Bauprobe/Decor/Prefabs/`).
-- [ ] Optionnel : remplir *Expected Payload* avec le texte de votre QR code du plateau.
+Le prefab Cube a déjà **Interactable Object** et **Decor Constraints** (objet toujours droit).
+Il reste à ajouter dans la scène les deux éléments écrits par Théophile (ils n'étaient encore dans aucune scène) :
 
-## 4. Brancher les nouveaux composants
+- [ ] Le **laser** : créer un objet vide enfant de `RightHandAnchor` (dans `[BuildingBlock] Camera Rig`),
+      lui ajouter **Right Controller Ray Selector** et, si on veut voir le laser, un **Line Renderer**
+      (fin, environ 0,005) glissé dans le champ *Laser*.
+- [ ] Le **menu de l'objet** : créer un Canvas en *World Space* (petit : échelle 0,001), lui ajouter
+      **Object Menu** et 6 boutons : ✕ (fermer), Supprimer, Couleur, Déplacer, Scale, Rotation,
+      à glisser dans les champs correspondants. Laisser l'objet **actif** : il se cache tout seul au lancement.
+- [ ] Le Canvas doit pouvoir être cliqué à la manette, comme le menu général
+      (même réglage que le Canvas de `QRCodeSampleUI` : *OVR Raycaster*).
+- [ ] Optionnel : ajouter **Layout Manager** sur Managers (*Spawner* = le Decor Spawner) et deux boutons
+      « Sauvegarder » / « Charger » dans le menu général (→ `LayoutManager.Save` / `LayoutManager.Load`).
 
-Sur l'objet **Managers** (ou un nouvel objet vide) :
-
-- [ ] Ajouter **Decor Spawner** : *Stage* = StageRoot, *Catalog* = le catalogue (voir ci-dessous).
-- [ ] Ajouter **Layout Manager** : *Spawner* = le Decor Spawner.
-
-Créer le catalogue :
-
-- [ ] Dans `Assets/_Bauprobe/Decor/Catalog/` : clic droit > *Create > Bauprobe > Catalogue de décor*.
-- [ ] Créer une fiche *Create > Bauprobe > Élément de décor* pour le Cube (prefab = `Decor/Prefabs/Cube`),
-      et l'ajouter au catalogue.
-- [ ] Sur le prefab Cube : ajouter un Collider, la saisie Interaction SDK (clic droit >
-      *Interaction SDK > Add Grab Interaction*) et **Decor Constraints**.
-
-Menu (peut être fait plus tard par la personne chargée de l'UI) :
-
-- [ ] Créer un Canvas en World Space utilisable avec l'Interaction SDK (*Interaction SDK > Add Ray Interaction to Canvas*).
-- [ ] Y mettre **Decor Menu** + un bouton modèle (Button + TextMeshPro).
-- [ ] Ajouter des boutons « Sauvegarder » (→ `LayoutManager.Save`), « Charger » (→ `LayoutManager.Load`),
-      « Recaler » (→ `StageCalibrator.Unlock`), « Figer » (→ `StageCalibrator.Lock`).
+Le Cube garde aussi sa saisie à la main d'origine (Interaction SDK). Elle peut rester : Decor Constraints
+empêche aussi de pencher l'objet quand on l'attrape à la main.
 
 ## 5. Réglages de build
 
-- [ ] *File > Build Profiles* : ajouter `Assets/_Bauprobe/Scenes/Main.unity` dans la liste des scènes
+- [ ] *File > Build Profiles* : ajouter `Assets/_Bauprobe/Scenes/MenuGeneral.unity` dans la liste des scènes
       (la liste était vide).
 - [ ] *Project Settings > Player* :
   * *Company Name* : `MinesParis`

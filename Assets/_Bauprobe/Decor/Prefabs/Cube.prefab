@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 4813695458582784211}
   - component: {fileID: 6548040336946671515}
   - component: {fileID: 9058052745081143279}
+  - component: {fileID: 7310452180036122001}
+  - component: {fileID: 7310452180036122002}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -260,3 +262,30 @@ MonoBehaviour:
   _useClosestPointAsGrabSource: 0
   _releaseDistance: 0
   _resetGrabOnGrabsUpdated: 1
+--- !u!114 &7310452180036122001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4100876796635234277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9ddf98079a04a60985e49c1e27b61f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Bauprobe.Manipulation::Bauprobe.Manipulation.DecorConstraints
+  keepOnFloor: 0
+  keepUpright: 1
+  uniformScale: 1
+--- !u!114 &7310452180036122002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4100876796635234277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5d6cf7a576e4ebaae2768f06f312616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Bauprobe.Manipulation::Bauprobe.Manipulation.InteractableObject

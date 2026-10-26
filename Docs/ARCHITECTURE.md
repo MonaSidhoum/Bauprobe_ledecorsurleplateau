@@ -34,7 +34,7 @@ Chaque dossier de `Assets/_Bauprobe` est un **module** : une partie de l'appli q
 | **Decor** | La liste des décors disponibles et leur apparition | `DecorItemDefinition`, `DecorCatalog`, `DecorSpawner`, `DecorInstance` |
 | **Manipulation** | Déplacer / tourner / agrandir un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `RightControllerRaySelector` |
 | **Persistence** | Sauvegarder / recharger une implantation (fichier JSON) | `LayoutManager`, `LayoutSerializer`, `LayoutData` |
-| **UI** | Les menus dans le casque | `BauprobeMenuLogic` (menu général), `DecorMenu` |
+| **UI** | Les menus dans le casque | `BauprobeMenuLogic` (menu général : Importer, Supprimer tout, suivi QR) |
 | **Tests** | Tests automatiques (Window > General > Test Runner) | `StageSpaceTests`, `LayoutSerializerTests` |
 
 ### Qui a le droit d'utiliser qui ?
@@ -73,12 +73,17 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    Le repère est gardé **horizontal** (option `keepLevel`) : seul le « cap » du QR code compte.
    Par défaut, il **fige** ensuite la position (`lockAfterFirstDetection`) pour éviter que le décor tremble.
    Les méthodes `Lock()` / `Unlock()` peuvent être branchées sur des boutons.
-3. **Le metteur en scène choisit un décor dans le menu** (`DecorMenu`).
-   Le menu crée un bouton par fiche du catalogue (`DecorCatalog`).
-4. **`DecorSpawner`** fait apparaître l'objet au sol, 1,5 m devant le casque, comme enfant de `StageRoot`.
-5. **Le metteur en scène attrape l'objet** avec les mains ou les manettes. C'est l'**Interaction SDK** de
-   Meta qui gère ça (composant `Grabbable`), on ne le recode pas.
-   **`DecorConstraints`** passe juste après pour garder l'objet au sol, droit, et dans des tailles raisonnables.
+3. **Le metteur en scène ouvre « Importer » dans le menu général** (`BauprobeMenuLogic`) et choisit un décor.
+   Le bouton n°0 de la liste importe le décor n°0 du catalogue (`DecorCatalog`), le bouton n°1 le décor n°1, etc.
+4. **`DecorSpawner`** fait apparaître l'objet 1,5 m devant le casque, posé sur le plateau, comme enfant de `StageRoot`.
+   « Supprimer tout » passe aussi par `DecorSpawner`.
+5. **Le metteur en scène manipule l'objet à la manette droite** :
+   * il vise l'objet avec le laser (`RightControllerRaySelector`) et appuie sur la gâchette ;
+   * un petit menu s'ouvre au-dessus de l'objet (`ObjectMenu`) : Supprimer, Couleur, Déplacer, Scale, Rotation ;
+   * pendant Déplacer / Scale / Rotation (`InteractableObject`) : joystick = ajuster, gâchette = valider, B = annuler.
+
+   **Les objets restent toujours droits** : la rotation au joystick tourne seulement autour de la verticale,
+   et `DecorConstraints` empêche de les pencher (même si on les attrape à la main).
 6. **`LayoutManager.Save()`** écrit la liste des objets et leurs positions sur le plateau dans un fichier JSON
    sur le casque. **`LayoutManager.Load()`** la recharge.
 
@@ -98,19 +103,13 @@ inversement : deux scripts qui s'appellent l'un l'autre doivent être dans le m�
 
 La scène de la branche de test (`menu général.unity`) est devenue `Scenes/MenuGeneral.unity`.
 
-### Doublons à trancher en équipe
+### Choix faits par l'équipe
 
-Ces scripts et les squelettes ajoutés pendant la restructuration font parfois la même chose.
-Il faudra choisir et n'en garder qu'un :
-
-* **Faire apparaître un objet** : `BauprobeMenuLogic.SpawnIndex` (liste `importItems`) **ou**
-  `DecorSpawner` + `DecorCatalog`. Conseil : garder le bouton « Importer » de `BauprobeMenuLogic`, mais
-  lui faire appeler `DecorSpawner` (le catalogue et la sauvegarde ont besoin que les objets passent par lui).
-* **Manipuler un objet** : modes manette de `InteractableObject` (joystick) **ou** saisie à la main de
-  l'Interaction SDK + `DecorConstraints`. Les deux peuvent cohabiter (manette pour la précision,
-  mains pour aller vite). Mais `InteractableObject` permet de pencher l'objet, alors que
-  `DecorConstraints` le garde droit : décidez de la règle.
-* **Suivi des QR codes** : `BauprobeMenuLogic` et `StageCalibrator` écoutent tous les deux MRUK.
+* **Une seule scène** : `Scenes/MenuGeneral.unity` (l'ancienne `Main.unity`, avec le cube posé à la main, a été supprimée).
+* **Faire apparaître un objet** : le bouton « Importer » de `BauprobeMenuLogic`, qui passe par `DecorSpawner`
+  et le catalogue (indispensable pour la sauvegarde).
+* **Manipuler un objet** : à la manette (`InteractableObject`), avec des **objets toujours droits**.
+* **Reste à faire plus tard** : `BauprobeMenuLogic` et `StageCalibrator` écoutent tous les deux MRUK.
   C'est sans danger, mais à terme le menu pourrait simplement lire `StageCalibrator.IsQrLocated`.
 
 ## Ajouter un nouveau décor (sans code)
@@ -128,8 +127,9 @@ Il faudra choisir et n'en garder qu'un :
 
 ## Le dossier ThirdParty
 
-`Assets/ThirdParty/MetaQRCodeDetection` est une copie **non modifiée** de l'exemple « QR Code Detection » de Meta.
-Il sert à afficher les QR codes détectés (pratique pour déboguer). **On n'y touche pas** :
+`Assets/ThirdParty/MetaQRCodeDetection` est une copie de l'exemple « QR Code Detection » de Meta.
+Il sert à afficher les QR codes détectés (pratique pour déboguer). Seul son prefab `QRCodeSampleUI` a été
+modifié sur la branche de test (il accueille le menu Bauprobe). **Pour le reste, on n'y touche pas** :
 si on a besoin d'un comportement différent, on écrit notre propre script dans `_Bauprobe`.
 Comme ça, on peut mettre à jour l'exemple Meta sans perdre notre travail.
 

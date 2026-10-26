@@ -1737,7 +1737,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1501947303}
-        m_TargetAssemblyTypeName: BauprobeMenuLogic, Assembly-CSharp
+        m_TargetAssemblyTypeName: Bauprobe.UI.BauprobeMenuLogic, Bauprobe.UI
         m_MethodName: SpawnIndex
         m_Mode: 3
         m_Arguments:
@@ -3029,7 +3029,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1501947303}
-        m_TargetAssemblyTypeName: BauprobeMenuLogic, Assembly-CSharp
+        m_TargetAssemblyTypeName: Bauprobe.UI.BauprobeMenuLogic, Bauprobe.UI
         m_MethodName: DeleteAll
         m_Mode: 0
         m_Arguments:
@@ -3361,7 +3361,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1501947303}
-        m_TargetAssemblyTypeName: BauprobeMenuLogic, Assembly-CSharp
+        m_TargetAssemblyTypeName: Bauprobe.UI.BauprobeMenuLogic, Bauprobe.UI
         m_MethodName: ToggleTracking
         m_Mode: 0
         m_Arguments:
@@ -6108,7 +6108,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1501947303}
-        m_TargetAssemblyTypeName: BauprobeMenuLogic, Assembly-CSharp
+        m_TargetAssemblyTypeName: Bauprobe.UI.BauprobeMenuLogic, Bauprobe.UI
         m_MethodName: ToggleImportList
         m_Mode: 0
         m_Arguments:
@@ -7794,6 +7794,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1320711072}
   - component: {fileID: 1320711073}
+  - component: {fileID: 1320711074}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -7801,6 +7802,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1320711074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1320711071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b33b5b930e6441d8255ddab410cead1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Bauprobe.Decor::Bauprobe.Decor.DecorSpawner
+  stage: {fileID: 1291867139}
+  catalog: {fileID: 11400000, guid: e5c53e94e12840a9a45dc9021767da0a, type: 2}
+  spawnDistance: 1.5
 --- !u!4 &1320711072
 Transform:
   m_ObjectHideFlags: 0
@@ -8431,12 +8447,7 @@ MonoBehaviour:
   trackingStatus: {fileID: 2109464779}
   detectedStatus: {fileID: 1132876575}
   importList: {fileID: 1752838411}
-  importItems:
-  - label: Cube
-    prefab: {fileID: 0}
-  spawnParent: {fileID: 0}
-  spawnSpacing: 0.2
-  cubeSize: 0.1
+  spawner: {fileID: 1320711074}
   scenePermission: com.oculus.permission.USE_SCENE
   trackingInitiallyOn: 1
   originalRequestButton: {fileID: 0}
@@ -10071,7 +10082,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1501947303}
-        m_TargetAssemblyTypeName: BauprobeMenuLogic, Assembly-CSharp
+        m_TargetAssemblyTypeName: Bauprobe.UI.BauprobeMenuLogic, Bauprobe.UI
         m_MethodName: RequestPermission
         m_Mode: 0
         m_Arguments:

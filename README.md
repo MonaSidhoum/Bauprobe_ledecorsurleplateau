@@ -44,7 +44,7 @@ Notre solution immersive permet aux metteurs en scène et aux équipes technique
 /                         ← le projet Unity (à ouvrir avec Unity Hub)
 ├── Assets/
 │   ├── _Bauprobe/        ← TOUT NOTRE TRAVAIL EST ICI
-│   │   ├── Scenes/       Main.unity, MenuGeneral.unity + Sandbox/ (une scène de test par personne)
+│   │   ├── Scenes/       MenuGeneral.unity (la scène du casque) + Sandbox/ (une scène de test par personne)
 │   │   ├── Core/         le repère du plateau (StageSpace)
 │   │   ├── Calibration/  QR code → position du plateau (StageCalibrator)
 │   │   ├── Decor/        catalogue des décors, apparition des objets
@@ -79,10 +79,12 @@ git lfs pull
 ## Utilisation
 
 1. Ouvrez le projet avec Unity.
-2. Ouvrez la scène principale : `Assets/_Bauprobe/Scenes/Main.unity`.
+2. Ouvrez la scène principale : `Assets/_Bauprobe/Scenes/MenuGeneral.unity`.
 3. Assurez-vous que votre casque Meta Quest est branché et configuré en mode développeur.
 4. Lancez le Build and Run (`File > Build Profiles`, plateforme Meta Quest / Android).
 5. Sur le plateau : posez le QR code au sol, regardez-le avec le casque, le décor se cale dessus.
+6. Menu « Importer » pour ajouter un décor ; laser de la manette droite + gâchette sur un objet pour le
+   déplacer, le tourner ou l'agrandir (il reste toujours droit).
 
 ## L'équipe
 

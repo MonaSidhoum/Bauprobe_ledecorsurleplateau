@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Bauprobe.Decor
@@ -10,9 +11,17 @@ namespace Bauprobe.Decor
     {
         public DecorItemDefinition Definition { get; private set; }
 
+        /// <summary>Appelé quand l'objet est détruit (par ex. bouton « Supprimer » du menu de l'objet).</summary>
+        public event Action<DecorInstance> Destroyed;
+
         public void Initialize(DecorItemDefinition definition)
         {
             Definition = definition;
+        }
+
+        private void OnDestroy()
+        {
+            Destroyed?.Invoke(this);
         }
     }
 }

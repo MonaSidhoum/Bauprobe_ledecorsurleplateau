@@ -51,7 +51,6 @@ namespace Bauprobe.Manipulation
         Renderer[] _renderers;
         int _colorIndex;
         int _startFrame;
-        Transform _camera;
 
         // sauvegarde pour annuler
         Vector3 _savedPos, _savedScale;
@@ -63,7 +62,6 @@ namespace Bauprobe.Manipulation
         void Awake()
         {
             _renderers = GetComponentsInChildren<Renderer>();
-            if (Camera.main) _camera = Camera.main.transform;
 
             if (!controllerAnchor)
             {
@@ -159,11 +157,9 @@ namespace Bauprobe.Manipulation
                     break;
 
                 case Mode.Rotate:
-                    // Joystick gauche/droite = tourner autour de la verticale,
-                    // haut/bas = basculer vers l'avant/l'arrière (par rapport à la vue)
+                    // Joystick gauche/droite = tourner autour de la verticale.
+                    // Pas de bascule avant/arrière : les objets de décor restent toujours droits.
                     transform.Rotate(Vector3.up, -stick.x * rotationSpeed * dt, Space.World);
-                    Vector3 right = _camera ? _camera.right : Vector3.right;
-                    transform.Rotate(right, stick.y * rotationSpeed * dt, Space.World);
                     break;
             }
         }
