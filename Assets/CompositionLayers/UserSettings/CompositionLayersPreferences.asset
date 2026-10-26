@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e2e47e42044edae850431df91235f7272e60869ede56e7247e6b4de1876aa9ce
-size 508
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c66150246d824833a8257ecb5aaa1d11, type: 3}
+  m_Name: CompositionLayersPreferences
+  m_EditorClassIdentifier: 
+  m_DisplayAnglesAs: 0
+  m_EmulationInScene: 1
+  m_EmulationInPlayMode: 1

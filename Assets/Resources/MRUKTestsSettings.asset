@@ -1,3 +1,93 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:6bf44635d071b116a59136e96c0d10d5a68b61edeee7da7bd36b4faaf0b45f5c
-size 5878
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca707af374700164cb2845f3d7b6c906, type: 3}
+  m_Name: MRUKTestsSettings
+  m_EditorClassIdentifier:
+  enableWorldLock: 0
+  enableNotifications: 1
+  autoOpenOnFailure: 0
+  _sceneSettings:
+    DataSource: 3
+    RoomIndex: 0
+    RoomPrefabs:
+    - {fileID: 5618556046422172173, guid: 4b454e8ccd6764ccdbcd91586969863f, type: 3}
+    - {fileID: 2107087800172922289, guid: bb2157b25c29dac439b7f4da3bae4f95, type: 3}
+    - {fileID: 3426318296430495451, guid: 35e526707112ea84db34e4fb31f699b3, type: 3}
+    - {fileID: 1766085727792645261, guid: 989283c9dcb36a24aac11a601001dce0, type: 3}
+    - {fileID: 2640443293730897823, guid: e522ab26ed3a6994c8318dbec3f71fda, type: 3}
+    - {fileID: 8156262258667604303, guid: 3f4e666639df10c49acba0a3872e5188, type: 3}
+    - {fileID: 5618556046422172173, guid: 3aaa7f66d6713834ca31af8c3d9bebda, type: 3}
+    - {fileID: 5496900764493747747, guid: fec8dc4a2237b4b41b1a0a6325c7f24c, type: 3}
+    - {fileID: 2668294893442739597, guid: 6889c8d8e4209234caec6829f683b3b2, type: 3}
+    - {fileID: 86263974782626159, guid: aa89d72299be8eb4bb183aaffedb20c1, type: 3}
+    - {fileID: 8337359762278700308, guid: 1e89293ca5c265c408383952b2cfdf62, type: 3}
+    - {fileID: 4218085339991310026, guid: 63ff355546f485e4b810b9558af04960, type: 3}
+    - {fileID: 511133621533070678, guid: c7983e957ea6fdb46a563505256373d3, type: 3}
+    - {fileID: 1545335288386986513, guid: 3c08cfa4a002bea4d9df31df8c92fdf0, type: 3}
+    - {fileID: 1103890109290553307, guid: b4f53f8b59b530a4091f9bec750967ed, type: 3}
+    - {fileID: 4775692966918290961, guid: 3f835b481d1ae3a4daa4df18f6c858a6, type: 3}
+    - {fileID: 7385339549462044555, guid: 9071f1fe8f1a34048ac3d0c82ed11af0, type: 3}
+    - {fileID: 8965484993579043588, guid: b5dc0a42cfee8494d80faefa56839173, type: 3}
+    - {fileID: 5710852274528214698, guid: 665492cb888e6984984129a83c328e1b, type: 3}
+    - {fileID: 8149197552105518368, guid: bfdb2bc734a156349b52619c0faff799, type: 3}
+    - {fileID: 6240677031976514303, guid: d2f5619c7d04eb6419c63a439824ec5f, type: 3}
+    - {fileID: 5618556046422172173, guid: 029ede24e76b24d0888dc235dd0b96f2, type: 3}
+    - {fileID: 5618556046422172173, guid: caa3755f1f2184eb7a9fd17b7cf1f1d3, type: 3}
+    - {fileID: 8617065727246603190, guid: 90477f470c22867448fb3284b29cd5ad, type: 3}
+    - {fileID: 8445361484322836604, guid: 5c21e35587ed04840b1b6b1b8efb0eee, type: 3}
+    - {fileID: 5618556046422172173, guid: 531aeca35d703a64cb0e1fd73a128fc0, type: 3}
+    - {fileID: 6112467815387627639, guid: 1bf3dc7d21c3edf4bb14c3437026ee53, type: 3}
+    - {fileID: 5618556046422172173, guid: 1550cf68ffa5a344e881275021bc3ffe, type: 3}
+    - {fileID: 6631284343627542269, guid: 6997940f7b90a9c44bcaea50e318f8eb, type: 3}
+    - {fileID: 322770182520489500, guid: f4eca9455b4ef03489b618f440771f31, type: 3}
+    - {fileID: 2601742620458953579, guid: 3fa25aa8ad204e840af12904489f2dcd, type: 3}
+    - {fileID: 6680045106327574414, guid: 892aa20cc9b1d854899af9af50c8ec08, type: 3}
+    - {fileID: 574122697291409419, guid: 86286a8a76001ec45883aec945b6148a, type: 3}
+    - {fileID: 4681838206798608616, guid: 972ed802880f5404486122542ee902dc, type: 3}
+    - {fileID: 2937834133036230973, guid: c26a1c141c0ca024298b4bb75554148d, type: 3}
+    - {fileID: 383126261976665222, guid: 3e3757f7165078547b6173e9e861e1c8, type: 3}
+    - {fileID: 3090186376460557778, guid: 93eb9b6f738e5f14b81765b609ef2ce5, type: 3}
+    - {fileID: 1851870975495527198, guid: a3e4ae4647d78db43847a7b35262cb04, type: 3}
+    - {fileID: 5618556046422172173, guid: 31818101cde292945ab80af5d14bec54, type: 3}
+    - {fileID: 5618556046422172173, guid: c2bd5595e9fe2493a92d4bc0bb264603, type: 3}
+    - {fileID: 5892866481101579158, guid: 38f1194518d4c794097f56dfebcd125f, type: 3}
+    - {fileID: 5353737756925331059, guid: aa3b7bd4f5e4a594da33dd196c4de284, type: 3}
+    - {fileID: 4833243207006835194, guid: efeab38bcbb8f134e8b3fc741b1b7f1c, type: 3}
+    - {fileID: 577882463725604206, guid: 5b7a64cb5fa742c46a434e9174897983, type: 3}
+    - {fileID: 5618556046422172173, guid: b2217186fc11b47638c925d674e7f526, type: 3}
+    - {fileID: 6302978003103097842, guid: 403f368895033c347bc3d74a104ff658, type: 3}
+    - {fileID: 4083301385204724999, guid: b6446506026fd7b40bce89b45d7dce43, type: 3}
+    - {fileID: 5964040136252426636, guid: 9b22be1a72a6e3a408582e196d896b0c, type: 3}
+    - {fileID: 4637912509085372996, guid: 57dd3d0af48d44043b63b6f4a88f6f1e, type: 3}
+    - {fileID: 7034657780980490005, guid: 3cd3f858399614244a45ac1ec9b3c301, type: 3}
+    SceneJsons:
+    - {fileID: 4900000, guid: e74ccdce0174db947ab8611a1b39d5ba, type: 3}
+    - {fileID: 4900000, guid: a42277f85740284419b7a33b4785317d, type: 3}
+    - {fileID: 4900000, guid: 4619d891bbcb1614e9be606f8faf0de1, type: 3}
+    - {fileID: 4900000, guid: 373694211c1d9ea4ab07bff51169e3c3, type: 3}
+    - {fileID: 4900000, guid: 80a133f3c2e481e429a52841f989fb26, type: 3}
+    - {fileID: 4900000, guid: 5139efde3f8210a4189ba669f8c4c768, type: 3}
+    - {fileID: 4900000, guid: 5c33e7b3e50fc944889c808743559b6f, type: 3}
+    - {fileID: 4900000, guid: 1c73847af159bbe49ab9032ccd89a381, type: 3}
+    LoadSceneOnStartup: 1
+    EnableHighFidelityScene: 0
+    SeatWidth: 0.6
+    SceneJson:
+    <TrackerConfiguration>k__BackingField:
+      <KeyboardTrackingEnabled>k__BackingField: 0
+      <QRCodeTrackingEnabled>k__BackingField: 0
+    <TrackableAdded>k__BackingField:
+      m_PersistentCalls:
+        m_Calls: []
+    <TrackableRemoved>k__BackingField:
+      m_PersistentCalls:
+        m_Calls: []
