@@ -1,0 +1,18 @@
+{
+    "name": "Bauprobe.Calibration",
+    "rootNamespace": "Bauprobe.Calibration",
+    "references": [
+        "Bauprobe.Core",
+        "meta.xr.mrutilitykit",
+        "Oculus.VR"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

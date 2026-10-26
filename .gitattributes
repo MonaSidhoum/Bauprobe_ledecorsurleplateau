@@ -1,0 +1,54 @@
+# =====================================================================
+# .gitattributes du projet Bauprobe
+# =====================================================================
+# 1) Fichiers texte Unity : on les garde en TEXTE normal (pas dans LFS),
+#    pour que Git puisse les comparer et les fusionner.
+#    "unityyamlmerge" utilise l'outil de fusion de Unity s'il est configuré
+#    (voir Docs/CONTRIBUER.md). S'il ne l'est pas, Git fait une fusion normale.
+#    On ne force PAS "text" sur ces fichiers : certains (ex. LightingData.asset)
+#    sont binaires, et une conversion de fins de ligne les abîmerait.
+*.cs          text diff=csharp
+*.asmdef      text
+*.json        text
+*.md          text
+*.unity       merge=unityyamlmerge
+*.prefab      merge=unityyamlmerge
+*.asset       merge=unityyamlmerge
+*.mat         merge=unityyamlmerge
+*.anim        merge=unityyamlmerge
+*.controller  merge=unityyamlmerge
+*.meta        merge=unityyamlmerge
+LightingData.asset binary
+
+# 2) Gros fichiers binaires : stockés avec Git LFS
+#    (modèles 3D, images, sons, vidéos, polices).
+# Modèles 3D
+*.fbx   filter=lfs diff=lfs merge=lfs -text
+*.FBX   filter=lfs diff=lfs merge=lfs -text
+*.obj   filter=lfs diff=lfs merge=lfs -text
+*.glb   filter=lfs diff=lfs merge=lfs -text
+*.blend filter=lfs diff=lfs merge=lfs -text
+*.skp   filter=lfs diff=lfs merge=lfs -text
+*.3ds   filter=lfs diff=lfs merge=lfs -text
+*.dae   filter=lfs diff=lfs merge=lfs -text
+# Images / textures
+*.png   filter=lfs diff=lfs merge=lfs -text
+*.jpg   filter=lfs diff=lfs merge=lfs -text
+*.jpeg  filter=lfs diff=lfs merge=lfs -text
+*.psd   filter=lfs diff=lfs merge=lfs -text
+*.tga   filter=lfs diff=lfs merge=lfs -text
+*.tif   filter=lfs diff=lfs merge=lfs -text
+*.tiff  filter=lfs diff=lfs merge=lfs -text
+*.exr   filter=lfs diff=lfs merge=lfs -text
+*.hdr   filter=lfs diff=lfs merge=lfs -text
+# Sons / vidéos
+*.wav   filter=lfs diff=lfs merge=lfs -text
+*.mp3   filter=lfs diff=lfs merge=lfs -text
+*.ogg   filter=lfs diff=lfs merge=lfs -text
+*.mp4   filter=lfs diff=lfs merge=lfs -text
+*.mov   filter=lfs diff=lfs merge=lfs -text
+# Polices
+*.ttf   filter=lfs diff=lfs merge=lfs -text
+*.otf   filter=lfs diff=lfs merge=lfs -text
+# Documents de référence (plans du théâtre...)
+*.pdf   filter=lfs diff=lfs merge=lfs -text

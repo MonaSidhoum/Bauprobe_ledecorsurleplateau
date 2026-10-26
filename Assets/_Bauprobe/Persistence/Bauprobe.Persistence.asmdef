@@ -1,0 +1,17 @@
+{
+    "name": "Bauprobe.Persistence",
+    "rootNamespace": "Bauprobe.Persistence",
+    "references": [
+        "Bauprobe.Core",
+        "Bauprobe.Decor"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
