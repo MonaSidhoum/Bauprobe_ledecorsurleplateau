@@ -5,10 +5,6 @@
 ![Statut](https://img.shields.io/badge/Statut-En_développement-orange)
 ![Platform](https://img.shields.io/badge/Platforme-AR-green)
 
-> ⚠️ **Avant toute chose** : des fichiers de réglages Unity sont actuellement cassés dans le dépôt
-> (ils contiennent seulement un « pointeur LFS » au lieu de leur vrai contenu).
-> Suivez l'étape 1 de [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md) pour les réparer.
-
 
 ##  À propos du projet
 
