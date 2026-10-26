@@ -1,89 +1,103 @@
-# À faire dans Unity après la restructuration
+# Unity : mise en route et reste à faire
 
-La restructuration du dépôt a été faite sans pouvoir ouvrir Unity. Voici ce qu'**une personne** doit
-faire (dans l'ordre) en ouvrant le projet la première fois. Cochez au fur et à mesure.
+La restructuration du projet est **terminée et testée sur le Quest 3** : import d'un décor, sélection au laser,
+déplacement / agrandissement / rotation à la manette, objets toujours droits, sauvegarde / chargement.
+
+Ce document contient :
+1. ce qu'il faut faire pour ouvrir le projet sur **un nouvel ordinateur** ;
+2. l'**état actuel** de la scène (pour s'y retrouver) ;
+3. la liste de ce qui **reste à faire**.
 
 ---
 
-## 1. ✅ Fichiers « pointeurs LFS » : réparé
+## 1. Ouvrir le projet sur un nouvel ordinateur
 
-56 fichiers de réglages Unity ne contenaient qu'une étiquette LFS (3 lignes) au lieu de leur vrai contenu.
-Ils ont tous été remis en texte normal, avec un contenu vérifié identique à l'original (même empreinte sha256,
-aux fins de ligne près). Pour vérifier qu'il n'en reste aucun :
+1. Installer **Unity 6000.3.26f1** (Unity Hub) avec **Android Build Support** (+ OpenJDK, Android SDK & NDK).
+2. Une seule fois par ordinateur : `git lfs install`
+3. Cloner le dépôt (voir le [README](../README.md)), puis dans Unity Hub : *Add > Add project from disk* >
+   choisir **la racine du dépôt** (le dossier qui contient `Assets/`, `Packages/`, `ProjectSettings/`).
+4. Attendre l'import (10 à 20 min la première fois).
+5. Ouvrir la **Console** (*Window > General > Console*) : il ne doit pas y avoir d'erreur rouge.
+6. *File > Build Profiles* : vérifier que la plateforme active est **Meta Quest / Android** (sinon *Switch Platform*).
+7. Ouvrir la scène `Assets/_Bauprobe/Scenes/MenuGeneral.unity`.
+8. (Optionnel) *Window > General > Test Runner* > **EditMode** > *Run All* : les 2 tests doivent être verts.
 
-```bash
-git grep -l "^version https://git-lfs" -- Assets ProjectSettings   # ne doit rien afficher
+Si vous aviez un ancien clone (avec le dossier `Unity-MRUtilityKitSample/`), ne le réutilisez pas :
+re-clonez, ou supprimez au moins son dossier `Library/`.
+
+### Installer sur le casque
+
+1. Casque en **mode développeur** (appli Meta Horizon > Appareils > Paramètres du casque > Mode développeur).
+2. Brancher le casque en USB-C et accepter « Autoriser le débogage USB » dans le casque.
+3. *File > Build Profiles* > *Run Device* = le Quest 3 > **Build And Run**.
+4. Au premier lancement, accepter la permission **« données spatiales »** (sinon : bouton *Permission* du menu).
+
+---
+
+## 2. État actuel de la scène `MenuGeneral`
+
+```
+MenuGeneral
+├── [BuildingBlock] Camera Rig
+│   └── TrackingSpace
+│       ├── LeftHandAnchor
+│       │   └── QRCodeSampleUI            (prefab Meta)
+│       │       └── Canvas [V]
+│       │           └── BauprobeMenu      (prefab _Bauprobe/UI/Prefabs/BauprobeMenu) : menu général, main gauche
+│       └── RightHandAnchor
+│           └── Laser                     Right Controller Ray Selector + Line Renderer
+├── Managers                              Decor Spawner + Layout Manager
+├── MRUK                                  détection des QR codes (Meta)
+├── QRAnchor                              Stage Calibrator : se cale sur le QR code
+│   └── StageRoot                         Stage Space : le repère du plateau, parent de tous les décors
+└── ObjectMenu                            (prefab _Bauprobe/UI/Prefabs/ObjectMenu) : menu au-dessus de l'objet sélectionné
 ```
 
-Les réglages Unity sont des fichiers **texte** : ils ne doivent jamais passer par LFS
-(le `.gitattributes` s'en assure).
+| Élément | Où | Rôle |
+|---|---|---|
+| Menu général | `BauprobeMenu` (main gauche) | Permission, suivi QR, **Importer**, **Supprimer tout**, **Sauvegarder**, **Charger** |
+| Catalogue | `Decor/Catalog/DecorCatalog.asset` | Liste des décors importables (pour l'instant : `Cube`) |
+| Laser | `Laser` (main droite) | Vise un objet ; gâchette = ouvre son menu |
+| Menu objet | `ObjectMenu` (racine) | Supprimer, Couleur, Déplacer, Scale, Rotation |
+| Décor | prefab `Decor/Prefabs/Cube` | *Interactable Object* (manette) + *Decor Constraints* (toujours droit) |
 
-## 2. Ouvrir le projet
+Pour ajouter un nouveau décor au catalogue : voir [ARCHITECTURE.md](ARCHITECTURE.md#ajouter-un-nouveau-décor-sans-code).
 
-1. Fermer Unity. Supprimer le dossier `Library/` de votre ancien clone s'il existe
-   (le projet a changé de dossier : il est maintenant **à la racine du dépôt**).
-2. Unity Hub > *Add project from disk* > choisir la racine du dépôt.
-3. Attendre l'import (long la première fois).
-4. Ouvrir la **Console** (*Window > General > Console*) : il ne doit pas y avoir d'erreur rouge.
-   * Si un `.asmdef` signale une référence introuvable (`meta.xr.mrutilitykit`, `Oculus.VR`,
-     `Unity.TextMeshPro`...), cliquer sur le `.asmdef` concerné et corriger la référence dans l'Inspector.
+Rappel : **une seule personne à la fois** modifie `MenuGeneral.unity`. Pour modifier un menu,
+ouvrez son prefab (`_Bauprobe/UI/Prefabs/`) plutôt que la scène.
 
-## 3. Vérifier la scène principale
+---
 
-La seule scène est `Assets/_Bauprobe/Scenes/MenuGeneral.unity` (anciennement `menu général.unity`).
-Ouvrez-la et vérifiez :
+## 3. Reste à faire
 
-- [ ] **QRAnchor** a le composant **Stage Calibrator** (anciennement *QR Scene Coordinator*),
-      avec *Qr Anchor* = QRAnchor et *Stage Root* = StageRoot.
-- [ ] **StageRoot** a le composant **Stage Space**.
-- [ ] **Managers** a le composant **Decor Spawner**, avec *Stage* = StageRoot et
-      *Catalog* = `Decor/Catalog/DecorCatalog`.
-- [ ] **BauprobeMenu** (composant *Bauprobe Menu Logic*) a *Spawner* = le Decor Spawner de Managers.
-- [ ] Le bouton de la liste « Importer » appelle bien `BauprobeMenuLogic.SpawnIndex` avec `0` (= le Cube).
-      Si l'appel apparaît comme *Missing*, le rebrancher (le script a changé de dossier).
-- [ ] Optionnel : remplir *Expected Payload* (Stage Calibrator) avec le texte du QR code du plateau.
-- [ ] Le prefab Meta `ThirdParty/MetaQRCodeDetection/Prefabs/QRCodeSampleUI.prefab` a été modifié sur la
-      branche de test. À terme, sortir le menu Bauprobe dans un prefab à nous (`_Bauprobe/UI/Prefabs/`).
+### Manipulation (gênant sur le plateau)
 
-## 4. Mettre en place la manipulation à la manette
+- [ ] **Scale** : l'objet grandit à partir de son centre, donc il s'enfonce dans le sol quand on l'agrandit
+      (et flotte quand on le rétrécit). Il faudrait le reposer au sol après chaque changement de taille.
+- [ ] **Déplacer** : l'objet suit la manette dans les 3 dimensions et peut flotter ou passer sous la scène.
+      Décider : le faire glisser sur le plateau uniquement, ou garder la possibilité de le soulever.
+- [ ] **Menu objet** : il s'affiche au-dessus de l'objet. Pour un grand décor (mur de 4 m), il est hors de portée.
+      Le placer plutôt à hauteur des yeux, devant l'objet.
+- [ ] **Laser** : le menu général ne bloque pas le laser. Viser un bouton du menu général avec un objet
+      derrière sélectionne aussi l'objet.
 
-Le prefab Cube a déjà **Interactable Object** et **Decor Constraints** (objet toujours droit).
-Il reste à ajouter dans la scène les deux éléments écrits par Théophile (ils n'étaient encore dans aucune scène) :
+### Nettoyage du code
 
-- [ ] Le **laser** : créer un objet vide enfant de `RightHandAnchor` (dans `[BuildingBlock] Camera Rig`),
-      lui ajouter **Right Controller Ray Selector** et, si on veut voir le laser, un **Line Renderer**
-      (fin, environ 0,005) glissé dans le champ *Laser*.
-- [ ] Le **menu de l'objet** : créer un Canvas en *World Space* (petit : échelle 0,001), lui ajouter
-      **Object Menu** et 6 boutons : ✕ (fermer), Supprimer, Couleur, Déplacer, Scale, Rotation,
-      à glisser dans les champs correspondants. Laisser l'objet **actif** : il se cache tout seul au lancement.
-- [ ] Le Canvas doit pouvoir être cliqué à la manette, comme le menu général
-      (même réglage que le Canvas de `QRCodeSampleUI` : *OVR Raycaster*).
-- [ ] Optionnel : ajouter **Layout Manager** sur Managers (*Spawner* = le Decor Spawner) et deux boutons
-      « Sauvegarder » / « Charger » dans le menu général (→ `LayoutManager.Save` / `LayoutManager.Load`).
+- [ ] Deux limites de taille en double : `InteractableObject` (0,02 à 5) et le catalogue (0,1 à 10, via
+      `DecorConstraints`). Ensemble, elles donnent 0,1 à 5. Ne garder que celles du catalogue (réglables par décor).
+- [ ] `ObjectMenu` plante si l'un de ses 6 boutons n'est pas renseigné : le rendre tolérant.
+- [ ] `BauprobeMenuLogic` et `StageCalibrator` écoutent tous les deux MRUK : le menu pourrait lire
+      `StageCalibrator.IsQrLocated`.
+- [ ] `BauprobeMenu` est rangé dans le prefab Meta `QRCodeSampleUI` (dossier `ThirdParty`). À terme, lui donner
+      son propre Canvas pour ne plus dépendre de l'exemple Meta.
 
-Le Cube garde aussi sa saisie à la main d'origine (Interaction SDK). Elle peut rester : Decor Constraints
-empêche aussi de pencher l'objet quand on l'attrape à la main.
+### Fonctionnalités
 
-## 5. Réglages de build
-
-Déjà faits dans le dépôt, à vérifier seulement :
-
-- [ ] *File > Build Profiles* : la liste des scènes contient uniquement `Assets/_Bauprobe/Scenes/MenuGeneral.unity`.
-- [ ] *Project Settings > Player* : *Company Name* = `MinesParis`, *Product Name* = `Bauprobe`,
-      *Package Name* (Android) = `fr.minesparis.bauprobe`.
-      L'appli s'installe donc à côté de l'ancienne « MRUKSample » dans le casque : on peut désinstaller cette dernière.
-
-## 6. Lancer les tests
-
-- [ ] *Window > General > Test Runner* > onglet **EditMode** > *Run All*. Les 2 tests doivent être verts.
-
-## 7. Committer
-
-```bash
-git status            # vérifier : pas de Library/, pas de .csproj
-git add -A
-git commit -m "Ouverture dans Unity : scène et réglages vérifiés"
-```
-
-Unity va probablement générer `Packages/packages-lock.json` : **il faut le committer** (il garantit que
-tout le monde a les mêmes versions de packages).
+- [ ] **Couleur** non sauvegardée : la sauvegarde garde la position, la rotation et la taille, pas la couleur.
+- [ ] **Vrais décors** : importer les modèles 3D du bureau d'études (`Decor/Models/`) et les ajouter au catalogue,
+      avec un bouton par décor dans la liste « Importer ».
+- [ ] **QR code du plateau** : choisir le texte du QR code officiel et le mettre dans *Expected Payload*
+      (Stage Calibrator), pour ignorer les autres QR codes présents dans la salle.
+- [ ] **Plusieurs implantations** : aujourd'hui, Sauvegarder / Charger utilisent toujours le même nom
+      (`implantation`). Permettre d'en garder plusieurs.
+- [ ] **Points de vue depuis la salle** (orchestre, balcons...) : prévu dans le README, pas encore commencé.
