@@ -75,7 +75,7 @@ crashlytics-build.properties
 # Unity generated assets and imported dependencies
 /Assets/Resources/buildInfo.txt*
 /Assets/Resources/InputActions.asset*
-/Assets/TextMesh Pro*
+# (Assets/TextMesh Pro est VERSIONNÉ : polices des menus partagées par toute l'équipe)
 
 ##########################################
 # Additional ignores to the original file#
