@@ -44,9 +44,6 @@ Ouvrez-la et vérifiez :
 - [ ] Optionnel : remplir *Expected Payload* (Stage Calibrator) avec le texte du QR code du plateau.
 - [ ] Le prefab Meta `ThirdParty/MetaQRCodeDetection/Prefabs/QRCodeSampleUI.prefab` a été modifié sur la
       branche de test. À terme, sortir le menu Bauprobe dans un prefab à nous (`_Bauprobe/UI/Prefabs/`).
-- [ ] `Assets/UniversalRenderPipelineGlobalSettings 1.asset` est un doublon créé par Unity quand l'original
-      était cassé. Une fois l'étape 1 faite, vérifier lequel est utilisé
-      (*Project Settings > Graphics*) et supprimer l'autre.
 
 ## 4. Mettre en place la manipulation à la manette
 
