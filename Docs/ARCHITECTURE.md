@@ -32,9 +32,9 @@ Chaque dossier de `Assets/_Bauprobe` est un **module** : une partie de l'appli q
 | **Core** | Le repère du plateau, partagé par tous | `StageSpace` |
 | **Calibration** | Trouver le QR code et y caler le plateau | `StageCalibrator` |
 | **Decor** | La liste des décors disponibles et leur apparition | `DecorItemDefinition`, `DecorCatalog`, `DecorSpawner`, `DecorInstance` |
-| **Manipulation** | Les règles quand on déplace / tourne / agrandit un objet | `DecorConstraints` |
+| **Manipulation** | Déplacer / tourner / agrandir un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `RightControllerRaySelector` |
 | **Persistence** | Sauvegarder / recharger une implantation (fichier JSON) | `LayoutManager`, `LayoutSerializer`, `LayoutData` |
-| **UI** | Les menus dans le casque | `DecorMenu` |
+| **UI** | Les menus dans le casque | `BauprobeMenuLogic` (menu général), `DecorMenu` |
 | **Tests** | Tests automatiques (Window > General > Test Runner) | `StageSpaceTests`, `LayoutSerializerTests` |
 
 ### Qui a le droit d'utiliser qui ?
@@ -56,6 +56,7 @@ Chaque module a un fichier `.asmdef` (*Assembly Definition*). C'est un fichier q
 * **Decor** utilise Core.
 * **Manipulation**, **Persistence** et **UI** utilisent Decor (et Core).
 * **Calibration** utilise Core et le kit Meta MRUK.
+* **Manipulation** utilise aussi `Oculus.VR` (manettes) ; **UI** utilise aussi MRUK (état du suivi QR).
 
 Si quelqu'un essaie par erreur d'utiliser l'UI depuis Decor, Unity affiche une erreur de compilation.
 C'est voulu : ça évite que tout le code finisse par dépendre de tout.
@@ -80,6 +81,37 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    **`DecorConstraints`** passe juste après pour garder l'objet au sol, droit, et dans des tailles raisonnables.
 6. **`LayoutManager.Save()`** écrit la liste des objets et leurs positions sur le plateau dans un fichier JSON
    sur le casque. **`LayoutManager.Load()`** la recharge.
+
+## Code venu de la branche `test/mr-quest3`
+
+Les scripts écrits sur la branche de test ont été intégrés :
+
+| Script | Rangé dans | Ce qu'il fait |
+|---|---|---|
+| `BauprobeMenuLogic` | `UI/` | Menu général : permission QR, suivi QR, Importer, Supprimer tout |
+| `InteractableObject` | `Manipulation/` | Les 5 actions sur un objet : supprimer, couleur, déplacer, scale, rotation (manette droite) |
+| `ObjectMenu` | `Manipulation/` | Le petit menu qui s'affiche au-dessus de l'objet sélectionné |
+| `RightControllerRaySelector` | `Manipulation/` | Le laser de la manette droite qui sélectionne un objet |
+
+`ObjectMenu` est dans `Manipulation` (et pas dans `UI`) parce qu'il appelle `InteractableObject` et
+inversement : deux scripts qui s'appellent l'un l'autre doivent être dans le même module.
+
+La scène de la branche de test (`menu général.unity`) est devenue `Scenes/MenuGeneral.unity`.
+
+### Doublons à trancher en équipe
+
+Ces scripts et les squelettes ajoutés pendant la restructuration font parfois la même chose.
+Il faudra choisir et n'en garder qu'un :
+
+* **Faire apparaître un objet** : `BauprobeMenuLogic.SpawnIndex` (liste `importItems`) **ou**
+  `DecorSpawner` + `DecorCatalog`. Conseil : garder le bouton « Importer » de `BauprobeMenuLogic`, mais
+  lui faire appeler `DecorSpawner` (le catalogue et la sauvegarde ont besoin que les objets passent par lui).
+* **Manipuler un objet** : modes manette de `InteractableObject` (joystick) **ou** saisie à la main de
+  l'Interaction SDK + `DecorConstraints`. Les deux peuvent cohabiter (manette pour la précision,
+  mains pour aller vite). Mais `InteractableObject` permet de pencher l'objet, alors que
+  `DecorConstraints` le garde droit : décidez de la règle.
+* **Suivi des QR codes** : `BauprobeMenuLogic` et `StageCalibrator` écoutent tous les deux MRUK.
+  C'est sans danger, mais à terme le menu pourrait simplement lire `StageCalibrator.IsQrLocated`.
 
 ## Ajouter un nouveau décor (sans code)
 

@@ -52,3 +52,6 @@ LightingData.asset binary
 *.otf   filter=lfs diff=lfs merge=lfs -text
 # Documents de référence (plans du théâtre...)
 *.pdf   filter=lfs diff=lfs merge=lfs -text
+
+# Exception : petite image d'interface (moins de 1 Ko), gardée hors de LFS.
+Assets/_Bauprobe/UI/Sprites/RoundedRect.png -filter -diff -merge binary

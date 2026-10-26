@@ -9,7 +9,7 @@ faire (dans l'ordre) en ouvrant le projet la première fois. Cochez au fur et à
 
 ### Le problème
 
-52 fichiers de réglages Unity ne contiennent pas leur vrai contenu, mais seulement 3 lignes comme celles-ci :
+41 fichiers de réglages Unity ne contiennent pas leur vrai contenu, mais seulement 3 lignes comme celles-ci :
 
 ```
 version https://git-lfs.github.com/spec/v1
@@ -19,6 +19,7 @@ size 25156
 
 C'est un « pointeur LFS » : une étiquette qui dit « le vrai fichier est stocké ailleurs ». Ça concerne
 **tout `ProjectSettings/`** et plusieurs fichiers de `Assets/` (réglages XR, URP, Meta, matériaux du QR code).
+(Il y en avait 56 : 4 ont été repris de l'exemple Meta, et 11 réparés grâce à la branche `test/mr-quest3`.)
 Avec ces fichiers, Unity n'a pas les bons réglages (XR, Android, rendu...) et le build sur le Quest ne marchera pas.
 
 Pour voir la liste exacte :
@@ -82,7 +83,21 @@ les réglages Android (plateforme Android, passthrough, scene support...).
 
 ## 3. Vérifier la scène principale
 
-Ouvrir `Assets/_Bauprobe/Scenes/Main.unity` (anciennement `QRCodeDetection.unity`).
+Il y a pour l'instant **deux scènes** :
+
+* `Assets/_Bauprobe/Scenes/Main.unity` (anciennement `QRCodeDetection.unity`, avec le cube de test) ;
+* `Assets/_Bauprobe/Scenes/MenuGeneral.unity` (anciennement `menu général.unity`, de la branche de test,
+  avec le menu Bauprobe).
+
+- [ ] Choisir la scène principale. Le plus simple : ouvrir `MenuGeneral.unity` (la plus avancée),
+      y copier le Cube de `Main.unity`, puis la renommer `Main.unity` et supprimer l'ancienne.
+- [ ] Le prefab Meta `ThirdParty/MetaQRCodeDetection/Prefabs/QRCodeSampleUI.prefab` a été modifié sur la
+      branche de test. À terme, sortir le menu Bauprobe dans un prefab à nous (`_Bauprobe/UI/Prefabs/`).
+- [ ] `Assets/UniversalRenderPipelineGlobalSettings 1.asset` est un doublon créé par Unity quand l'original
+      était cassé. Une fois l'étape 1 faite, vérifier lequel est utilisé
+      (*Project Settings > Graphics*) et supprimer l'autre.
+
+Dans la scène choisie :
 
 - [ ] L'objet **QRAnchor** a le composant **Stage Calibrator** (anciennement *QR Scene Coordinator*),
       avec *Qr Anchor* = QRAnchor et *Stage Root* = StageRoot.

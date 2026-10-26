@@ -3,7 +3,9 @@
     "rootNamespace": "Bauprobe.Manipulation",
     "references": [
         "Bauprobe.Core",
-        "Bauprobe.Decor"
+        "Bauprobe.Decor",
+        "Oculus.VR",
+        "UnityEngine.UI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -44,7 +44,7 @@ Notre solution immersive permet aux metteurs en scène et aux équipes technique
 /                         ← le projet Unity (à ouvrir avec Unity Hub)
 ├── Assets/
 │   ├── _Bauprobe/        ← TOUT NOTRE TRAVAIL EST ICI
-│   │   ├── Scenes/       Main.unity (la scène du casque) + Sandbox/ (une scène de test par personne)
+│   │   ├── Scenes/       Main.unity, MenuGeneral.unity + Sandbox/ (une scène de test par personne)
 │   │   ├── Core/         le repère du plateau (StageSpace)
 │   │   ├── Calibration/  QR code → position du plateau (StageCalibrator)
 │   │   ├── Decor/        catalogue des décors, apparition des objets
