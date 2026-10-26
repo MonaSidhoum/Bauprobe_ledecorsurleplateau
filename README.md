@@ -10,7 +10,7 @@
 
 Ce projet s'inscrit dans le cadre de l'unité d'enseignement MOVIE de **Mines Paris - PSL**, en collaboration directe avec le **Théâtre du Châtelet**.
 
-L'objectif est de concevoir un outil immersif en Réalité Augmentée (AR) pour améliorer la première version en réalité virtuelle de la **Bauprobe**.
+L'objectif est de concevoir un outil immersif en Réalité Mixte (MR) pour améliorer la première version en réalité virtuelle de la **Bauprobe**.
 
 ### Qu'est-ce qu'une Bauprobe ?
 Au théâtre, la Bauprobe est une étape cruciale qui a lieu plusieurs mois avant l'arrivée du décor final sur le plateau. Elle consiste à simuler l'encombrement spatial du futur décor (historiquement avec des marquages au sol ou des éléments de substitution) afin de :
