@@ -20,7 +20,19 @@ Au théâtre, la Bauprobe est une étape cruciale qui a lieu plusieurs mois avan
 
 Notre solution immersive permet aux metteurs en scène et aux équipes techniques de visualiser les maquettes 3D des décors directement à l'échelle sur le plateau.
 
-## Fonctionnalités
+## État actuel
+
+Testé sur Meta Quest 3 :
+
+* ✅ Calage du décor sur un **QR code** posé sur le plateau
+* ✅ **Importer** un décor depuis le menu (catalogue ; pour l'instant un cube de test)
+* ✅ Sélection au **laser** de la manette droite, puis **Déplacer / Scale / Rotation / Couleur / Supprimer**
+* ✅ Les objets restent toujours **droits**
+* ✅ **Supprimer tout**, **Sauvegarder** / **Charger** une implantation
+
+Ce qui reste à faire : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#3-reste-à-faire).
+
+## Fonctionnalités visées
 
 * **Visualisation 3D à l'échelle 1:1** : Import et affichage de maquettes 3D du décor sur la scène réelle du théâtre.
 * **Vérification des visibilités** : Simulation du point de vue depuis différentes places critiques de la salle (orchestre, balcons, corbeille).
@@ -43,9 +55,9 @@ Notre solution immersive permet aux metteurs en scène et aux équipes technique
 │   │   ├── Scenes/       MenuGeneral.unity (la scène du casque) + Sandbox/ (une scène de test par personne)
 │   │   ├── Core/         le repère du plateau (StageSpace)
 │   │   ├── Calibration/  QR code → position du plateau (StageCalibrator)
-│   │   ├── Decor/        catalogue des décors, apparition des objets
-│   │   ├── Manipulation/ règles quand on déplace / agrandit un objet
-│   │   ├── UI/           menus
+│   │   ├── Decor/        catalogue des décors (Catalog/), prefabs, apparition des objets
+│   │   ├── Manipulation/ laser, menu de l'objet, déplacer / agrandir / tourner (à la manette)
+│   │   ├── UI/           menu général (BauprobeMenu) ; prefabs des menus dans UI/Prefabs/
 │   │   ├── Persistence/  sauvegarde / chargement d'une implantation
 │   │   └── Tests/        tests automatiques
 │   ├── ThirdParty/       code repris d'ailleurs (ex. détection QR de Meta), on n'y touche pas
@@ -55,8 +67,10 @@ Notre solution immersive permet aux metteurs en scène et aux équipes technique
 └── Docs/                 documentation de l'équipe
 ```
 
-Pour comprendre comment le code est organisé : **[Docs/ARCHITECTURE.md](Docs/ARCHITECTURE.md)**.
-Pour savoir comment travailler à plusieurs avec Git : **[Docs/CONTRIBUER.md](Docs/CONTRIBUER.md)**.
+Documentation :
+* **[Docs/ARCHITECTURE.md](Docs/ARCHITECTURE.md)** : comment le code est organisé, ajouter un décor.
+* **[Docs/CONTRIBUER.md](Docs/CONTRIBUER.md)** : travailler à plusieurs avec Git.
+* **[Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md)** : ouvrir le projet sur un nouvel ordi, contenu de la scène, reste à faire.
 
 ##  Installation et Prérequis
 
@@ -74,13 +88,32 @@ git lfs pull
 
 ## Utilisation
 
-1. Ouvrez le projet avec Unity.
-2. Ouvrez la scène principale : `Assets/_Bauprobe/Scenes/MenuGeneral.unity`.
-3. Assurez-vous que votre casque Meta Quest est branché et configuré en mode développeur.
-4. Lancez le Build and Run (`File > Build Profiles`, plateforme Meta Quest / Android).
-5. Sur le plateau : posez le QR code au sol, regardez-le avec le casque, le décor se cale dessus.
-6. Menu « Importer » pour ajouter un décor ; laser de la manette droite + gâchette sur un objet pour le
-   déplacer, le tourner ou l'agrandir (il reste toujours droit).
+### Lancer l'appli
+
+1. Ouvrez la scène `Assets/_Bauprobe/Scenes/MenuGeneral.unity`.
+2. Branchez le casque (mode développeur activé) et lancez **Build And Run** (`File > Build Profiles`, plateforme Meta Quest / Android).
+3. Au premier lancement, acceptez la permission **« données spatiales »**.
+
+Le détail (premier lancement sur un nouvel ordinateur, installation sur le casque) est dans
+[Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md).
+
+### Dans le casque
+
+1. **Calage** : posez le QR code **à plat au sol** sur le plateau (au moins 15 cm de côté) et regardez-le.
+   Le menu affiche « QR détectés : 1 » ; le décor est alors calé sur le plateau.
+2. **Menu général** : il est attaché à la **main gauche**.
+   * *Importer* > choisir un décor : il apparaît posé au sol, 1,5 m devant vous.
+   * *Supprimer tout*, *Sauvegarder*, *Charger*.
+3. **Manipuler un objet** (manette droite) :
+
+| Action | Commande |
+|---|---|
+| Sélectionner un objet | viser avec le laser + **gâchette** → le menu de l'objet s'ouvre |
+| Déplacer | bouton *Déplacer*, puis bouger la manette ; joystick haut / bas = éloigner / rapprocher |
+| Agrandir / rétrécir | bouton *Scale*, puis joystick haut / bas |
+| Tourner | bouton *Rotation*, puis joystick gauche / droite (l'objet reste droit) |
+| Valider / Annuler | **gâchette** / bouton **B** |
+| Couleur, Supprimer | boutons du menu de l'objet ; ✕ pour fermer le menu |
 
 ## L'équipe
 
@@ -97,7 +130,7 @@ Ce projet est réalisé par des élèves de Mines Paris - PSL :
 
 ##  Crédits et Assets tiers
 
-* **Détection de QR Code** : le dossier `Assets/ThirdParty/MetaQRCodeDetection` provient du dépôt officiel [Unity-MRUtilityKitSample](https://github.com/oculus-samples/Unity-MRUtilityKitSample) fourni par Oculus/Meta. Il n'est pas modifié : notre code (`StageCalibrator`) écoute directement MRUK.
+* **Détection de QR Code** : le dossier `Assets/ThirdParty/MetaQRCodeDetection` provient du dépôt officiel [Unity-MRUtilityKitSample](https://github.com/oculus-samples/Unity-MRUtilityKitSample) fourni par Oculus/Meta. Ses scripts ne sont pas modifiés : notre code (`StageCalibrator`) écoute directement MRUK. Son prefab `QRCodeSampleUI` sert de support au menu général `BauprobeMenu`.
 
 ##  Licence
 
