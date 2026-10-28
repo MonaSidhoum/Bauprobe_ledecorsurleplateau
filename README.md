@@ -35,7 +35,7 @@ Testé sur Meta Quest 3 :
 * ✅ Calage du décor sur un **QR code** posé sur le plateau
 * ✅ **Importer** un décor depuis le menu (catalogue ; pour l'instant un cube de test)
 * ✅ Sélection au **laser** de la manette droite, puis **Déplacer / Scale / Rotation / Couleur / Supprimer**
-* ✅ Les objets se tournent et se **basculent** sans s'enfoncer dans le sol, et ne passent jamais sous le plateau
+* ✅ Les objets se déplacent dans toutes les directions, se tournent et se **basculent** sans s'enfoncer dans le sol
 * ✅ **Supprimer tout**, **Sauvegarder** / **Charger** une implantation
 
 Ce qui reste à faire : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#3-cahier-des-charges--suivi) (suivi du cahier des charges, puis corrections techniques).

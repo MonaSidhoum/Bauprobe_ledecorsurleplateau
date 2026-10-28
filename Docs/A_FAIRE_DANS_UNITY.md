@@ -160,8 +160,9 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 - [x] **Scale** : l'objet grandit désormais autour de son **point d'origine** (section 3.2) : un élément au sol
       reste posé sur le plateau, un élément au cintre reste accroché par le haut.
 - [x] **Déplacer** : le joystick déplace l'objet dans toutes les directions (avant / arrière / gauche / droite par
-      rapport au regard ; grip maintenu = monter / descendre), en plus de suivre la manette. L'objet ne passe
-      plus jamais sous la scène. Il peut encore être soulevé : pour un décor qui doit glisser au sol uniquement,
+      rapport au regard ; grip maintenu = monter / descendre), en plus de suivre la manette, sans limite de hauteur.
+      Pour empêcher de passer sous la scène, cocher *Prevent Below Stage* sur `InteractableObject` (seulement si
+      le QR code est au sol, car le plateau est à sa hauteur). Pour un décor qui doit glisser au sol uniquement,
       cocher *Keep On Floor* sur son `DecorConstraints`.
 - [x] **Rotation** : joystick gauche / droite = tourner sur lui-même ; haut / bas = basculer vers l'avant / l'arrière
       (avant, seule la rotation autour de la verticale était possible). L'objet tourne autour de son centre sans

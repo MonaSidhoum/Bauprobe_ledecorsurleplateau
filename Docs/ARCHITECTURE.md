@@ -83,7 +83,9 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    * pendant Déplacer / Scale / Rotation (`InteractableObject`) : joystick = ajuster, gâchette = valider, B = annuler.
 
    **Déplacer** : l'objet suit la manette, et le joystick le déplace dans toutes les directions
-   (grip maintenu = monter / descendre). Il ne passe jamais sous le plateau.
+   (grip maintenu = monter / descendre, sans limite). L'option *Prevent Below Stage* de `InteractableObject`
+   empêche de le descendre sous le plateau, mais le plateau est à la hauteur du QR code : à ne cocher que
+   si le QR code est posé au sol.
    **Rotation** : joystick gauche / droite = tourner sur lui-même, haut / bas = basculer. La rotation se fait
    autour du centre de l'objet, et son point le plus bas (sol) ou le plus haut (cintre) reste à la même hauteur.
    Pour interdire la bascule sur un décor, cocher *Keep Upright* sur son `DecorConstraints`
