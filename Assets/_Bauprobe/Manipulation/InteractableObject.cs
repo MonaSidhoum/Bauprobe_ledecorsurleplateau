@@ -160,8 +160,15 @@ namespace Bauprobe.Manipulation
                         Vector3 newScale = transform.localScale * (target / current);
 
                         if (!_decor) _decor = GetComponent<DecorInstance>(); // ajouté après Awake par le spawner
-                        if (_decor) _decor.SetScaleAroundOrigin(newScale);
-                        else transform.localScale = newScale;
+                        if (_decor)
+                        {
+                            // Cahier des charges : l'objet ne dépasse jamais 18 m sur sa plus grande dimension.
+                            _decor.SetScaleAroundOrigin(_decor.ClampScaleToMaxSize(newScale));
+                        }
+                        else
+                        {
+                            transform.localScale = newScale;
+                        }
                     }
                     break;
 

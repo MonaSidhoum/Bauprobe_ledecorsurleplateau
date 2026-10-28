@@ -64,11 +64,12 @@ namespace Bauprobe.Decor
         /// </summary>
         public static Vector3 ComputeLocalOrigin(Transform root, DecorAttachment attachment)
         {
-            if (!TryGetLocalBounds(root, out var b))
-            {
-                return Vector3.zero;
-            }
+            return TryGetLocalBounds(root, out var b) ? OriginFromBounds(b, attachment) : Vector3.zero;
+        }
 
+        /// <summary>Point d'origine d'une boîte englobante : centre en X et Z ; en Y, le bas (sol) ou le haut (cintre).</summary>
+        public static Vector3 OriginFromBounds(Bounds b, DecorAttachment attachment)
+        {
             var y = attachment == DecorAttachment.Cintre ? b.max.y : b.min.y;
             return new Vector3(b.center.x, y, b.center.z);
         }
