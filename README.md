@@ -79,8 +79,8 @@ Documentation :
 3. Cloner le projet :
 
 ```bash
-git clone https://git.sophia.minesparis.psl.eu/projets-movie-2026/bauprobe-le-decor-sur-le-plateau
-cd bauprobe-le-decor-sur-le-plateau
+git clone https://github.com/MonaSidhoum/Bauprobe_ledecorsurleplateau
+cd Bauprobe_ledecorsurleplateau
 git lfs pull
 ```
 
