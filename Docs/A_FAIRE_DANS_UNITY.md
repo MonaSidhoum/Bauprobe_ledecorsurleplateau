@@ -6,7 +6,8 @@ déplacement / agrandissement / rotation à la manette, objets toujours droits, 
 Ce document contient :
 1. ce qu'il faut faire pour ouvrir le projet sur **un nouvel ordinateur** ;
 2. l'**état actuel** de la scène (pour s'y retrouver) ;
-3. la liste de ce qui **reste à faire**.
+3. le **suivi du cahier des charges** (version 1, 9 octobre 2026) : ce qui est fait, ce qui manque ;
+4. les **corrections techniques** qui restent à faire.
 
 ---
 
@@ -68,12 +69,93 @@ ouvrez son prefab (`_Bauprobe/UI/Prefabs/`) plutôt que la scène.
 
 ---
 
-## 3. Reste à faire
+## 3. Cahier des charges : suivi
+
+Le résumé du cahier des charges est dans le [README](../README.md#cahier-des-charges). Ici, chaque point est
+traduit en tâches pour notre volet, **Le décor sur le plateau**.
+
+Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
+
+### 3.1 Le parcours de l'utilisateur
+
+| # | Étape du cahier des charges | État | Ce qui existe / ce qui manque |
+|---|---|---|---|
+| 1 | Importer le décor du bureau d'études et le tableau de positionnement | 🟡 | *Importer* fait apparaître un décor du catalogue, mais seul un **cube de test** existe. Pas encore de vrais modèles, ni de lecture du tableau. |
+| 2 | Afficher en AR la scène 1, puis les suivantes | ⬜ | Le calage sur le QR code marche, mais il n'y a qu'**une seule implantation** à la fois : pas de notion de « scène 1, 2, 3… ». |
+| 3 | Modifier placement et transformation, puis enregistrer dans la scène | 🟡 | Déplacer / Scale / Rotation et *Sauvegarder* marchent, mais toujours dans le même fichier (`implantation`). |
+| 4 | Exporter le tableau modifié et les nouveaux modèles | ⬜ | La sauvegarde est un fichier JSON sur le casque, qu'on ne peut pas ouvrir dans Excel. |
+
+**Tâches :**
+
+- [ ] **Format du tableau de positionnement** : le définir **avec le volet « Voir la même chose »** (format commun
+      obligatoire). Une ligne par élément, par exemple : scène, identifiant du modèle, position X / Y / Z (en m,
+      dans le repère du QR code), rotation, échelle, au sol ou au cintre.
+      Piste : un **CSV**, qu'Excel ouvre et enregistre, est bien plus simple à lire dans Unity qu'un `.xlsx`.
+- [ ] **Importer le tableau** : lire le fichier et créer les éléments à leur place, scène par scène
+      (réutiliser `LayoutSerializer` / `LayoutData`, à compléter avec le numéro de scène).
+- [ ] **Importer les modèles du bureau d'études** : choisir le format d'échange (FBX, glTF, OBJ…), les placer
+      dans `Decor/Models/` et les ajouter au catalogue, avec un bouton par décor dans la liste « Importer ».
+- [ ] **Gérer plusieurs scènes** : ajouter au menu général un choix « Scène précédente / Scène suivante » qui
+      affiche l'implantation de la scène choisie (remplace l'actuel nom unique `implantation`).
+- [ ] **Enregistrer dans la scène** : *Sauvegarder* écrit dans la scène affichée.
+- [ ] **Exporter** le tableau modifié dans le même format que l'import, et le récupérer sur un ordinateur
+      (câble USB / MQDH, ou partage réseau à étudier).
+- [ ] **Exporter les nouveaux modèles** : préciser avec les commanditaires ce qu'on appelle un « nouveau modèle »
+      (un modèle redimensionné ? un modèle créé dans l'appli ?).
+
+### 3.2 Règles sur le décor
+
+- [ ] **Point d'origine** : pour un élément au sol, le point le plus bas au centre de l'objet ; pour un élément
+      au cintre, le point le plus haut. À appliquer à l'import des modèles (pivot corrigé une fois pour toutes,
+      ou calculé à partir des *bounds* du modèle). Ajouter un réglage « sol / cintre » dans `DecorItemDefinition`.
+      Ça règle aussi le problème du **Scale** qui enfonce l'objet dans le sol (section 4).
+- [ ] **Réduire l'échelle de tout le décor** si l'espace manque : un réglage d'échelle globale sur `StageRoot`
+      (par exemple 1:1, 1:2, 1:5) dans le menu général. La sauvegarde doit rester en mètres réels.
+- [ ] **Bibliothèque standard** : modéliser et ajouter au catalogue des praticables, une draperie simple, des
+      pendrillons et des frises, en tailles standard. Demander les dimensions standard au théâtre.
+- [ ] **Premier jeu de modèles** : récupérer auprès de Thomas les modèles de *La Cage aux Folles*.
+- [ ] **Vue de dessus** : prévue en V6, pas pour l'instant.
+
+### 3.3 Contraintes
+
+- [ ] **Aucun élément de plus de 18 m** : aujourd'hui les limites sont des facteurs d'échelle, pas des tailles en
+      mètres. Empêcher le *Scale* de dépasser 18 m sur la plus grande dimension de l'objet.
+- [ ] **Formats communs** avec « Voir la même chose » (décor et tableau) : fixer les formats avec l'autre équipe
+      **avant** de coder l'import et l'export.
+- [ ] **Exécutable déployable partout, en kit transportable** : documenter le kit (casque(s), câble, chargeur,
+      QR code imprimé et sa taille, ordinateur pour l'import / export) et l'installation de l'`.apk` sans Unity.
+- [ ] Le Quest se met en pause quand on enlève le casque (quelques secondes de noir au retour). Pour les répétitions,
+      désactiver le capteur de proximité (Meta Quest Developer Hub > *Device Manager*) et l'ajouter au mode d'emploi du kit.
+
+### 3.4 Livrables
+
+| Livrable | État |
+|---|---|
+| Tableau de positionnement par scène (Excel en première approche) | ⬜ format à définir (section 3.1) |
+| Tableau modifié et nouveaux modèles 3D | ⬜ dépend de l'export (section 3.1) |
+| Code source | 🟡 ce dépôt ; à finaliser |
+| Documentation utilisateur | 🟡 le README explique l'utilisation dans le casque ; à compléter par un **mode d'emploi pour le technicien** (sans Unity) |
+
+### 3.5 Tests prévus
+
+- [ ] Une scène de *La Cage aux Folles* sur le plateau.
+- [ ] Un décor sans lien avec ce spectacle (pour vérifier que l'import marche avec d'autres modèles).
+- [ ] Test commun avec le volet « Voir la même chose » : date à fixer.
+
+### 3.6 Hors cahier des charges (à confirmer)
+
+- [ ] **Points de vue depuis la salle** (orchestre, balcons…) : prévu au départ du projet, absent du cahier des
+      charges. Demander aux commanditaires si c'est encore souhaité.
+
+---
+
+## 4. Reste à faire (technique)
 
 ### Manipulation (gênant sur le plateau)
 
 - [ ] **Scale** : l'objet grandit à partir de son centre, donc il s'enfonce dans le sol quand on l'agrandit
       (et flotte quand on le rétrécit). Il faudrait le reposer au sol après chaque changement de taille.
+      Se règle en même temps que le **point d'origine** du cahier des charges (section 3.2).
 - [ ] **Déplacer** : l'objet suit la manette dans les 3 dimensions et peut flotter ou passer sous la scène.
       Décider : le faire glisser sur le plateau uniquement, ou garder la possibilité de le soulever.
 - [ ] **Menu objet** : il s'affiche au-dessus de l'objet. Pour un grand décor (mur de 4 m), il est hors de portée.
@@ -84,20 +166,16 @@ ouvrez son prefab (`_Bauprobe/UI/Prefabs/`) plutôt que la scène.
 ### Nettoyage du code
 
 - [ ] Deux limites de taille en double : `InteractableObject` (0,02 à 5) et le catalogue (0,1 à 10, via
-      `DecorConstraints`). Ensemble, elles donnent 0,1 à 5. Ne garder que celles du catalogue (réglables par décor).
+      `DecorConstraints`). Ensemble, elles donnent 0,1 à 5. Ne garder que celles du catalogue (réglables par décor),
+      et y ajouter la limite de **18 m** du cahier des charges (section 3.3).
 - [ ] `ObjectMenu` plante si l'un de ses 6 boutons n'est pas renseigné : le rendre tolérant.
 - [ ] `BauprobeMenuLogic` et `StageCalibrator` écoutent tous les deux MRUK : le menu pourrait lire
       `StageCalibrator.IsQrLocated`.
 - [ ] `BauprobeMenu` est rangé dans le prefab Meta `QRCodeSampleUI` (dossier `ThirdParty`). À terme, lui donner
       son propre Canvas pour ne plus dépendre de l'exemple Meta.
 
-### Fonctionnalités
+### Petites fonctionnalités
 
 - [ ] **Couleur** non sauvegardée : la sauvegarde garde la position, la rotation et la taille, pas la couleur.
-- [ ] **Vrais décors** : importer les modèles 3D du bureau d'études (`Decor/Models/`) et les ajouter au catalogue,
-      avec un bouton par décor dans la liste « Importer ».
 - [ ] **QR code du plateau** : choisir le texte du QR code officiel et le mettre dans *Expected Payload*
       (Stage Calibrator), pour ignorer les autres QR codes présents dans la salle.
-- [ ] **Plusieurs implantations** : aujourd'hui, Sauvegarder / Charger utilisent toujours le même nom
-      (`implantation`). Permettre d'en garder plusieurs.
-- [ ] **Points de vue depuis la salle** (orchestre, balcons...) : prévu dans le README, pas encore commencé.

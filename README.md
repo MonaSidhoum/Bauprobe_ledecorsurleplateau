@@ -10,15 +10,23 @@
 
 Ce projet s'inscrit dans le cadre de l'unité d'enseignement MOVIE de **Mines Paris - PSL**, en collaboration directe avec le **Théâtre du Châtelet**.
 
-L'objectif est de concevoir un outil immersif en Réalité Mixte (MR) pour améliorer la première version en réalité virtuelle de la **Bauprobe**.
+**Bauprobe Immersive II** est une application de réalité augmentée développée sous Unity. Elle permet de **visualiser un décor de spectacle à l'échelle 1 sur la scène réelle, avant sa construction**. Elle fait suite à l'application **Bauprobe Immersive I** (en réalité virtuelle), dont elle reprend la méthodologie et l'interface de connexion Unity.
 
 ### Qu'est-ce qu'une Bauprobe ?
 Au théâtre, la Bauprobe est une étape cruciale qui a lieu plusieurs mois avant l'arrivée du décor final sur le plateau. Elle consiste à simuler l'encombrement spatial du futur décor (historiquement avec des marquages au sol ou des éléments de substitution) afin de :
 * Anticiper le jeu des acteurs et l'espace scénique.
 * Valider les lignes de visibilité depuis la salle (qui compte environ 2000 places avec une configuration complexe à l'italienne).
 
-
 Notre solution immersive permet aux metteurs en scène et aux équipes techniques de visualiser les maquettes 3D des décors directement à l'échelle sur le plateau.
+
+### Les deux volets du projet
+
+D'après le [cahier des charges](#cahier-des-charges) (version 1, 9 octobre 2026), le projet comporte deux volets :
+
+| Volet | Principe | Ce dépôt |
+|---|---|---|
+| **Le décor sur le plateau** | Un technicien, seul, place et ajuste le décor, scène par scène. | ✅ **C'est ce dépôt.** |
+| **Voir la même chose** | Un groupe de 5 personnes, connecté en réseau, voit le même décor ensemble, sur place ou à distance. | Développé à part. Les formats de décor et de tableau doivent rester **communs** aux deux volets. |
 
 ## État actuel
 
@@ -30,14 +38,51 @@ Testé sur Meta Quest 3 :
 * ✅ Les objets restent toujours **droits**
 * ✅ **Supprimer tout**, **Sauvegarder** / **Charger** une implantation
 
-Ce qui reste à faire : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#3-reste-à-faire).
+Ce qui reste à faire : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#3-cahier-des-charges--suivi) (suivi du cahier des charges, puis corrections techniques).
 
-## Fonctionnalités visées
+## Cahier des charges
 
-* **Visualisation 3D à l'échelle 1:1** : Import et affichage de maquettes 3D du décor sur la scène réelle du théâtre.
-* **Vérification des visibilités** : Simulation du point de vue depuis différentes places critiques de la salle (orchestre, balcons, corbeille).
-* **Manipulation en temps réel** : Possibilité de déplacer, ajuster ou masquer des éléments du décor virtuel.
-* **Compatibilité avec le workflow existant** : Interfaçage avec les formats d'export des outils actuellement utilisés par le bureau d'études (AutoCAD, SketchUp, Unreal Engine).
+Résumé du cahier des charges *Bauprobe Immersive II × MOVIE* (version 1, 9 octobre 2026) pour notre volet. Le suivi détaillé, point par point, est dans [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#3-cahier-des-charges--suivi).
+
+### Le parcours de l'utilisateur
+
+Un utilisateur unique (le technicien) travaille ainsi :
+
+1. **Importer** le décor du bureau d'études et le **tableau de positionnement**.
+2. **Afficher en AR la scène 1**, puis les suivantes.
+3. **Modifier le placement et la transformation** (taille, échelle) des éléments, puis **enregistrer** dans la scène.
+4. **Exporter** le tableau modifié et les nouveaux modèles.
+
+### Règles sur le décor
+
+* **Point d'origine des éléments** : pour un élément posé **au sol**, le point le plus bas, au centre de l'objet ; pour un élément **au cintre**, le point le plus haut.
+* **Échelle du décor réductible** si l'espace manque (pour répéter dans un lieu plus petit que la scène).
+* **Bibliothèque standard** en plus des décors du bureau d'études : praticables, draperie simple, pendrillons et frises, en tailles standard.
+* **Premier jeu de modèles** : le décor de *La Cage aux Folles* (détenu par Thomas).
+* **Vue de dessus** : prévue en V6.
+
+### Contraintes
+
+* Aucun élément de plus de **18 m**.
+* **Exécutable déployable partout**, sous forme de **kit transportable** jusqu'à la scène musicale.
+* **Formats de décor et de tableau communs** avec le volet « Voir la même chose ».
+
+### Livrables
+
+* **Tableau de positionnement par scène** (Excel en première approche).
+* **Tableau modifié** et **nouveaux modèles 3D**.
+* **Code source** et **documentation utilisateur**.
+
+### Tests prévus
+
+1. Une scène de *La Cage aux Folles*.
+2. Puis un décor sans lien avec ce spectacle.
+3. Un test commun avec le volet « Voir la même chose » (date à fixer).
+
+### Pistes hors cahier des charges
+
+* **Points de vue depuis la salle** (orchestre, balcons, corbeille) pour vérifier les visibilités : idée de départ du projet, absente du cahier des charges. À confirmer avec les commanditaires.
+* **Compatibilité avec les outils du bureau d'études** (AutoCAD, SketchUp, Unreal Engine) : à préciser selon le format retenu pour l'import des modèles.
 
 ##  Technologies utilisées
 
@@ -70,7 +115,7 @@ Ce qui reste à faire : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#
 Documentation :
 * **[Docs/ARCHITECTURE.md](Docs/ARCHITECTURE.md)** : comment le code est organisé, ajouter un décor.
 * **[Docs/CONTRIBUER.md](Docs/CONTRIBUER.md)** : travailler à plusieurs avec Git.
-* **[Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md)** : ouvrir le projet sur un nouvel ordi, contenu de la scène, reste à faire.
+* **[Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md)** : ouvrir le projet sur un nouvel ordi, contenu de la scène, suivi du cahier des charges et reste à faire.
 
 ##  Installation et Prérequis
 
