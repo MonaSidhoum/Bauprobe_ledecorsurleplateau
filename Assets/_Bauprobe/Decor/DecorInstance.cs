@@ -19,6 +19,7 @@ namespace Bauprobe.Decor
         public event Action<DecorInstance> Destroyed;
 
         private Vector3 _originLocal;
+        private Vector3 _localSize;
         private bool _originComputed;
 
         public void Initialize(DecorItemDefinition definition)
@@ -43,10 +44,44 @@ namespace Bauprobe.Decor
             }
         }
 
+        /// <summary>
+        /// Taille de l'objet à l'échelle 1 (sans son échelle), en mètres, calculée à partir de ses modèles 3D.
+        /// Sa taille réelle sur le plateau est cette taille multipliée par son échelle.
+        /// </summary>
+        public Vector3 LocalSize
+        {
+            get
+            {
+                if (!_originComputed)
+                {
+                    RecomputeOrigin();
+                }
+                return _localSize;
+            }
+        }
+
+        /// <summary>Taille réelle de l'objet sur le plateau, en mètres.</summary>
+        public Vector3 StageSize => Vector3.Scale(LocalSize, transform.localScale);
+
+        /// <summary>
+        /// Réduit l'échelle demandée si l'objet dépasserait 18 m sur sa plus grande dimension
+        /// (cahier des charges). Les proportions sont gardées.
+        /// </summary>
+        public Vector3 ClampScaleToMaxSize(Vector3 localScale) => DecorLimits.ClampScaleToMaxSize(LocalSize, localScale);
+
         /// <summary>À rappeler si les modèles 3D de l'objet changent.</summary>
         public void RecomputeOrigin()
         {
-            _originLocal = DecorOrigin.ComputeLocalOrigin(transform, Attachment);
+            if (DecorOrigin.TryGetLocalBounds(transform, out var bounds))
+            {
+                _originLocal = DecorOrigin.OriginFromBounds(bounds, Attachment);
+                _localSize = bounds.size;
+            }
+            else
+            {
+                _originLocal = Vector3.zero;
+                _localSize = Vector3.zero;
+            }
             _originComputed = true;
         }
 

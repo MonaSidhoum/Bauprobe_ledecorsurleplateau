@@ -8,7 +8,8 @@ namespace Bauprobe.Manipulation
     ///
     /// La saisie (attraper, déplacer, tourner, agrandir à deux mains) est faite par
     /// l'Interaction SDK de Meta (composant Grabbable). Ce script passe juste après
-    /// pour garder l'objet posé au sol, droit, et dans des tailles raisonnables.
+    /// pour garder l'objet posé au sol, droit, et dans des tailles raisonnables
+    /// (jamais plus de 18 m sur sa plus grande dimension, comme le demande le cahier des charges).
     ///
     /// "Posé au sol" utilise le point d'origine de l'objet (le bas de ses modèles 3D) :
     /// le pivot du modèle peut donc être n'importe où.
@@ -98,6 +99,12 @@ namespace Bauprobe.Manipulation
                     Mathf.Clamp(s.x, min, max),
                     Mathf.Clamp(s.y, min, max),
                     Mathf.Clamp(s.z, min, max));
+            }
+
+            // La limite de 18 m passe avant les limites de la fiche.
+            if (_instance != null)
+            {
+                clamped = _instance.ClampScaleToMaxSize(clamped);
             }
 
             if (clamped == s)

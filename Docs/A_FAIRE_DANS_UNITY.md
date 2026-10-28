@@ -121,8 +121,9 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 
 ### 3.3 Contraintes
 
-- [ ] **Aucun élément de plus de 18 m** : aujourd'hui les limites sont des facteurs d'échelle, pas des tailles en
-      mètres. Empêcher le *Scale* de dépasser 18 m sur la plus grande dimension de l'objet.
+- [x] **Aucun élément de plus de 18 m** : la taille réelle de l'objet (calculée à partir de ses modèles 3D) ne peut
+      pas dépasser 18 m sur sa plus grande dimension (`DecorLimits`). Le *Scale* s'arrête à 18 m, et un modèle
+      importé plus grand est réduit à 18 m (avec un avertissement dans la Console).
 - [ ] **Formats communs** avec « Voir la même chose » (décor et tableau) : fixer les formats avec l'autre équipe
       **avant** de coder l'import et l'export.
 - [ ] **Exécutable déployable partout, en kit transportable** : documenter le kit (casque(s), câble, chargeur,
@@ -168,8 +169,8 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 ### Nettoyage du code
 
 - [ ] Deux limites de taille en double : `InteractableObject` (0,02 à 5) et le catalogue (0,1 à 10, via
-      `DecorConstraints`). Ensemble, elles donnent 0,1 à 5. Ne garder que celles du catalogue (réglables par décor),
-      et y ajouter la limite de **18 m** du cahier des charges (section 3.3).
+      `DecorConstraints`). Ensemble, elles donnent 0,1 à 5. Ne garder que celles du catalogue (réglables par décor).
+      La limite de **18 m** du cahier des charges est déjà appliquée en plus (section 3.3).
 - [ ] `ObjectMenu` plante si l'un de ses 6 boutons n'est pas renseigné : le rendre tolérant.
 - [ ] `BauprobeMenuLogic` et `StageCalibrator` écoutent tous les deux MRUK : le menu pourrait lire
       `StageCalibrator.IsQrLocated`.

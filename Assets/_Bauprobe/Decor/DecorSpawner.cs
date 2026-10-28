@@ -76,7 +76,17 @@ namespace Bauprobe.Decor
             {
                 instance = go.AddComponent<DecorInstance>();
             }
-            instance.Initialize(definition); // calcule le point d'origine à partir des modèles 3D
+            instance.Initialize(definition); // calcule le point d'origine et la taille à partir des modèles 3D
+
+            // Cahier des charges : aucun élément de plus de 18 m.
+            var allowedScale = instance.ClampScaleToMaxSize(localScale);
+            if (allowedScale != localScale)
+            {
+                go.transform.localScale = allowedScale;
+                Debug.LogWarning($"« {definition.DisplayName} » dépassait {DecorLimits.MaxSizeMeters} m : " +
+                                 "il a été réduit à cette taille maximale.", go);
+            }
+
             instance.SetOriginStagePosition(originPosition);
             instance.Destroyed += OnInstanceDestroyed;
 
