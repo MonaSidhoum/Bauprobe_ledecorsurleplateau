@@ -9,11 +9,14 @@ namespace Bauprobe.Manipulation
     /// La saisie (attraper, déplacer, tourner, agrandir à deux mains) est faite par
     /// l'Interaction SDK de Meta (composant Grabbable). Ce script passe juste après
     /// pour garder l'objet posé au sol, droit, et dans des tailles raisonnables.
+    ///
+    /// "Posé au sol" utilise le point d'origine de l'objet (le bas de ses modèles 3D) :
+    /// le pivot du modèle peut donc être n'importe où.
     /// À mettre sur le prefab de chaque décor, à côté du Grabbable.
     /// </summary>
     public class DecorConstraints : MonoBehaviour
     {
-        [Tooltip("Garde l'objet posé sur le plateau (le pivot du modèle doit être en bas).")]
+        [Tooltip("Garde le bas de l'objet sur le plateau (sans effet sur un élément au cintre).")]
         [SerializeField] private bool keepOnFloor = true;
 
         [Tooltip("Empêche de pencher l'objet : il ne peut tourner que sur lui-même.")]
@@ -34,10 +37,10 @@ namespace Bauprobe.Manipulation
             // Les positions sont locales : on raisonne dans le repère du plateau (le parent).
             var t = transform;
 
-            if (keepOnFloor)
+            // DecorInstance est ajouté au moment de l'apparition, après Awake.
+            if (_instance == null)
             {
-                var p = t.localPosition;
-                t.localPosition = new Vector3(p.x, 0f, p.z);
+                _instance = GetComponent<DecorInstance>();
             }
 
             if (keepUpright)
@@ -45,32 +48,71 @@ namespace Bauprobe.Manipulation
                 t.localRotation = Quaternion.Euler(0f, t.localEulerAngles.y, 0f);
             }
 
+            // La taille est corrigée avant de reposer l'objet au sol, sinon il s'enfoncerait
+            // (ou flotterait) d'une frame à chaque correction.
             ClampScale(t);
+
+            if (keepOnFloor)
+            {
+                KeepOnFloor(t);
+            }
+        }
+
+        private void KeepOnFloor(Transform t)
+        {
+            if (_instance == null)
+            {
+                // Pas de point d'origine connu : on se rabat sur le pivot.
+                var p = t.localPosition;
+                t.localPosition = new Vector3(p.x, 0f, p.z);
+                return;
+            }
+
+            if (_instance.Attachment != DecorAttachment.Sol)
+            {
+                return;
+            }
+
+            var origin = _instance.OriginStagePosition;
+            if (!Mathf.Approximately(origin.y, 0f))
+            {
+                _instance.SetOriginStagePosition(new Vector3(origin.x, 0f, origin.z));
+            }
         }
 
         private void ClampScale(Transform t)
         {
-            // DecorInstance est ajouté au moment de l'apparition, après Awake.
-            if (_instance == null)
-            {
-                _instance = GetComponent<DecorInstance>();
-            }
-
             var min = _instance != null && _instance.Definition != null ? _instance.Definition.MinScale : 0.01f;
             var max = _instance != null && _instance.Definition != null ? _instance.Definition.MaxScale : 100f;
 
             var s = t.localScale;
+            Vector3 clamped;
             if (uniformScale)
             {
                 var uniform = Mathf.Clamp(s.x, min, max);
-                t.localScale = new Vector3(uniform, uniform, uniform);
+                clamped = new Vector3(uniform, uniform, uniform);
             }
             else
             {
-                t.localScale = new Vector3(
+                clamped = new Vector3(
                     Mathf.Clamp(s.x, min, max),
                     Mathf.Clamp(s.y, min, max),
                     Mathf.Clamp(s.z, min, max));
+            }
+
+            if (clamped == s)
+            {
+                return;
+            }
+
+            // Corriger la taille sans déplacer le point d'origine (le bas reste au sol, le haut reste au cintre).
+            if (_instance != null)
+            {
+                _instance.SetScaleAroundOrigin(clamped);
+            }
+            else
+            {
+                t.localScale = clamped;
             }
         }
     }

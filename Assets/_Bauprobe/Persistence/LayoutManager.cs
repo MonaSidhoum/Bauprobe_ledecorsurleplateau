@@ -51,7 +51,13 @@ namespace Bauprobe.Persistence
                     continue;
                 }
 
-                spawner.Spawn(definition, entry.position, entry.rotation, entry.scale);
+                var instance = spawner.Spawn(definition, entry.position, entry.rotation, entry.scale);
+
+                // Anciennes sauvegardes (version 1) : la position était celle du pivot.
+                if (instance != null && data.version < 2)
+                {
+                    instance.transform.localPosition = entry.position;
+                }
             }
 
             Debug.Log($"Implantation '{layoutName}' chargée ({data.items.Count} objets).");

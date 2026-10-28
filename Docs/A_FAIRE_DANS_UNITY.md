@@ -105,10 +105,13 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 
 ### 3.2 Règles sur le décor
 
-- [ ] **Point d'origine** : pour un élément au sol, le point le plus bas au centre de l'objet ; pour un élément
-      au cintre, le point le plus haut. À appliquer à l'import des modèles (pivot corrigé une fois pour toutes,
-      ou calculé à partir des *bounds* du modèle). Ajouter un réglage « sol / cintre » dans `DecorItemDefinition`.
-      Ça règle aussi le problème du **Scale** qui enfonce l'objet dans le sol (section 4).
+- [x] **Point d'origine** : pour un élément au sol, le point le plus bas au centre de l'objet ; pour un élément
+      au cintre, le point le plus haut. Calculé automatiquement à partir des modèles 3D (`DecorOrigin`), donc le
+      pivot des modèles peut être n'importe où. Réglage **Sol / Cintre** (et hauteur d'accroche pour le cintre)
+      dans chaque fiche `DecorItemDefinition`. La sauvegarde enregistre désormais la position du point d'origine
+      (format version 2 ; les anciennes sauvegardes se rechargent toujours).
+      Ça règle aussi le problème du **Scale** qui enfonçait l'objet dans le sol (section 4).
+      Reste à vérifier dans le casque, et à décider s'il faut empêcher un élément au cintre de descendre sous le plateau.
 - [ ] **Réduire l'échelle de tout le décor** si l'espace manque : un réglage d'échelle globale sur `StageRoot`
       (par exemple 1:1, 1:2, 1:5) dans le menu général. La sauvegarde doit rester en mètres réels.
 - [ ] **Bibliothèque standard** : modéliser et ajouter au catalogue des praticables, une draperie simple, des
@@ -153,9 +156,8 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 
 ### Manipulation (gênant sur le plateau)
 
-- [ ] **Scale** : l'objet grandit à partir de son centre, donc il s'enfonce dans le sol quand on l'agrandit
-      (et flotte quand on le rétrécit). Il faudrait le reposer au sol après chaque changement de taille.
-      Se règle en même temps que le **point d'origine** du cahier des charges (section 3.2).
+- [x] **Scale** : l'objet grandit désormais autour de son **point d'origine** (section 3.2) : un élément au sol
+      reste posé sur le plateau, un élément au cintre reste accroché par le haut.
 - [ ] **Déplacer** : l'objet suit la manette dans les 3 dimensions et peut flotter ou passer sous la scène.
       Décider : le faire glisser sur le plateau uniquement, ou garder la possibilité de le soulever.
 - [ ] **Menu objet** : il s'affiche au-dessus de l'objet. Pour un grand décor (mur de 4 m), il est hors de portée.
