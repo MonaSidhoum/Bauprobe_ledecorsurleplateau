@@ -14,3 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Bauprobe.Decor::Bauprobe.Decor.DecorCatalog
   items:
   - {fileID: 11400000, guid: 26317b956897412f955983a9ceb280c0, type: 2}
+  - {fileID: 11400000, guid: 1870a3804409e564795ceb7143599940, type: 2}
+  - {fileID: 11400000, guid: 5745dfbc849d8cb4289dd46a64677bc6, type: 2}
+  - {fileID: 11400000, guid: 8945ffb40e820bb438cf2e1919a63589, type: 2}
+  - {fileID: 11400000, guid: 192b576be246f434d96fd10f845c44c0, type: 2}
+  - {fileID: 11400000, guid: f4421a43cdaefe04f81b3701289b4a86, type: 2}
+  - {fileID: 11400000, guid: 6446eee2a56a82c43ac9e87801ebc768, type: 2}
+  - {fileID: 11400000, guid: d97359cf93bca9d44b612925e0b440a4, type: 2}

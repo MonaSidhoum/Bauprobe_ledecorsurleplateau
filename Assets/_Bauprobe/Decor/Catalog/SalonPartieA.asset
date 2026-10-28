@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88b6b5c4e7794962883cce06c4266f91, type: 3}
+  m_Name: SalonPartieA
+  m_EditorClassIdentifier: Bauprobe.Decor::Bauprobe.Decor.DecorItemDefinition
+  id: SalonPartieA
+  displayName: SalonPartieA
+  thumbnail: {fileID: 0}
+  prefab: {fileID: 4100876796635234277, guid: fc7304cf47b568148b33c140a829b778, type: 3}
+  minScale: 0.5
+  maxScale: 2
