@@ -1,7 +1,7 @@
 # Unity : mise en route et reste à faire
 
 La restructuration du projet est **terminée et testée sur le Quest 3** : import d'un décor, sélection au laser,
-déplacement / agrandissement / rotation à la manette, objets toujours droits, sauvegarde / chargement.
+déplacement / agrandissement / rotation à la manette, sauvegarde / chargement.
 
 Ce document contient :
 1. ce qu'il faut faire pour ouvrir le projet sur **un nouvel ordinateur** ;
@@ -60,7 +60,7 @@ MenuGeneral
 | Catalogue | `Decor/Catalog/DecorCatalog.asset` | Liste des décors importables (pour l'instant : `Cube`) |
 | Laser | `Laser` (main droite) | Vise un objet ; gâchette = ouvre son menu |
 | Menu objet | `ObjectMenu` (racine) | Supprimer, Couleur, Déplacer, Scale, Rotation |
-| Décor | prefab `Decor/Prefabs/Cube` | *Interactable Object* (manette) + *Decor Constraints* (toujours droit) |
+| Décor | prefab `Decor/Prefabs/Cube` | *Interactable Object* (manette) + *Decor Constraints* (taille, sol) |
 
 Pour ajouter un nouveau décor au catalogue : voir [ARCHITECTURE.md](ARCHITECTURE.md#ajouter-un-nouveau-décor-sans-code).
 
@@ -159,8 +159,13 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 
 - [x] **Scale** : l'objet grandit désormais autour de son **point d'origine** (section 3.2) : un élément au sol
       reste posé sur le plateau, un élément au cintre reste accroché par le haut.
-- [ ] **Déplacer** : l'objet suit la manette dans les 3 dimensions et peut flotter ou passer sous la scène.
-      Décider : le faire glisser sur le plateau uniquement, ou garder la possibilité de le soulever.
+- [x] **Déplacer** : le joystick déplace l'objet dans toutes les directions (avant / arrière / gauche / droite par
+      rapport au regard ; grip maintenu = monter / descendre), en plus de suivre la manette. L'objet ne passe
+      plus jamais sous la scène. Il peut encore être soulevé : pour un décor qui doit glisser au sol uniquement,
+      cocher *Keep On Floor* sur son `DecorConstraints`.
+- [x] **Rotation** : joystick gauche / droite = tourner sur lui-même ; haut / bas = basculer vers l'avant / l'arrière
+      (avant, seule la rotation autour de la verticale était possible). L'objet tourne autour de son centre sans
+      s'enfoncer dans le sol. *Keep Upright* est décoché sur le prefab Cube pour permettre la bascule.
 - [ ] **Menu objet** : il s'affiche au-dessus de l'objet. Pour un grand décor (mur de 4 m), il est hors de portée.
       Le placer plutôt à hauteur des yeux, devant l'objet.
 - [ ] **Laser** : le menu général ne bloque pas le laser. Viser un bouton du menu général avec un objet

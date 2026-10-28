@@ -35,7 +35,7 @@ Testé sur Meta Quest 3 :
 * ✅ Calage du décor sur un **QR code** posé sur le plateau
 * ✅ **Importer** un décor depuis le menu (catalogue ; pour l'instant un cube de test)
 * ✅ Sélection au **laser** de la manette droite, puis **Déplacer / Scale / Rotation / Couleur / Supprimer**
-* ✅ Les objets restent toujours **droits**
+* ✅ Les objets se tournent et se **basculent** sans s'enfoncer dans le sol, et ne passent jamais sous le plateau
 * ✅ **Supprimer tout**, **Sauvegarder** / **Charger** une implantation
 
 Ce qui reste à faire : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#3-cahier-des-charges--suivi) (suivi du cahier des charges, puis corrections techniques).
@@ -154,9 +154,9 @@ Le détail (premier lancement sur un nouvel ordinateur, installation sur le casq
 | Action | Commande |
 |---|---|
 | Sélectionner un objet | viser avec le laser + **gâchette** → le menu de l'objet s'ouvre |
-| Déplacer | bouton *Déplacer*, puis bouger la manette ; joystick haut / bas = éloigner / rapprocher |
+| Déplacer | bouton *Déplacer*, puis bouger la manette ; **joystick** = avant / arrière / gauche / droite (par rapport à votre regard) ; **grip maintenu + joystick haut / bas** = monter / descendre |
 | Agrandir / rétrécir | bouton *Scale*, puis joystick haut / bas (l'objet reste posé au sol, ou accroché par le haut s'il est au cintre) |
-| Tourner | bouton *Rotation*, puis joystick gauche / droite (l'objet reste droit) |
+| Tourner | bouton *Rotation*, puis joystick gauche / droite = tourner sur lui-même ; joystick haut / bas = basculer vers l'avant / l'arrière |
 | Valider / Annuler | **gâchette** / bouton **B** |
 | Couleur, Supprimer | boutons du menu de l'objet ; ✕ pour fermer le menu |
 

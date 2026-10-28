@@ -117,12 +117,84 @@ namespace Bauprobe.Decor
         /// <summary>
         /// Change l'échelle de l'objet sans bouger son point d'origine :
         /// un objet au sol grandit vers le haut, un objet au cintre grandit vers le bas.
+        /// Si l'objet est penché, son point le plus bas (sol) ou le plus haut (cintre) reste aussi à la même hauteur.
         /// </summary>
         public void SetScaleAroundOrigin(Vector3 localScale)
         {
+            var height = AttachmentHeight();
             var origin = OriginWorldPosition;
             transform.localScale = localScale;
             SetOriginWorldPosition(origin);
+            RestoreAttachmentHeight(height);
+        }
+
+        /// <summary>
+        /// Tourne l'objet autour de son centre. Son point le plus bas (sol) ou le plus haut (cintre)
+        /// reste à la même hauteur : un objet posé au sol que l'on penche reste posé, sans s'enfoncer.
+        /// </summary>
+        /// <param name="worldAxis">Axe de rotation, dans le repère du monde.</param>
+        /// <param name="degrees">Angle en degrés.</param>
+        public void RotateAroundCenter(Vector3 worldAxis, float degrees)
+        {
+            if (Mathf.Approximately(degrees, 0f))
+            {
+                return;
+            }
+
+            var height = AttachmentHeight();
+            var center = DecorOrigin.TryGetBounds(transform, Matrix4x4.identity, out var world) ? world.center : transform.position;
+            transform.RotateAround(center, worldAxis, degrees);
+            RestoreAttachmentHeight(height);
+        }
+
+        /// <summary>
+        /// Empêche l'objet de passer sous le plateau : si son point le plus bas est sous le sol,
+        /// il est remonté juste au niveau du sol.
+        /// </summary>
+        public void KeepAboveStage()
+        {
+            if (TryGetStageBounds(out var b) && b.min.y < 0f)
+            {
+                transform.localPosition += new Vector3(0f, -b.min.y, 0f);
+            }
+        }
+
+        /// <summary>Pose le point le plus bas de l'objet exactement sur le plateau.</summary>
+        public void RestOnStage()
+        {
+            if (TryGetStageBounds(out var b) && !Mathf.Approximately(b.min.y, 0f))
+            {
+                transform.localPosition += new Vector3(0f, -b.min.y, 0f);
+            }
+        }
+
+        /// <summary>
+        /// Boîte englobante de l'objet dans le repère du plateau (le parent), en tenant compte
+        /// de sa position, de sa rotation et de son échelle.
+        /// </summary>
+        public bool TryGetStageBounds(out Bounds bounds)
+        {
+            var parent = transform.parent;
+            return DecorOrigin.TryGetBounds(transform, parent != null ? parent.worldToLocalMatrix : Matrix4x4.identity, out bounds);
+        }
+
+        // Hauteur (repère du plateau) du point qui doit rester fixe : le plus bas pour le sol, le plus haut pour le cintre.
+        private float? AttachmentHeight()
+        {
+            if (!TryGetStageBounds(out var b))
+            {
+                return null;
+            }
+            return Attachment == DecorAttachment.Cintre ? b.max.y : b.min.y;
+        }
+
+        private void RestoreAttachmentHeight(float? height)
+        {
+            var now = AttachmentHeight();
+            if (height.HasValue && now.HasValue)
+            {
+                transform.localPosition += new Vector3(0f, height.Value - now.Value, 0f);
+            }
         }
 
         private void OnDestroy()

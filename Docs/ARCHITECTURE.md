@@ -82,8 +82,12 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    * un petit menu s'ouvre au-dessus de l'objet (`ObjectMenu`) : Supprimer, Couleur, Déplacer, Scale, Rotation ;
    * pendant Déplacer / Scale / Rotation (`InteractableObject`) : joystick = ajuster, gâchette = valider, B = annuler.
 
-   **Les objets restent toujours droits** : la rotation au joystick tourne seulement autour de la verticale,
-   et `DecorConstraints` empêche de les pencher (même si on les attrape à la main).
+   **Déplacer** : l'objet suit la manette, et le joystick le déplace dans toutes les directions
+   (grip maintenu = monter / descendre). Il ne passe jamais sous le plateau.
+   **Rotation** : joystick gauche / droite = tourner sur lui-même, haut / bas = basculer. La rotation se fait
+   autour du centre de l'objet, et son point le plus bas (sol) ou le plus haut (cintre) reste à la même hauteur.
+   Pour interdire la bascule sur un décor, cocher *Keep Upright* sur son `DecorConstraints`
+   (et décocher *Allow Tilt* sur son `InteractableObject`).
 6. **`LayoutManager.Save()`** écrit la liste des objets et leurs positions sur le plateau dans un fichier JSON
    sur le casque. **`LayoutManager.Load()`** la recharge.
 
@@ -108,7 +112,7 @@ La scène de la branche de test (`menu général.unity`) est devenue `Scenes/Men
 * **Une seule scène** : `Scenes/MenuGeneral.unity` (l'ancienne `Main.unity`, avec le cube posé à la main, a été supprimée).
 * **Faire apparaître un objet** : le bouton « Importer » de `BauprobeMenuLogic`, qui passe par `DecorSpawner`
   et le catalogue (indispensable pour la sauvegarde).
-* **Manipuler un objet** : à la manette (`InteractableObject`), avec des **objets toujours droits**.
+* **Manipuler un objet** : à la manette (`InteractableObject`). Les objets peuvent être basculés (choix de l’équipe, octobre 2026) ; avant, ils restaient toujours droits.
 * **Reste à faire plus tard** : `BauprobeMenuLogic` et `StageCalibrator` écoutent tous les deux MRUK.
   C'est sans danger, mais à terme le menu pourrait simplement lire `StageCalibrator.IsQrLocated`.
 
