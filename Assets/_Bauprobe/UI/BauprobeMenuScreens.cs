@@ -58,6 +58,9 @@ namespace Bauprobe.UI
         [Tooltip("Coché : au-dessus du menu. Décoché : dans le coin haut droit, à l'intérieur " +
                  "(si le bouton n'est pas cliquable au casque).")]
         [SerializeField] private bool placeAboveMenu = true;
+        [Tooltip("Position du bouton + quand le menu est rangé, par rapport au centre du menu. " +
+                 "Z négatif = vers toi (hors du plan du menu). Unités du Canvas.")]
+        [SerializeField] private Vector3 collapsedPosition = new Vector3(0f, 0f, -10f);
 
         [Header("Style (couleurs de la maquette)")]
         [SerializeField] private Color panelColor = new Color(0.42f, 0.00f, 0.012f, 1f);
@@ -295,15 +298,21 @@ namespace Bauprobe.UI
             _toggleRT.sizeDelta = new Vector2(w, h);
             _toggleRT.anchorMin = _toggleRT.anchorMax = _rootRT.pivot;
 
-            if (placeAboveMenu)
+            if (_collapsed)
+            {
+                // Menu rangé : le "+" se place là où était le centre du menu (X, Y, Z réglables)
+                _toggleRT.pivot = new Vector2(0.5f, 0.5f);
+                _toggleRT.anchoredPosition3D = collapsedPosition;
+            }
+            else if (placeAboveMenu)
             {
                 _toggleRT.pivot = new Vector2(0.5f, 0f);
-                _toggleRT.anchoredPosition = new Vector2(center.x, center.y + size.y * 0.5f + margin);
+                _toggleRT.anchoredPosition3D = new Vector3(center.x, center.y + size.y * 0.5f + margin, 0f);
             }
             else
             {
                 _toggleRT.pivot = new Vector2(1f, 1f);
-                _toggleRT.anchoredPosition = new Vector2(center.x + size.x * 0.5f - margin, center.y + size.y * 0.5f - margin);
+                _toggleRT.anchoredPosition3D = new Vector3(center.x + size.x * 0.5f - margin, center.y + size.y * 0.5f - margin, 0f);
             }
 
             _toggleRT.SetAsLastSibling();

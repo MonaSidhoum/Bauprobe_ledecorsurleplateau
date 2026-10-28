@@ -4828,6 +4828,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.0005232885
       objectReference: {fileID: 0}
+    - target: {fileID: 2624990572303766987, guid: e5273f7f74bd9fc439ba8950a00bac38, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 2624990573474107924, guid: e5273f7f74bd9fc439ba8950a00bac38, type: 3}
       propertyPath: m_Name
       value: QRCodeSampleUI
@@ -8545,6 +8549,30 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 782627517999817077, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 782627517999817077, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 782627517999817077, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 782627517999817077, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 782627517999817077, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 782627517999817077, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1252783062633594700, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -8682,6 +8710,30 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3485464820890938967, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4604669528028954814, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4604669528028954814, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4604669528028954814, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4604669528028954814, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4604669528028954814, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4604669528028954814, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
@@ -8942,13 +8994,15 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 7649845084189476263, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
+    - {fileID: 8173969576684093279, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5616040824200539164, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
-      insertIndex: 15
+      insertIndex: 14
       addedObject: {fileID: 674760976}
     - targetCorrespondingSourceObject: {fileID: 5616040824200539164, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
-      insertIndex: 16
+      insertIndex: 15
       addedObject: {fileID: 1670364389}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b35ec28a6c09b440af6ad23cad34957, type: 3}
