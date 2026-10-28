@@ -80,10 +80,24 @@ namespace Bauprobe.Manipulation
             Destroy(gameObject);
         }
 
+        /// <summary>Couleurs proposées pour cet objet (lues par le menu pour afficher les pastilles).</summary>
+        public Color[] Palette => palette;
+
+        /// <summary>Indice de la couleur actuelle dans la palette.</summary>
+        public int ColorIndex => _colorIndex;
+
+        /// <summary>Passe à la couleur suivante (utilisé si le menu n'a pas de palette).</summary>
         public void ChangeColor()
         {
             if (palette == null || palette.Length == 0) return;
-            _colorIndex = (_colorIndex + 1) % palette.Length;
+            SetColor((_colorIndex + 1) % palette.Length);
+        }
+
+        /// <summary>Applique la couleur n°index de la palette (choisie par le metteur en scène).</summary>
+        public void SetColor(int index)
+        {
+            if (palette == null || palette.Length == 0) return;
+            _colorIndex = Mathf.Clamp(index, 0, palette.Length - 1);
             Color c = palette[_colorIndex];
 
             foreach (var r in _renderers)
