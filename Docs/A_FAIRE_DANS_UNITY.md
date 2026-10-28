@@ -33,6 +33,38 @@ re-clonez, ou supprimez au moins son dossier `Library/`.
 3. *File > Build Profiles* > *Run Device* = le Quest 3 > **Build And Run**.
 4. Au premier lancement, accepter la permission **« données spatiales »** (sinon : bouton *Permission* du menu).
 
+### Régler la hauteur du QR code (à refaire à chaque nouveau lieu)
+
+Le décor est calé sur le QR code. Si le QR code **n'est pas posé à plat au sol** (collé sur un mur, un pied,
+une table…), il faut dire à l'appli à quelle hauteur il se trouve, sinon tout le décor est décalé en hauteur.
+
+1. **Mesurer** au mètre la distance **verticale** entre **le bord du bas du QR code** et **le sol du plateau**.
+   * On mesure le **bord du bas** du carré imprimé, pas son centre ni le bord de la feuille.
+   * Exemple : bord du bas du QR code à 1,20 m du sol → `1.2`. QR code posé à plat au sol → `0`.
+2. **Indiquer la valeur** (en mètres, avec un point) dans `Assets/_Bauprobe/Core/Resources/StageSettings.asset`,
+   champ **Qr Bottom Height Above Floor** :
+   * dans Unity : cliquer sur le fichier dans la fenêtre *Project*, modifier la valeur dans l'*Inspector*, puis *Ctrl+S* ;
+   * ou dans un éditeur de texte : dernière ligne du fichier, `qrBottomHeightAboveFloor: 1.2`.
+3. **Refaire un *Build And Run*** : la valeur est intégrée à l'appli, elle ne change pas toute seule sur le casque.
+4. **Committer** `StageSettings.asset` (sur une branche, comme d'habitude) pour que toute l'équipe ait la même valeur.
+5. **Vérifier dans le casque** : après le calage, importer le cube. Il doit être posé **exactement sur le sol**.
+   La Console (en Play avec Link) affiche aussi « Plateau calé : sol à 1,20 m sous le bas du QR code ».
+
+**Comment ça marche.** Quand le casque détecte le QR code, `StageCalibrator` :
+1. calcule la hauteur du **coin le plus bas** du QR code (ça marche qu'il soit à plat, droit sur un mur ou penché) ;
+2. retire la distance réglée dans `StageSettings` : c'est la hauteur du **vrai sol** ;
+3. pose le repère du plateau (`QRAnchor` > `StageRoot`) **à cette hauteur, à la verticale du centre du QR code**,
+   tourné comme le QR code mais toujours à l'horizontale.
+
+Tout le décor est enfant de `StageRoot` : la hauteur 0 du décor est donc le vrai sol. C'est ce sol qu'utilisent
+l'apparition des objets, *Keep On Floor*, la hauteur d'accroche au cintre et le blocage « pas sous le sol ».
+
+**À savoir.**
+* Si on **déplace le QR code** ou qu'on change de lieu, il faut **remesurer** et refaire un *Build*.
+* Une erreur de mesure de 5 cm décale tout le décor de 5 cm en hauteur.
+* Les positions sauvegardées sont relatives au point du sol sous le QR code : remettre le QR code **au même endroit**
+  pour retrouver une implantation.
+
 ---
 
 ## 2. État actuel de la scène `MenuGeneral`
@@ -61,6 +93,7 @@ MenuGeneral
 | Laser | `Laser` (main droite) | Vise un objet ; gâchette = ouvre son menu |
 | Menu objet | `ObjectMenu` (racine) | Supprimer, Couleur, Déplacer, Scale, Rotation |
 | Décor | prefab `Decor/Prefabs/Cube` | *Interactable Object* (manette) + *Decor Constraints* (taille, sol) |
+| Réglages du plateau | `Core/Resources/StageSettings.asset` | Distance entre le bas du QR code et le sol ([voir plus haut](#régler-la-hauteur-du-qr-code-à-refaire-à-chaque-nouveau-lieu)) |
 
 Pour ajouter un nouveau décor au catalogue : voir [ARCHITECTURE.md](ARCHITECTURE.md#ajouter-un-nouveau-décor-sans-code).
 
@@ -126,7 +159,8 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
       importé plus grand est réduit à 18 m (avec un avertissement dans la Console).
 - [ ] **Formats communs** avec « Voir la même chose » (décor et tableau) : fixer les formats avec l'autre équipe
       **avant** de coder l'import et l'export.
-- [ ] **Exécutable déployable partout, en kit transportable** : documenter le kit (casque(s), câble, chargeur,
+- [ ] **Exécutable déployable partout, en kit transportable** : documenter le kit (mètre ruban pour mesurer la hauteur
+      du QR code, casque(s), câble, chargeur,
       QR code imprimé et sa taille, ordinateur pour l'import / export) et l'installation de l'`.apk` sans Unity.
 - [ ] Le Quest se met en pause quand on enlève le casque (quelques secondes de noir au retour). Pour les répétitions,
       désactiver le capteur de proximité (Meta Quest Developer Hub > *Device Manager*) et l'ajouter au mode d'emploi du kit.

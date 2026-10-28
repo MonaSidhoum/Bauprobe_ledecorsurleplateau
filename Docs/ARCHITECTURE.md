@@ -9,7 +9,7 @@ support. Quand le casque le voit, il sait où est la scène.
 
 Si le QR code n'est pas au sol, on indique la distance entre **le bas du QR code et le sol** dans
 `Core/Resources/StageSettings.asset`. `StageCalibrator` place alors le repère du plateau **au sol, à la verticale
-du centre du QR code** : la hauteur 0 du décor est le vrai sol.
+du centre du QR code** : la hauteur 0 du décor est le vrai sol. Détails : [A_FAIRE_DANS_UNITY.md](A_FAIRE_DANS_UNITY.md#régler-la-hauteur-du-qr-code-à-refaire-à-chaque-nouveau-lieu).
 
 Ensuite, **chaque objet de décor est placé par rapport à ce QR code**, et pas par rapport au casque.
 Si le metteur en scène pose une table « 2 m à gauche du QR code », elle sera encore au même

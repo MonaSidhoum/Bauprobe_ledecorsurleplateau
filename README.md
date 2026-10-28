@@ -150,6 +150,7 @@ Le détail (premier lancement sur un nouvel ordinateur, installation sur le casq
    (en mètres) dans `Assets/_Bauprobe/Core/Resources/StageSettings.asset`, champ *Qr Bottom Height Above Floor*
    (dans l'Inspector de Unity, ou directement dans le fichier), puis refaites un *Build And Run*.
    Exemple : bas du QR code à 1,20 m du sol → `1.2`. Ce fichier est suivi par Git.
+   Marche à suivre détaillée et fonctionnement : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#régler-la-hauteur-du-qr-code-à-refaire-à-chaque-nouveau-lieu).
 2. **Menu général** : il est attaché à la **main gauche**.
    * *Importer* > choisir un décor : il apparaît posé au sol, 1,5 m devant vous.
    * *Supprimer tout*, *Sauvegarder*, *Charger*.
