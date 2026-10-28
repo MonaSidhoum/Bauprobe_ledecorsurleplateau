@@ -1,3 +1,4 @@
+using Bauprobe.Decor;
 using UnityEngine;
 
 namespace Bauprobe.Manipulation
@@ -49,6 +50,7 @@ namespace Bauprobe.Manipulation
         public Mode CurrentMode { get; private set; } = Mode.None;
 
         Renderer[] _renderers;
+        DecorInstance _decor;
         int _colorIndex;
         int _startFrame;
 
@@ -62,6 +64,7 @@ namespace Bauprobe.Manipulation
         void Awake()
         {
             _renderers = GetComponentsInChildren<Renderer>();
+            _decor = GetComponent<DecorInstance>();
 
             if (!controllerAnchor)
             {
@@ -147,12 +150,25 @@ namespace Bauprobe.Manipulation
                     break;
 
                 case Mode.Scale:
-                    // Joystick haut = agrandir, bas = rétrécir (uniforme)
+                    // Joystick haut = agrandir, bas = rétrécir (uniforme).
+                    // L'objet grandit autour de son point d'origine : un élément au sol reste posé
+                    // sur le plateau, un élément au cintre reste accroché par le haut.
                     if (stick.y != 0f)
                     {
                         float current = transform.localScale.x;
                         float target = Mathf.Clamp(current * (1f + stick.y * scaleSpeed * dt), minScale, maxScale);
-                        transform.localScale *= target / current;
+                        Vector3 newScale = transform.localScale * (target / current);
+
+                        if (!_decor) _decor = GetComponent<DecorInstance>(); // ajouté après Awake par le spawner
+                        if (_decor)
+                        {
+                            // Cahier des charges : l'objet ne dépasse jamais 18 m sur sa plus grande dimension.
+                            _decor.SetScaleAroundOrigin(_decor.ClampScaleToMaxSize(newScale));
+                        }
+                        else
+                        {
+                            transform.localScale = newScale;
+                        }
                     }
                     break;
 
