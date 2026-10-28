@@ -4,8 +4,12 @@ Ce document explique **comment le code est rangé et pourquoi**. Il est écrit p
 
 ## L'idée centrale : le QR code est le « point zéro » du plateau
 
-On colle un QR code **à plat sur le sol du plateau** (par exemple au centre, au bord de la scène).
-Quand le casque le voit, il sait où est la scène.
+On pose un QR code sur le plateau (par exemple au centre, au bord de la scène) : à plat au sol, ou collé sur un
+support. Quand le casque le voit, il sait où est la scène.
+
+Si le QR code n'est pas au sol, on indique la distance entre **le bas du QR code et le sol** dans
+`Core/Resources/StageSettings.asset`. `StageCalibrator` place alors le repère du plateau **au sol, à la verticale
+du centre du QR code** : la hauteur 0 du décor est le vrai sol.
 
 Ensuite, **chaque objet de décor est placé par rapport à ce QR code**, et pas par rapport au casque.
 Si le metteur en scène pose une table « 2 m à gauche du QR code », elle sera encore au même
@@ -29,7 +33,7 @@ Chaque dossier de `Assets/_Bauprobe` est un **module** : une partie de l'appli q
 
 | Module | Rôle | Scripts principaux |
 |---|---|---|
-| **Core** | Le repère du plateau, partagé par tous | `StageSpace` |
+| **Core** | Le repère du plateau, partagé par tous ; ses réglages (hauteur du QR code) | `StageSpace`, `StageSettings` |
 | **Calibration** | Trouver le QR code et y caler le plateau | `StageCalibrator` |
 | **Decor** | La liste des décors disponibles et leur apparition | `DecorItemDefinition`, `DecorCatalog`, `DecorSpawner`, `DecorInstance` |
 | **Manipulation** | Déplacer / tourner / agrandir un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `RightControllerRaySelector` |
@@ -83,9 +87,8 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    * pendant Déplacer / Scale / Rotation (`InteractableObject`) : joystick = ajuster, gâchette = valider, B = annuler.
 
    **Déplacer** : l'objet suit la manette, et le joystick le déplace dans toutes les directions
-   (grip maintenu = monter / descendre, sans limite). L'option *Prevent Below Stage* de `InteractableObject`
-   empêche de le descendre sous le plateau, mais le plateau est à la hauteur du QR code : à ne cocher que
-   si le QR code est posé au sol.
+   (grip maintenu = monter / descendre). Il ne descend pas sous le sol du plateau (option *Prevent Below Stage*
+   de `InteractableObject`, cochée par défaut).
    **Rotation** : joystick gauche / droite = tourner sur lui-même, haut / bas = basculer. La rotation se fait
    autour du centre de l'objet, et son point le plus bas (sol) ou le plus haut (cintre) reste à la même hauteur.
    Pour interdire la bascule sur un décor, cocher *Keep Upright* sur son `DecorConstraints`

@@ -161,9 +161,9 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
       reste posé sur le plateau, un élément au cintre reste accroché par le haut.
 - [x] **Déplacer** : le joystick déplace l'objet dans toutes les directions (avant / arrière / gauche / droite par
       rapport au regard ; grip maintenu = monter / descendre), en plus de suivre la manette, sans limite de hauteur.
-      Pour empêcher de passer sous la scène, cocher *Prevent Below Stage* sur `InteractableObject` (seulement si
-      le QR code est au sol, car le plateau est à sa hauteur). Pour un décor qui doit glisser au sol uniquement,
-      cocher *Keep On Floor* sur son `DecorConstraints`.
+      L'objet ne descend pas sous le sol du plateau (option *Prevent Below Stage* de `InteractableObject`, cochée
+      par défaut ; le sol vient de la hauteur du QR code réglée dans `StageSettings`). Pour un décor qui doit
+      glisser au sol uniquement, cocher *Keep On Floor* sur son `DecorConstraints`.
 - [x] **Rotation** : joystick gauche / droite = tourner sur lui-même ; haut / bas = basculer vers l'avant / l'arrière
       (avant, seule la rotation autour de la verticale était possible). L'objet tourne autour de son centre sans
       s'enfoncer dans le sol. *Keep Upright* est décoché sur le prefab Cube pour permettre la bascule.
@@ -186,5 +186,8 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 ### Petites fonctionnalités
 
 - [ ] **Couleur** non sauvegardée : la sauvegarde garde la position, la rotation et la taille, pas la couleur.
+- [x] **QR code pas au sol** : la distance entre le bas du QR code et le sol se règle dans
+      `Core/Resources/StageSettings.asset` (*Qr Bottom Height Above Floor*, en mètres). Le repère du plateau est posé
+      au vrai sol, à la verticale du QR code.
 - [ ] **QR code du plateau** : choisir le texte du QR code officiel et le mettre dans *Expected Payload*
       (Stage Calibrator), pour ignorer les autres QR codes présents dans la salle.

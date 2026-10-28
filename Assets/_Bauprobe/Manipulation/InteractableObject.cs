@@ -15,7 +15,7 @@ namespace Bauprobe.Manipulation
     ///
     /// Déplacer : l'objet suit la manette ; en plus, le joystick le déplace dans toutes les directions
     ///   (avant / arrière / gauche / droite par rapport à l'endroit où l'on regarde ;
-    ///   en maintenant le bouton de saisie (grip) : haut / bas = monter / descendre, sans limite de hauteur).
+    ///   en maintenant le bouton de saisie (grip) : haut / bas = monter / descendre, jusqu'au sol du plateau).
     /// Rotation : joystick gauche / droite = tourner sur lui-même,
     ///   haut / bas = le basculer vers l'avant / l'arrière.
     /// </summary>
@@ -44,9 +44,9 @@ namespace Bauprobe.Manipulation
         [Header("Déplacer")]
         [Tooltip("Vitesse (m/s) du déplacement au joystick, joystick à fond.")]
         [SerializeField, FormerlySerializedAs("pushPullSpeed")] float moveSpeed = 1f;
-        [Tooltip("Empêche de descendre l'objet sous le plateau. Le plateau est à la hauteur du QR code : " +
-                 "ne cocher que si le QR code est posé au sol.")]
-        [SerializeField] bool preventBelowStage = false;
+        [Tooltip("Empêche de descendre l'objet sous le sol du plateau. La hauteur du sol vient de la distance " +
+                 "QR code → sol réglée dans Core/Resources/StageSettings.asset.")]
+        [SerializeField] bool preventBelowStage = true;
 
         [Header("Scale")]
         [SerializeField] float scaleSpeed = 1f;      // facteur par seconde, joystick à fond
@@ -186,7 +186,7 @@ namespace Bauprobe.Manipulation
                     // L'objet suit aussi la manette, comme avant.
                     transform.position = controllerAnchor.TransformPoint(_grabLocalPos) + _stickOffset;
 
-                    // Option : il ne passe pas sous le plateau (hauteur du QR code).
+                    // Il ne passe pas sous le sol du plateau (option, cochée par défaut).
                     if (preventBelowStage && _decor) _decor.KeepAboveStage();
                     break;
                 }
