@@ -115,14 +115,16 @@ La scène de la branche de test (`menu général.unity`) est devenue `Scenes/Men
 ## Ajouter un nouveau décor (sans code)
 
 1. Mettre le modèle 3D (`.fbx`, `.glb`...) dans `Assets/_Bauprobe/Decor/Models/`.
-   Le modèle doit être **en mètres, à l'échelle 1:1, avec le pivot en bas** (au sol).
+   Le modèle doit être **en mètres, à l'échelle 1:1**. Son pivot peut être n'importe où : le **point d'origine**
+   (bas au centre pour le sol, haut au centre pour le cintre) est calculé automatiquement à partir du modèle.
 2. En faire un prefab dans `Assets/_Bauprobe/Decor/Prefabs/` et y ajouter :
    * un **Collider** (par ex. Box Collider) ;
    * les composants de saisie de l'Interaction SDK : clic droit sur l'objet >
      *Interaction SDK > Add Grab Interaction* (vérifier que la mise à l'échelle à deux mains est activée) ;
    * le composant **`DecorConstraints`**.
 3. Clic droit dans `Assets/_Bauprobe/Decor/Catalog/` > *Create > Bauprobe > Élément de décor*.
-   Remplir le nom et glisser le prefab.
+   Remplir le nom, glisser le prefab et choisir **Sol** ou **Cintre** (pour le cintre, régler aussi la
+   hauteur d'accroche à l'import).
 4. Ajouter cette fiche dans la liste du **`DecorCatalog`**.
 
 ## Le dossier ThirdParty

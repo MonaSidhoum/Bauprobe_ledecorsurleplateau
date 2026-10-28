@@ -24,7 +24,7 @@ namespace Bauprobe.Persistence
                 data.items.Add(new LayoutEntry
                 {
                     itemId = instance.Definition.Id,
-                    position = t.localPosition,
+                    position = instance.OriginStagePosition,
                     rotation = t.localRotation,
                     scale = t.localScale,
                 });
