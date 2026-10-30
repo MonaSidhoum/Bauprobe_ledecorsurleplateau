@@ -35,6 +35,9 @@ namespace Bauprobe.Manipulation
         [Tooltip("Décalage de la croix depuis le coin en haut à droite du menu (X vers la droite, Y vers le haut).")]
         [SerializeField] Vector2 closeOffset = new Vector2(-10f, -10f);
 
+        [Tooltip("Taille de la croix (largeur, hauteur).")]
+        [SerializeField] Vector2 closeSize = new Vector2(32f, 32f);
+
         /// <summary>15 teintes de décor de théâtre, en 5 rangées de 3 (une famille par rangée).</summary>
         static readonly Color[] Colors =
         {
@@ -114,6 +117,7 @@ namespace Bauprobe.Manipulation
             closeButton.anchorMin = Vector2.one;
             closeButton.anchorMax = Vector2.one;
             closeButton.pivot = Vector2.one;
+            closeButton.sizeDelta = closeSize; // sans ça, une croix réglée en mode "étiré" se retrouve avec une taille de 0
             closeButton.anchoredPosition = closeOffset;
             closeButton.localRotation = Quaternion.identity;
             closeButton.localScale = Vector3.one;
