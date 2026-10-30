@@ -67,6 +67,12 @@ Un utilisateur unique (le technicien) travaille ainsi :
 * **Exécutable déployable partout**, sous forme de **kit transportable** jusqu'à la scène musicale.
 * **Formats de décor et de tableau communs** avec le volet « Voir la même chose ».
 
+### Comment ajouter un élément de décor dans le projet (première version)
+
+* Glisser un modèle dans la fenêtre Project (par exemple dans Assets/_Bauprobe/Prefabs/), puis faites-en un prefab.
+* Retrouvez le catalogue : cliquer sur Managers dans la Hierarchy, puis sur le champ Catalog de Decor Spawner. Il se met en surbrillance dans Project.
+* Dans l’Inspector du catalogue, ajoutez une entrée avec un nom, un identifiant et le prefab. Le bouton apparaît dans le menu Objects.
+
 ### Livrables
 
 * **Tableau de positionnement par scène** (Excel en première approche).
