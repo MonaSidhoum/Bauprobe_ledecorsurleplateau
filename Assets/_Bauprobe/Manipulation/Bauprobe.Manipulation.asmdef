@@ -5,7 +5,8 @@
         "Bauprobe.Core",
         "Bauprobe.Decor",
         "Oculus.VR",
-        "UnityEngine.UI"
+        "UnityEngine.UI",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

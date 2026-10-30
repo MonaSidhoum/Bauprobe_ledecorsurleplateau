@@ -54,15 +54,20 @@ namespace Bauprobe.Manipulation
                     ObjectMenu.Instance.Show(hovered);
             }
 
-            UpdateLaser(ray, endDistance, hovered != null || overMenu);
+            // Pendant la Rotation, le laser sert à viser le bouton « Align with floor »
+            bool overLevelButton = LevelButton.IsPointerOver(ray);
+
+            UpdateLaser(ray, endDistance, hovered != null || overMenu || overLevelButton);
         }
 
         void UpdateLaser(Ray ray, float length, bool highlighted)
         {
             if (laser == null) return;
 
-            // Pas de laser pendant une manipulation (on garde la vue dégagée)
-            laser.enabled = !InteractableObject.IsAnyManipulating;
+            // Pas de laser pendant une manipulation (on garde la vue dégagée),
+            // sauf en Rotation, pour pouvoir viser le bouton « Align with floor ».
+            var active = InteractableObject.Active;
+            laser.enabled = active == null || active.CurrentMode == InteractableObject.Mode.Rotate;
             if (!laser.enabled) return;
 
             laser.useWorldSpace = true;

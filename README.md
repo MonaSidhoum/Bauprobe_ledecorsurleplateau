@@ -32,10 +32,10 @@ D'après le [cahier des charges](#cahier-des-charges) (version 1, 9 octobre 2026
 
 Testé sur Meta Quest 3 :
 
-* ✅ Calage du décor sur un **QR code** posé sur le plateau
+* ✅ Calage du décor sur un **QR code** posé sur le plateau (au sol, ou en hauteur avec sa distance au sol réglable)
 * ✅ **Importer** un décor depuis le menu (catalogue ; pour l'instant un cube de test)
 * ✅ Sélection au **laser** de la manette droite, puis **Déplacer / Scale / Rotation / Couleur / Supprimer**
-* ✅ Les objets restent toujours **droits**
+* ✅ Les objets se déplacent dans toutes les directions, se tournent et se **basculent** sans s'enfoncer dans le sol
 * ✅ **Supprimer tout**, **Sauvegarder** / **Charger** une implantation
 
 Ce qui reste à faire : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#3-cahier-des-charges--suivi) (suivi du cahier des charges, puis corrections techniques).
@@ -98,7 +98,7 @@ Un utilisateur unique (le technicien) travaille ainsi :
 ├── Assets/
 │   ├── _Bauprobe/        ← TOUT NOTRE TRAVAIL EST ICI
 │   │   ├── Scenes/       MenuGeneral.unity (la scène du casque) + Sandbox/ (une scène de test par personne)
-│   │   ├── Core/         le repère du plateau (StageSpace)
+│   │   ├── Core/         le repère du plateau (StageSpace) + ses réglages (Resources/StageSettings.asset)
 │   │   ├── Calibration/  QR code → position du plateau (StageCalibrator)
 │   │   ├── Decor/        catalogue des décors (Catalog/), prefabs, apparition des objets
 │   │   ├── Manipulation/ laser, menu de l'objet, déplacer / agrandir / tourner (à la manette)
@@ -144,8 +144,13 @@ Le détail (premier lancement sur un nouvel ordinateur, installation sur le casq
 
 ### Dans le casque
 
-1. **Calage** : posez le QR code **à plat au sol** sur le plateau (au moins 15 cm de côté) et regardez-le.
-   Le menu affiche « QR détectés : 1 » ; le décor est alors calé sur le plateau.
+1. **Calage** : posez le QR code sur le plateau (au moins 15 cm de côté), à plat au sol ou collé sur un support,
+   et regardez-le. Le menu affiche « QR détectés : 1 » ; le décor est alors calé sur le plateau.
+   **Si le QR code n'est pas au sol**, mesurez la distance entre **le bas du QR code et le sol**, et indiquez-la
+   (en mètres) dans `Assets/_Bauprobe/Core/Resources/StageSettings.asset`, champ *Qr Bottom Height Above Floor*
+   (dans l'Inspector de Unity, ou directement dans le fichier), puis refaites un *Build And Run*.
+   Exemple : bas du QR code à 1,20 m du sol → `1.2`. Ce fichier est suivi par Git.
+   Marche à suivre détaillée et fonctionnement : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#régler-la-hauteur-du-qr-code-à-refaire-à-chaque-nouveau-lieu).
 2. **Menu général** : il est attaché à la **main gauche**.
    * *Importer* > choisir un décor : il apparaît posé au sol, 1,5 m devant vous.
    * *Supprimer tout*, *Sauvegarder*, *Charger*.
@@ -154,9 +159,9 @@ Le détail (premier lancement sur un nouvel ordinateur, installation sur le casq
 | Action | Commande |
 |---|---|
 | Sélectionner un objet | viser avec le laser + **gâchette** → le menu de l'objet s'ouvre |
-| Déplacer | bouton *Déplacer*, puis bouger la manette ; joystick haut / bas = éloigner / rapprocher |
+| Déplacer | bouton *Déplacer*, puis bouger la manette ; **joystick** = avant / arrière / gauche / droite (par rapport à votre regard) ; **grip maintenu + joystick haut / bas** = monter / descendre |
 | Agrandir / rétrécir | bouton *Scale*, puis joystick haut / bas (l'objet reste posé au sol, ou accroché par le haut s'il est au cintre) |
-| Tourner | bouton *Rotation*, puis joystick gauche / droite (l'objet reste droit) |
+| Tourner | bouton *Rotation*, puis joystick gauche / droite = tourner sur lui-même ; joystick haut / bas = basculer vers l'avant / l'arrière ; laser + gâchette sur le bouton **Align with floor** (au-dessus de l'objet) = le poser parallèle au sol, sur la face la plus proche (un objet un peu penché se redresse, un objet très penché se couche sur le côté) |
 | Valider / Annuler | **gâchette** / bouton **B** |
 | Couleur, Supprimer | boutons du menu de l'objet ; ✕ pour fermer le menu |
 

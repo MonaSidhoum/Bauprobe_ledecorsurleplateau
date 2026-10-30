@@ -27,9 +27,19 @@ namespace Bauprobe.Decor
         /// </summary>
         public static bool TryGetLocalBounds(Transform root, out Bounds bounds)
         {
+            return TryGetBounds(root, root.worldToLocalMatrix, out bounds);
+        }
+
+        /// <summary>
+        /// Boîte englobante des modèles 3D de l'objet, alignée sur les axes du repère donné par
+        /// <paramref name="worldToSpace"/> (par ex. le repère du plateau). Suit l'objet même s'il est tourné ou penché.
+        /// Renvoie false si l'objet n'a aucun modèle 3D visible.
+        /// </summary>
+        public static bool TryGetBounds(Transform root, Matrix4x4 worldToSpace, out Bounds bounds)
+        {
             bounds = default;
             var found = false;
-            var toRoot = root.worldToLocalMatrix;
+            var toRoot = worldToSpace;
 
             foreach (var filter in root.GetComponentsInChildren<MeshFilter>())
             {

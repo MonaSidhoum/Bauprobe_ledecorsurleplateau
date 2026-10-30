@@ -20,7 +20,8 @@ namespace Bauprobe.Manipulation
         [Tooltip("Garde le bas de l'objet sur le plateau (sans effet sur un élément au cintre).")]
         [SerializeField] private bool keepOnFloor = true;
 
-        [Tooltip("Empêche de pencher l'objet : il ne peut tourner que sur lui-même.")]
+        [Tooltip("Empêche de pencher l'objet : il ne peut tourner que sur lui-même. " +
+                 "Décoché, on peut aussi le basculer avec le joystick haut / bas en mode Rotation.")]
         [SerializeField] private bool keepUpright = true;
 
         [Tooltip("Garde les mêmes proportions quand on agrandit l'objet.")]
@@ -74,11 +75,8 @@ namespace Bauprobe.Manipulation
                 return;
             }
 
-            var origin = _instance.OriginStagePosition;
-            if (!Mathf.Approximately(origin.y, 0f))
-            {
-                _instance.SetOriginStagePosition(new Vector3(origin.x, 0f, origin.z));
-            }
+            // Le point le plus bas de l'objet (même s'il est penché) touche le plateau.
+            _instance.RestOnStage();
         }
 
         private void ClampScale(Transform t)
