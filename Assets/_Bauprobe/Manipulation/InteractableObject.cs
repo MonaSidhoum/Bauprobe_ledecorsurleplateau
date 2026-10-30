@@ -18,7 +18,7 @@ namespace Bauprobe.Manipulation
     ///   en maintenant le bouton de saisie (grip) : haut / bas = monter / descendre, jusqu'au sol du plateau).
     /// Rotation : joystick gauche / droite = tourner sur lui-même,
     ///   haut / bas = le basculer vers l'avant / l'arrière ;
-    ///   le bouton « Aligner au sol » au-dessus de l'objet le remet parallèle au sol.
+    ///   le bouton « Align with floor » au-dessus de l'objet le pose parallèle au sol, sur la face la plus proche.
     /// </summary>
     public class InteractableObject : MonoBehaviour
     {
@@ -142,13 +142,13 @@ namespace Bauprobe.Manipulation
             // On cache le menu pendant la manipulation
             if (ObjectMenu.Instance) ObjectMenu.Instance.Hide();
 
-            // En Rotation : bouton « Aligner au sol » au-dessus de l'objet
+            // En Rotation : bouton « Align with floor » au-dessus de l'objet
             if (mode == Mode.Rotate && allowTilt) LevelButton.Show(this, LevelWithFloor);
         }
 
         /// <summary>
         /// Pose l'objet parallèle au sol, sur la face la plus proche de sa position actuelle
-        /// (voir DecorInstance.LevelWithStage). Appelé par le bouton « Aligner au sol ».
+        /// (voir DecorInstance.LevelWithStage). Appelé par le bouton « Align with floor ».
         /// </summary>
         public void LevelWithFloor()
         {
@@ -177,7 +177,7 @@ namespace Bauprobe.Manipulation
             // Ne pas valider dans la frame même où la manipulation a commencé
             if (Time.frameCount != _startFrame)
             {
-                // La gâchette valide, sauf si le laser vise le bouton « Aligner au sol » (c'est alors un clic sur le bouton).
+                // La gâchette valide, sauf si le laser vise le bouton « Align with floor » (c'est alors un clic sur le bouton).
                 bool onLevelButton = controllerAnchor &&
                                      LevelButton.IsPointerOver(new Ray(controllerAnchor.position, controllerAnchor.forward));
                 if (!onLevelButton && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controller)) { EndManipulation(true); return; }

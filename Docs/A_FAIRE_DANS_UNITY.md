@@ -201,7 +201,7 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 - [x] **Rotation** : joystick gauche / droite = tourner sur lui-même ; haut / bas = basculer vers l'avant / l'arrière
       (avant, seule la rotation autour de la verticale était possible). L'objet tourne autour de son centre sans
       s'enfoncer dans le sol. *Keep Upright* est décoché sur le prefab Cube pour permettre la bascule.
-      Un bouton **Aligner au sol** apparaît au-dessus de l'objet pendant la Rotation (laser + gâchette) : il pose
+      Un bouton **Align with floor** apparaît au-dessus de l'objet pendant la Rotation (laser + gâchette) : il pose
       l'objet parallèle au sol sur la face la plus proche de sa position (un peu penché → redressé, très penché →
       couché sur le côté).
 - [ ] **Menu objet** : il s'affiche au-dessus de l'objet. Pour un grand décor (mur de 4 m), il est hors de portée.

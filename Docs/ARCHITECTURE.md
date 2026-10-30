@@ -91,7 +91,7 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    de `InteractableObject`, cochée par défaut).
    **Rotation** : joystick gauche / droite = tourner sur lui-même, haut / bas = basculer. La rotation se fait
    autour du centre de l'objet, et son point le plus bas (sol) ou le plus haut (cintre) reste à la même hauteur.
-   Pendant la Rotation, un bouton **Aligner au sol** (`LevelButton`, créé par le code, rien à ajouter dans la scène)
+   Pendant la Rotation, un bouton **Align with floor** (`LevelButton`, créé par le code, rien à ajouter dans la scène)
    s'affiche au-dessus de l'objet : la direction de l'objet la plus proche de la verticale devient exactement
    verticale, avec la plus petite rotation possible. L'objet est donc posé à plat sur la face la plus proche.
    Pour interdire la bascule sur un décor, cocher *Keep Upright* sur son `DecorConstraints`
