@@ -26,8 +26,9 @@ namespace Bauprobe.Decor
         public event Action<DecorInstance> Removed;
 
         /// <summary>
-        /// Fait apparaître l'objet devant la personne qui porte le casque, posé sur le plateau
-        /// (le bas de l'objet touche le sol, quel que soit l'endroit de son pivot).
+        /// Fait apparaître l'objet devant la personne qui porte le casque :
+        /// posé sur le plateau (élément au sol) ou à sa hauteur d'accroche (élément au cintre),
+        /// quel que soit l'endroit du pivot de son modèle.
         /// </summary>
         public DecorInstance SpawnInFrontOfUser(DecorItemDefinition definition)
         {
@@ -40,22 +41,24 @@ namespace Bauprobe.Decor
             }
             forward.Normalize();
 
-            var position = head.position + forward * spawnDistance;
-            position.y = stage.transform.position.y; // posé au niveau du plateau
-
             // L'objet est tourné vers la personne.
-            var worldPose = new Pose(position, Quaternion.LookRotation(-forward, Vector3.up));
+            var worldPose = new Pose(head.position + forward * spawnDistance, Quaternion.LookRotation(-forward, Vector3.up));
             var stagePose = stage.WorldToStage(worldPose);
-            var instance = Spawn(definition, stagePose.position, stagePose.rotation, definition.Prefab.transform.localScale);
-            if (instance != null)
-            {
-                PlaceOnFloor(instance.transform);
-            }
-            return instance;
+
+            // Hauteur du point d'origine : le sol du plateau, ou la hauteur d'accroche au cintre.
+            var origin = stagePose.position;
+            origin.y = definition != null && definition.Attachment == DecorAttachment.Cintre ? definition.HangHeight : 0f;
+
+            var scale = definition != null && definition.Prefab != null ? definition.Prefab.transform.localScale : Vector3.one;
+            return Spawn(definition, origin, stagePose.rotation, scale);
         }
 
-        /// <summary>Fait apparaître un objet à une position donnée dans le repère du plateau.</summary>
-        public DecorInstance Spawn(DecorItemDefinition definition, Vector3 localPosition, Quaternion localRotation, Vector3 localScale)
+        /// <summary>
+        /// Fait apparaître un objet dans le repère du plateau.
+        /// <paramref name="originPosition"/> est la position de son <b>point d'origine</b>
+        /// (bas au centre pour le sol, haut au centre pour le cintre), pas celle de son pivot.
+        /// </summary>
+        public DecorInstance Spawn(DecorItemDefinition definition, Vector3 originPosition, Quaternion localRotation, Vector3 localScale)
         {
             if (definition == null || definition.Prefab == null)
             {
@@ -65,7 +68,6 @@ namespace Bauprobe.Decor
 
             var go = Instantiate(definition.Prefab, stage.transform);
             go.name = definition.DisplayName;
-            go.transform.localPosition = localPosition;
             go.transform.localRotation = localRotation;
             go.transform.localScale = localScale;
 
@@ -74,7 +76,18 @@ namespace Bauprobe.Decor
             {
                 instance = go.AddComponent<DecorInstance>();
             }
-            instance.Initialize(definition);
+            instance.Initialize(definition); // calcule le point d'origine et la taille à partir des modèles 3D
+
+            // Cahier des charges : aucun élément de plus de 18 m.
+            var allowedScale = instance.ClampScaleToMaxSize(localScale);
+            if (allowedScale != localScale)
+            {
+                go.transform.localScale = allowedScale;
+                Debug.LogWarning($"« {definition.DisplayName} » dépassait {DecorLimits.MaxSizeMeters} m : " +
+                                 "il a été réduit à cette taille maximale.", go);
+            }
+
+            instance.SetOriginStagePosition(originPosition);
             instance.Destroyed += OnInstanceDestroyed;
 
             _instances.Add(instance);
@@ -119,24 +132,6 @@ namespace Bauprobe.Decor
             {
                 Removed?.Invoke(instance);
             }
-        }
-
-        // Remonte (ou descend) l'objet pour que le bas de ses modèles 3D touche le plateau.
-        private void PlaceOnFloor(Transform t)
-        {
-            var renderers = t.GetComponentsInChildren<Renderer>();
-            if (renderers.Length == 0)
-            {
-                return;
-            }
-
-            var bounds = renderers[0].bounds;
-            foreach (var r in renderers)
-            {
-                bounds.Encapsulate(r.bounds);
-            }
-
-            t.position += Vector3.up * (stage.transform.position.y - bounds.min.y);
         }
     }
 }

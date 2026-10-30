@@ -275,7 +275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Bauprobe.Manipulation::Bauprobe.Manipulation.DecorConstraints
   keepOnFloor: 0
-  keepUpright: 1
+  keepUpright: 0
   uniformScale: 1
 --- !u!114 &7310452180036122002
 MonoBehaviour:

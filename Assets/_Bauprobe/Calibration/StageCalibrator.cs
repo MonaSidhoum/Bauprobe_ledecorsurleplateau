@@ -20,6 +20,11 @@ namespace Bauprobe.Calibration
         [Tooltip("Objet qui contient tout le décor (avec le composant StageSpace).")]
         [SerializeField] private Transform stageRoot;
 
+        [Header("Hauteur du QR code")]
+        [Tooltip("Réglages du plateau (distance entre le bas du QR code et le sol). " +
+                 "Vide = le fichier Assets/_Bauprobe/Core/Resources/StageSettings.asset.")]
+        [SerializeField] private StageSettings settings;
+
         [Header("Réglages")]
         [Tooltip("Texte contenu dans le QR code du plateau. Vide = accepte n'importe quel QR code.")]
         [SerializeField] private string expectedPayload = "";
@@ -43,6 +48,15 @@ namespace Bauprobe.Calibration
 
         private void Start()
         {
+            if (settings == null)
+            {
+                settings = StageSettings.LoadDefault();
+                if (settings == null)
+                {
+                    Debug.LogWarning("StageSettings introuvable : on considère que le QR code est posé au sol.");
+                }
+            }
+
             if (stageRoot != null)
             {
                 _stageSpace = stageRoot.GetComponent<StageSpace>();
@@ -129,10 +143,40 @@ namespace Bauprobe.Calibration
             return Quaternion.LookRotation(forward.normalized, Vector3.up);
         }
 
+        /// <summary>Hauteur (repère du monde) du bord le plus bas du QR code.</summary>
+        private static float QrBottomY(MRUKTrackable trackable)
+        {
+            var qr = trackable.transform;
+            if (trackable.PlaneRect is not { } rect)
+            {
+                return qr.position.y; // taille inconnue : on prend le centre
+            }
+
+            // Les 4 coins du QR code, dans son plan (X, Y local) : on garde le plus bas.
+            var lowest = float.MaxValue;
+            foreach (var corner in new[]
+                     {
+                         new Vector3(rect.xMin, rect.yMin, 0f), new Vector3(rect.xMax, rect.yMin, 0f),
+                         new Vector3(rect.xMin, rect.yMax, 0f), new Vector3(rect.xMax, rect.yMax, 0f),
+                     })
+            {
+                lowest = Mathf.Min(lowest, qr.TransformPoint(corner).y);
+            }
+            return lowest;
+        }
+
         private void AlignToQr()
         {
             var qr = _trackedQr.transform;
-            qrAnchor.SetPositionAndRotation(qr.position, keepLevel ? LevelRotation(qr) : qr.rotation);
+
+            // Le repère du plateau est posé AU SOL, à la verticale du centre du QR code :
+            // sol = bas du QR code - distance mesurée entre le bas du QR code et le sol (StageSettings).
+            var qrBottomY = QrBottomY(_trackedQr);
+            var floorY = settings != null ? settings.FloorHeight(qrBottomY) : qrBottomY;
+            var anchorPosition = new Vector3(qr.position.x, floorY, qr.position.z);
+
+            qrAnchor.SetPositionAndRotation(anchorPosition, keepLevel ? LevelRotation(qr) : qr.rotation);
+            Debug.Log($"Plateau calé : sol à {qrBottomY - floorY:0.00} m sous le bas du QR code.");
 
             if (lockAfterFirstDetection)
             {

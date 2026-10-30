@@ -4,8 +4,12 @@ Ce document explique **comment le code est rangé et pourquoi**. Il est écrit p
 
 ## L'idée centrale : le QR code est le « point zéro » du plateau
 
-On colle un QR code **à plat sur le sol du plateau** (par exemple au centre, au bord de la scène).
-Quand le casque le voit, il sait où est la scène.
+On pose un QR code sur le plateau (par exemple au centre, au bord de la scène) : à plat au sol, ou collé sur un
+support. Quand le casque le voit, il sait où est la scène.
+
+Si le QR code n'est pas au sol, on indique la distance entre **le bas du QR code et le sol** dans
+`Core/Resources/StageSettings.asset`. `StageCalibrator` place alors le repère du plateau **au sol, à la verticale
+du centre du QR code** : la hauteur 0 du décor est le vrai sol. Détails : [A_FAIRE_DANS_UNITY.md](A_FAIRE_DANS_UNITY.md#régler-la-hauteur-du-qr-code-à-refaire-à-chaque-nouveau-lieu).
 
 Ensuite, **chaque objet de décor est placé par rapport à ce QR code**, et pas par rapport au casque.
 Si le metteur en scène pose une table « 2 m à gauche du QR code », elle sera encore au même
@@ -29,7 +33,7 @@ Chaque dossier de `Assets/_Bauprobe` est un **module** : une partie de l'appli q
 
 | Module | Rôle | Scripts principaux |
 |---|---|---|
-| **Core** | Le repère du plateau, partagé par tous | `StageSpace` |
+| **Core** | Le repère du plateau, partagé par tous ; ses réglages (hauteur du QR code) | `StageSpace`, `StageSettings` |
 | **Calibration** | Trouver le QR code et y caler le plateau | `StageCalibrator` |
 | **Decor** | La liste des décors disponibles et leur apparition | `DecorItemDefinition`, `DecorCatalog`, `DecorSpawner`, `DecorInstance` |
 | **Manipulation** | Déplacer / tourner / agrandir un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `RightControllerRaySelector` |
@@ -82,8 +86,16 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    * un petit menu s'ouvre au-dessus de l'objet (`ObjectMenu`) : Supprimer, Couleur, Déplacer, Scale, Rotation ;
    * pendant Déplacer / Scale / Rotation (`InteractableObject`) : joystick = ajuster, gâchette = valider, B = annuler.
 
-   **Les objets restent toujours droits** : la rotation au joystick tourne seulement autour de la verticale,
-   et `DecorConstraints` empêche de les pencher (même si on les attrape à la main).
+   **Déplacer** : l'objet suit la manette, et le joystick le déplace dans toutes les directions
+   (grip maintenu = monter / descendre). Il ne descend pas sous le sol du plateau (option *Prevent Below Stage*
+   de `InteractableObject`, cochée par défaut).
+   **Rotation** : joystick gauche / droite = tourner sur lui-même, haut / bas = basculer. La rotation se fait
+   autour du centre de l'objet, et son point le plus bas (sol) ou le plus haut (cintre) reste à la même hauteur.
+   Pendant la Rotation, un bouton **Align with floor** (`LevelButton`, créé par le code, rien à ajouter dans la scène)
+   s'affiche au-dessus de l'objet : la direction de l'objet la plus proche de la verticale devient exactement
+   verticale, avec la plus petite rotation possible. L'objet est donc posé à plat sur la face la plus proche.
+   Pour interdire la bascule sur un décor, cocher *Keep Upright* sur son `DecorConstraints`
+   (et décocher *Allow Tilt* sur son `InteractableObject`).
 6. **`LayoutManager.Save()`** écrit la liste des objets et leurs positions sur le plateau dans un fichier JSON
    sur le casque. **`LayoutManager.Load()`** la recharge.
 
@@ -108,21 +120,23 @@ La scène de la branche de test (`menu général.unity`) est devenue `Scenes/Men
 * **Une seule scène** : `Scenes/MenuGeneral.unity` (l'ancienne `Main.unity`, avec le cube posé à la main, a été supprimée).
 * **Faire apparaître un objet** : le bouton « Importer » de `BauprobeMenuLogic`, qui passe par `DecorSpawner`
   et le catalogue (indispensable pour la sauvegarde).
-* **Manipuler un objet** : à la manette (`InteractableObject`), avec des **objets toujours droits**.
+* **Manipuler un objet** : à la manette (`InteractableObject`). Les objets peuvent être basculés (choix de l’équipe, octobre 2026) ; avant, ils restaient toujours droits.
 * **Reste à faire plus tard** : `BauprobeMenuLogic` et `StageCalibrator` écoutent tous les deux MRUK.
   C'est sans danger, mais à terme le menu pourrait simplement lire `StageCalibrator.IsQrLocated`.
 
 ## Ajouter un nouveau décor (sans code)
 
 1. Mettre le modèle 3D (`.fbx`, `.glb`...) dans `Assets/_Bauprobe/Decor/Models/`.
-   Le modèle doit être **en mètres, à l'échelle 1:1, avec le pivot en bas** (au sol).
+   Le modèle doit être **en mètres, à l'échelle 1:1**. Son pivot peut être n'importe où : le **point d'origine**
+   (bas au centre pour le sol, haut au centre pour le cintre) est calculé automatiquement à partir du modèle.
 2. En faire un prefab dans `Assets/_Bauprobe/Decor/Prefabs/` et y ajouter :
    * un **Collider** (par ex. Box Collider) ;
    * les composants de saisie de l'Interaction SDK : clic droit sur l'objet >
      *Interaction SDK > Add Grab Interaction* (vérifier que la mise à l'échelle à deux mains est activée) ;
    * le composant **`DecorConstraints`**.
 3. Clic droit dans `Assets/_Bauprobe/Decor/Catalog/` > *Create > Bauprobe > Élément de décor*.
-   Remplir le nom et glisser le prefab.
+   Remplir le nom, glisser le prefab et choisir **Sol** ou **Cintre** (pour le cintre, régler aussi la
+   hauteur d'accroche à l'import).
 4. Ajouter cette fiche dans la liste du **`DecorCatalog`**.
 
 ## Le dossier ThirdParty
