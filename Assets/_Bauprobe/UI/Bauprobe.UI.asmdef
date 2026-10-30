@@ -6,7 +6,8 @@
         "Bauprobe.Decor",
         "UnityEngine.UI",
         "Unity.TextMeshPro",
-        "meta.xr.mrutilitykit"
+        "meta.xr.mrutilitykit",
+        "Bauprobe.Persistence"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -2223,10 +2223,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Bauprobe.UI::Bauprobe.UI.BauprobeMenuScreens
   importButton: {fileID: 3790209969658818204}
-  decorsTitle: "D\xE9cors"
-  backLabel: Retour
-  pageLabel: page
+  saveButton: {fileID: 0}
+  loadButton: {fileID: 0}
   logic: {fileID: 4626669397974724225}
+  layoutManager: {fileID: 0}
+  decorsTitle: Objects
+  saveTitle: Save
+  loadTitle: Load
+  namingTitle: Save Name
+  newSaveLabel: + New Save
+  backLabel: Back
+  pageLabel: page
+  noDecorLabel: No object
+  noSaveLabel: No Save
+  maxSaves: 50
+  maxNameLength: 30
   itemHeightRatio: 0.065
   itemWidthRatio: 0.72
   overridePanelSize: {x: 0, y: 0}

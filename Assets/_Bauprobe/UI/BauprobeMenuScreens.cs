@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using Bauprobe.Persistence;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,43 +12,65 @@ namespace Bauprobe.UI
     /// <summary>
     /// Ajoute au menu BauprobeMenu :
     ///   1. un petit bouton − / + au-dessus du menu pour le ranger / le rouvrir ;
-    ///   2. un deuxième écran "Décors" (liste d'objets paginée) qui remplace le menu principal
-    ///      quand on clique sur Importer.
+    ///   2. un écran "Décors" (liste d'objets paginée) à la place du menu principal quand on clique sur Importer ;
+    ///   3. un écran "Sauvegarder" : « + Nouvelle sauvegarde » (avec un nom) ou écraser une sauvegarde existante ;
+    ///   4. un écran "Charger" : la liste de toutes les sauvegardes, un clic recharge l'implantation.
     ///
-    /// REMPLACE MenuCollapseToggle : si ce composant est déjà sur le prefab, retire-le.
     /// A mettre sur la RACINE du prefab BauprobeMenu (l'objet qui contient tous les boutons).
+    /// Remplace MenuCollapseToggle / RangerMenu : retire-les du prefab s'ils y sont.
     ///
-    /// Fonctionnement :
-    ///   - Importer ouvre l'écran Décors (le script reprend la main sur le bouton Importer).
-    ///   - Cliquer sur un objet lance son action puis revient au menu principal.
-    ///   - Retour revient au menu principal sans rien faire.
-    ///   - L'écran Décors a la même taille que le menu principal ; le nombre d'objets par page est
-    ///     calculé pour en mettre le maximum, et les petits triangles changent de page.
-    ///
+    /// Les boutons Importer, Sauvegarder et Charger sont repris au lancement : leur ancien onClick est remplacé
+    /// par l'ouverture de l'écran correspondant. Les sauvegardes sont les fichiers du dossier de LayoutManager.
     /// Le menu principal n'est pas désactivé, seulement caché : ses scripts continuent de tourner.
     /// </summary>
     [DisallowMultipleComponent]
     public class BauprobeMenuScreens : MonoBehaviour
     {
-        private enum MenuScreen { Main, Decors }
+        private enum MenuScreen { Main, Decors, Save, Load, Naming, Confirm }
+
+        private class Row
+        {
+            public string label;
+            public System.Action onClick;
+            public System.Action onDelete;   // non nul = petite croix à droite de la ligne
+            public bool accent;              // bouton à cadre (ex : « Nouvelle sauvegarde », « Valider »)
+        }
 
         // ------------------------------------------------------------------ réglages
-        [Header("Bouton Importer")]
-        [Tooltip("Vide = le script cherche tout seul le bouton dont le texte contient « import ».")]
+        [Header("Boutons du menu principal (vide = trouvés automatiquement par leur texte)")]
         [SerializeField] private Button importButton;
+        [SerializeField] private Button saveButton;
+        [SerializeField] private Button loadButton;
 
-        [Header("Ecran Décors")]
-        [SerializeField] private string decorsTitle = "Décors";
-        [SerializeField] private string backLabel = "Retour";
-        [SerializeField] private string pageLabel = "page";
+        [Header("Liens")]
         [Tooltip("Vide = cherché automatiquement sur ce menu. La liste des objets est celle de « Import Items » de BauprobeMenuLogic.")]
         [SerializeField] private BauprobeMenuLogic logic;
-        [Tooltip("Hauteur d'un bouton d'objet, en proportion de la hauteur du menu (plus petit = plus d'objets par page).")]
+        [Tooltip("Vide = cherché automatiquement dans la scène (objet Managers).")]
+        [SerializeField] private LayoutManager layoutManager;
+
+        [Header("Textes")]
+        [SerializeField] private string decorsTitle = "Décors";
+        [SerializeField] private string saveTitle = "Sauvegarder";
+        [SerializeField] private string loadTitle = "Charger";
+        [SerializeField] private string namingTitle = "Nom de la sauvegarde";
+        [SerializeField] private string newSaveLabel = "+ Nouvelle sauvegarde";
+        [SerializeField] private string backLabel = "Retour";
+        [SerializeField] private string pageLabel = "page";
+        [SerializeField] private string noDecorLabel = "Aucun objet";
+        [SerializeField] private string noSaveLabel = "Aucune sauvegarde";
+
+        [Header("Sauvegardes")]
+        [Tooltip("Nombre maximum de sauvegardes. Au-delà, il faut en supprimer une.")]
+        [SerializeField, Min(1)] private int maxSaves = 50;
+        [SerializeField, Min(5)] private int maxNameLength = 30;
+
+        [Header("Mise en page des écrans")]
+        [Tooltip("Hauteur d'une ligne, en proportion de la hauteur du menu (plus petit = plus de lignes par page).")]
         [SerializeField, Range(0.04f, 0.12f)] private float itemHeightRatio = 0.065f;
         [SerializeField, Range(0.4f, 0.95f)] private float itemWidthRatio = 0.72f;
         [Tooltip("(0, 0) = même taille que le menu principal, calculée automatiquement.")]
         [SerializeField] private Vector2 overridePanelSize = Vector2.zero;
-        [Tooltip("Dessine un fond derrière l'écran Décors (utile si le fond du menu principal est un enfant).")]
+        [Tooltip("Dessine un fond derrière les écrans (utile si le fond du menu principal est un enfant).")]
         [SerializeField] private bool drawPanelBackground = true;
 
         [Header("Bouton − / +")]
@@ -66,7 +90,7 @@ namespace Bauprobe.UI
         [SerializeField] private Color panelColor = new Color(0.42f, 0.00f, 0.012f, 1f);
         [SerializeField] private Color buttonColor = new Color(0.91f, 0.77f, 0.58f, 1f);
         [SerializeField] private Color buttonTextColor = new Color(0.42f, 0.00f, 0.012f, 1f);
-        [Tooltip("Titre, texte « page », flèches, séparateur, texte de Retour.")]
+        [Tooltip("Titre, texte « page », flèches, séparateur, texte des boutons à cadre.")]
         [SerializeField] private Color accentColor = new Color(0.91f, 0.77f, 0.58f, 1f);
         [SerializeField] private Color backFillColor = new Color(0.33f, 0.04f, 0.03f, 1f);
         [Tooltip("Idéalement une police à empattements, comme la maquette. Vide = police par défaut.")]
@@ -104,6 +128,13 @@ namespace Bauprobe.UI
 
         private MenuScreen _screen = MenuScreen.Main;
         private bool _collapsed;
+
+        // écran de liste en cours
+        private string _title;
+        private string _emptyText;
+        private System.Func<List<Row>> _provider;
+        private System.Action _back;
+        private List<Row> _rows = new List<Row>();
         private int _page;
         private int _perPage = 1;
         private int _pageCount = 1;
@@ -111,6 +142,10 @@ namespace Bauprobe.UI
         private float _itemH;
         private float _gap;
         private float _listTop;
+
+        // saisie du nom
+        private TouchScreenKeyboard _keyboard;
+        private string _typed = "";
 
         public bool IsCollapsed => _collapsed;
 
@@ -142,7 +177,43 @@ namespace Bauprobe.UI
             // Une image d'attente : les autres scripts du menu ont fini leur démarrage et la mise en page est calculée.
             yield return null;
             RepositionToggle();
-            HookImportButton();
+            HookButtons();
+            EnsureLayoutManager();
+        }
+
+        private void OnDisable()
+        {
+            CloseKeyboard();
+        }
+
+        private void Update()
+        {
+            if (_keyboard == null) return;
+
+            var status = _keyboard.status;
+            string text = _keyboard.text;
+
+            if (status == TouchScreenKeyboard.Status.Visible)
+            {
+                if (text != _typed)
+                {
+                    _typed = text;
+                    if (_screen == MenuScreen.Naming) RefreshScreen();
+                }
+                return;
+            }
+
+            if (status == TouchScreenKeyboard.Status.Done)
+            {
+                _typed = text;
+                _keyboard = null;
+                if (_screen == MenuScreen.Naming) FinishNaming(_typed);
+                return;
+            }
+
+            // Annulé ou fermé sans valider : on reste sur l'écran, on peut rouvrir le clavier ou valider
+            _keyboard = null;
+            if (_screen == MenuScreen.Naming) RefreshScreen();
         }
 
         // ================================================================== API publique
@@ -157,13 +228,27 @@ namespace Bauprobe.UI
         public void OpenDecors()
         {
             if (_collapsed) return;
-            BuildPicker();
-            _screen = MenuScreen.Decors;
-            ApplyVisibility();
+            OpenScreen(MenuScreen.Decors, decorsTitle, noDecorLabel, BuildDecorRows, CloseToMain);
         }
 
-        public void CloseDecors()
+        public void OpenSave()
         {
+            if (_collapsed) return;
+            if (!EnsureLayoutManager()) return;
+            OpenScreen(MenuScreen.Save, saveTitle, noSaveLabel, BuildSaveRows, CloseToMain);
+        }
+
+        public void OpenLoad()
+        {
+            if (_collapsed) return;
+            if (!EnsureLayoutManager()) return;
+            OpenScreen(MenuScreen.Load, loadTitle, noSaveLabel, BuildLoadRows, CloseToMain);
+        }
+
+        /// <summary>Revient au menu principal.</summary>
+        public void CloseToMain()
+        {
+            CloseKeyboard();
             _screen = MenuScreen.Main;
             ApplyVisibility();
         }
@@ -192,7 +277,7 @@ namespace Bauprobe.UI
         private void ApplyVisibility()
         {
             bool showMain = !_collapsed && _screen == MenuScreen.Main;
-            bool showDecors = !_collapsed && _screen == MenuScreen.Decors;
+            bool showList = !_collapsed && _screen != MenuScreen.Main;
 
             foreach (var s in _mainTargets)
             {
@@ -202,12 +287,12 @@ namespace Bauprobe.UI
                 s.group.blocksRaycasts = showMain && s.blocksRaycasts;
             }
 
-            // Le fond éventuel de la racine reste affiché sur les deux écrans, et disparaît quand le menu est rangé.
+            // Le fond éventuel de la racine reste affiché sur tous les écrans, et disparaît quand le menu est rangé.
             if (_ownGraphic != null)
                 _ownGraphic.enabled = !_collapsed && _ownGraphicWasEnabled;
 
             if (_pickerRoot != null)
-                _pickerRoot.gameObject.SetActive(showDecors);
+                _pickerRoot.gameObject.SetActive(showList);
 
             if (_toggleLabel != null)
                 _toggleLabel.text = _collapsed ? expandLabel : collapseLabel;
@@ -215,48 +300,241 @@ namespace Bauprobe.UI
             RepositionToggle();
         }
 
-        // ================================================================== bouton Importer
-        private void HookImportButton()
+        // ================================================================== boutons du menu principal
+        private void HookButtons()
         {
-            if (importButton == null) importButton = FindImportButton();
-            if (importButton == null)
+            if (importButton == null) importButton = FindButton("import");
+            if (saveButton == null) saveButton = FindButton("sauveg", "save");
+            if (loadButton == null) loadButton = FindButton("charg", "load");
+
+            Replace(importButton, OpenDecors, "Importer");
+            Replace(saveButton, OpenSave, "Sauvegarder");
+            Replace(loadButton, OpenLoad, "Charger");
+        }
+
+        private void Replace(Button button, UnityAction action, string name)
+        {
+            if (button == null)
             {
-                Debug.LogWarning("[BauprobeMenuScreens] Bouton Importer introuvable : assigne-le dans l'inspecteur (champ « Import Button »).", this);
+                Debug.LogWarning("[BauprobeMenuScreens] Bouton « " + name + " » introuvable : assigne-le dans l'inspecteur.", this);
                 return;
             }
 
-            // Le clic sur Importer ne fait plus qu'ouvrir l'écran Décors (l'ancienne action est remplacée).
+            // L'ancien onClick (par ex. LayoutManager.Save) est remplacé : le clic ouvre l'écran correspondant.
             var replacement = new Button.ButtonClickedEvent();
-            replacement.AddListener(OpenDecors);
-            importButton.onClick = replacement;
+            replacement.AddListener(action);
+            button.onClick = replacement;
         }
 
-        private Button FindImportButton()
+        private Button FindButton(params string[] keywords)
         {
             foreach (var b in GetComponentsInChildren<Button>(true))
             {
                 if (b == null || b.gameObject == _toggleGO) continue;
+                if (_pickerRoot != null && b.transform.IsChildOf(_pickerRoot)) continue;
 
                 var label = b.GetComponentInChildren<TMP_Text>(true);
-                string text = label != null ? label.text : "";
-                if (b.name.ToLowerInvariant().Contains("import") || text.ToLowerInvariant().Contains("import"))
-                    return b;
+                string haystack = (b.name + " " + (label != null ? label.text : "")).ToLowerInvariant();
+                foreach (var k in keywords)
+                    if (haystack.Contains(k)) return b;
             }
             return null;
         }
 
-        private int EntryCount => logic != null && logic.importItems != null ? logic.importItems.Count : 0;
-
-        private string EntryLabel(int i)
+        // ================================================================== contenu des écrans
+        private List<Row> BuildDecorRows()
         {
-            string l = logic.importItems[i] != null ? logic.importItems[i].label : "";
-            return string.IsNullOrEmpty(l) ? "Objet " + (i + 1) : l;
+            var rows = new List<Row>();
+            int count = logic != null && logic.importItems != null ? logic.importItems.Count : 0;
+            for (int i = 0; i < count; i++)
+            {
+                int index = i;
+                string l = logic.importItems[i] != null ? logic.importItems[i].label : "";
+                rows.Add(new Row
+                {
+                    label = string.IsNullOrEmpty(l) ? "Objet " + (i + 1) : l,
+                    onClick = () => { if (logic != null) logic.SpawnIndex(index); CloseToMain(); }
+                });
+            }
+            return rows;
         }
 
-        private void ChooseEntry(int index)
+        private List<Row> BuildSaveRows()
         {
-            if (logic != null) logic.SpawnIndex(index);
-            CloseDecors();
+            var rows = new List<Row>();
+            rows.Add(new Row { label = newSaveLabel, accent = true, onClick = StartNaming });
+
+            foreach (var n in SavedNames())
+            {
+                string name = n;
+                rows.Add(new Row
+                {
+                    label = name,
+                    onClick = () => ConfirmOverwrite(name),
+                    onDelete = () => ConfirmDelete(name, OpenSave)
+                });
+            }
+            return rows;
+        }
+
+        private List<Row> BuildLoadRows()
+        {
+            var rows = new List<Row>();
+            foreach (var n in SavedNames())
+            {
+                string name = n;
+                rows.Add(new Row
+                {
+                    label = name,
+                    onClick = () => { if (EnsureLayoutManager()) layoutManager.Load(name); CloseToMain(); },
+                    onDelete = () => ConfirmDelete(name, OpenLoad)
+                });
+            }
+            return rows;
+        }
+
+        // ================================================================== sauvegardes
+        private bool EnsureLayoutManager()
+        {
+            if (layoutManager == null) layoutManager = FindFirstObjectByType<LayoutManager>();
+            if (layoutManager == null)
+                Debug.LogWarning("[BauprobeMenuScreens] LayoutManager introuvable dans la scène (objet Managers).", this);
+            return layoutManager != null;
+        }
+
+        /// <summary>Noms des sauvegardes, de la plus récente à la plus ancienne.</summary>
+        private List<string> SavedNames()
+        {
+            var names = new List<string>();
+            string folder = LayoutManager.Folder;
+            if (!Directory.Exists(folder)) return names;
+
+            var files = new List<string>(Directory.GetFiles(folder, "*.json"));
+            files.Sort((a, b) => File.GetLastWriteTime(b).CompareTo(File.GetLastWriteTime(a)));
+            foreach (var f in files) names.Add(Path.GetFileNameWithoutExtension(f));
+            return names;
+        }
+
+        private static bool SaveExists(string name) =>
+            File.Exists(Path.Combine(LayoutManager.Folder, name + ".json"));
+
+        private void ConfirmOverwrite(string name)
+        {
+            Confirm("Écraser « " + Short(name) + " » ?", () => DoSave(name), OpenSave);
+        }
+
+        private void ConfirmDelete(string name, System.Action returnTo)
+        {
+            Confirm("Supprimer « " + Short(name) + " » ?", () =>
+            {
+                try { File.Delete(Path.Combine(LayoutManager.Folder, name + ".json")); }
+                catch (System.Exception e) { Debug.LogWarning("[BauprobeMenuScreens] Suppression impossible : " + e.Message, this); }
+                returnTo();
+            }, returnTo);
+        }
+
+        private void DoSave(string name)
+        {
+            if (!EnsureLayoutManager()) return;
+
+            if (!SaveExists(name) && SavedNames().Count >= maxSaves)
+            {
+                ShowMessage("Limite de " + maxSaves + " atteinte", OpenSave);
+                return;
+            }
+
+            layoutManager.Save(name);
+            CloseToMain();
+        }
+
+        // ------------------------------------------------------------------ nom de la sauvegarde
+        private void StartNaming()
+        {
+            _typed = "";
+
+            // Sans clavier système (éditeur Unity) : nom automatique
+            if (!TouchScreenKeyboard.isSupported)
+            {
+                FinishNaming("");
+                return;
+            }
+
+            OpenScreen(MenuScreen.Naming, namingTitle, "", BuildNamingRows, () => { CloseKeyboard(); OpenSave(); });
+            OpenKeyboard();
+        }
+
+        private List<Row> BuildNamingRows()
+        {
+            return new List<Row>
+            {
+                new Row
+                {
+                    label = "Nom : " + (string.IsNullOrEmpty(_typed) ? "(toucher pour écrire)" : _typed),
+                    onClick = OpenKeyboard
+                },
+                new Row { label = "Valider", accent = true, onClick = () => { CloseKeyboard(); FinishNaming(_typed); } },
+                new Row { label = "Nom automatique", onClick = () => { CloseKeyboard(); FinishNaming(""); } }
+            };
+        }
+
+        private void OpenKeyboard()
+        {
+            _keyboard = TouchScreenKeyboard.Open(_typed, TouchScreenKeyboardType.Default, false, false, false, false,
+                "Nom", maxNameLength);
+        }
+
+        private void CloseKeyboard()
+        {
+            if (_keyboard != null)
+            {
+                _keyboard.active = false;
+                _keyboard = null;
+            }
+        }
+
+        private void FinishNaming(string raw)
+        {
+            string name = Sanitize(raw);
+            if (string.IsNullOrEmpty(name)) name = AutoName();
+
+            if (SaveExists(name)) ConfirmOverwrite(name);
+            else DoSave(name);
+        }
+
+        private string Sanitize(string raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return "";
+            foreach (char c in Path.GetInvalidFileNameChars()) raw = raw.Replace(c.ToString(), "");
+            raw = raw.Trim().TrimEnd('.');
+            if (raw.Length > maxNameLength) raw = raw.Substring(0, maxNameLength).Trim();
+            return raw;
+        }
+
+        private string AutoName()
+        {
+            int i = SavedNames().Count + 1;
+            while (SaveExists("Scène " + i)) i++;
+            return "Scène " + i;
+        }
+
+        private static string Short(string name) => name.Length <= 16 ? name : name.Substring(0, 15) + "...";
+
+        // ------------------------------------------------------------------ messages et confirmations
+        private void Confirm(string message, System.Action onYes, System.Action onNo)
+        {
+            OpenScreen(MenuScreen.Confirm, message, "", () => new List<Row>
+            {
+                new Row { label = "Oui", accent = true, onClick = onYes },
+                new Row { label = "Non", onClick = onNo }
+            }, onNo);
+        }
+
+        private void ShowMessage(string message, System.Action next)
+        {
+            OpenScreen(MenuScreen.Confirm, message, "", () => new List<Row>
+            {
+                new Row { label = "OK", accent = true, onClick = next }
+            }, next);
         }
 
         // ================================================================== bouton − / +
@@ -318,9 +596,31 @@ namespace Bauprobe.UI
             _toggleRT.SetAsLastSibling();
         }
 
-        // ================================================================== écran Décors
-        private void BuildPicker()
+        // ================================================================== écran de liste (commun à tous les sous-menus)
+        private void OpenScreen(MenuScreen screen, string title, string emptyText,
+                                System.Func<List<Row>> provider, System.Action back)
         {
+            _screen = screen;
+            _title = title;
+            _emptyText = emptyText;
+            _provider = provider;
+            _back = back;
+            BuildScreen(provider(), 0);
+            ApplyVisibility();
+        }
+
+        /// <summary>Reconstruit l'écran en cours (même page) : après une saisie de texte, par exemple.</summary>
+        private void RefreshScreen()
+        {
+            if (_provider == null) return;
+            BuildScreen(_provider(), _page);
+            ApplyVisibility();
+        }
+
+        private void BuildScreen(List<Row> rows, int page)
+        {
+            _rows = rows ?? new List<Row>();
+
             if (_pickerRoot != null)
             {
                 _pickerRoot.gameObject.SetActive(false);
@@ -341,15 +641,15 @@ namespace Bauprobe.UI
             float dividerH = _itemH * 0.3f;
             float navH = _itemH * 0.9f;
 
-            // Combien d'objets par page : le maximum qui tient dans la hauteur du menu
+            // Combien de lignes par page : le maximum qui tient dans la hauteur du menu
             _listTop = pad + titleH + _gap;
             float bottomBase = pad + backH + _gap + dividerH + _gap;
             float listH = H - _listTop - bottomBase;
             int capacityNoNav = Mathf.Max(1, Mathf.FloorToInt((listH + _gap) / (_itemH + _gap)));
 
-            if (EntryCount <= capacityNoNav)
+            if (_rows.Count <= capacityNoNav)
             {
-                _perPage = Mathf.Max(1, EntryCount);
+                _perPage = Mathf.Max(1, _rows.Count);
                 _hasNav = false;
             }
             else
@@ -358,12 +658,11 @@ namespace Bauprobe.UI
                 _perPage = Mathf.Max(1, Mathf.FloorToInt((listWithNav + _gap) / (_itemH + _gap)));
                 _hasNav = true;
             }
-            _pageCount = Mathf.Max(1, Mathf.CeilToInt(EntryCount / (float)_perPage));
-            _page = 0;
+            _pageCount = Mathf.Max(1, Mathf.CeilToInt(_rows.Count / (float)_perPage));
 
             // Panneau (même taille et même position que le menu principal)
-            _pickerRoot = NewRect("Decors_Ecran", transform);
-            // Sans ça, le VerticalLayoutGroup du menu range l'écran Décors comme un bouton de plus
+            _pickerRoot = NewRect("Ecran_" + _screen, transform);
+            // Sans ça, le VerticalLayoutGroup du menu range l'écran comme un bouton de plus
             // (il l'écrase et l'empile sous les autres) au lieu de le superposer au menu.
             _pickerRoot.gameObject.AddComponent<LayoutElement>().ignoreLayout = true;
             _pickerRoot.anchorMin = _pickerRoot.anchorMax = _rootRT.pivot;
@@ -383,7 +682,7 @@ namespace Bauprobe.UI
             // Titre
             var title = NewRect("Titre", _pickerRoot);
             SetTopCenter(title, pad, new Vector2(W - 2f * pad, titleH));
-            AddText(title.gameObject, decorsTitle, accentColor, titleH * 0.85f, FontStyles.Normal);
+            AddText(title.gameObject, _title, accentColor, titleH * 0.85f, FontStyles.Normal);
 
             // Liste
             _listRoot = NewRect("Liste", _pickerRoot);
@@ -395,13 +694,17 @@ namespace Bauprobe.UI
             BuildDivider(divider, dividerH);
 
             // Flèches de page
+            _prevArrow = _nextArrow = null;
+            _pageText = null;
             if (_hasNav)
                 BuildNav(_pickerRoot, W, pad + backH + _gap + dividerH + _gap, navH);
 
             // Bouton Retour (fond sombre, cadre crème)
-            BuildBackButton(_pickerRoot, W * 0.5f, backH, pad);
+            var back = NewRect("Bouton_Retour", _pickerRoot);
+            SetBottomCenter(back, pad, new Vector2(W * 0.5f, backH));
+            CreateOutlinedButton(back, backLabel, backH, () => _back?.Invoke());
 
-            ShowPage(0);
+            ShowPage(page);
             _pickerRoot.SetAsLastSibling();
             _toggleRT.SetAsLastSibling();
         }
@@ -418,35 +721,43 @@ namespace Bauprobe.UI
 
             float itemW = _pickerRoot.sizeDelta.x * itemWidthRatio;
             int first = _page * _perPage;
-            int last = Mathf.Min(EntryCount, first + _perPage);
+            int last = Mathf.Min(_rows.Count, first + _perPage);
 
-            if (EntryCount == 0)
+            if (_rows.Count == 0 && !string.IsNullOrEmpty(_emptyText))
             {
                 var empty = NewRect("Vide", _listRoot);
                 SetTopCenter(empty, _listTop, new Vector2(itemW, _itemH));
-                AddText(empty.gameObject, "Aucun objet", accentColor, _itemH * 0.5f, FontStyles.Italic);
+                AddText(empty.gameObject, _emptyText, accentColor, _itemH * 0.5f, FontStyles.Italic);
             }
 
-            for (int i = first, row = 0; i < last; i++, row++)
+            for (int i = first, line = 0; i < last; i++, line++)
             {
-                string label = EntryLabel(i);
-                var rt = NewRect("Objet_" + label, _listRoot);
-                SetTopCenter(rt, _listTop + row * (_itemH + _gap), new Vector2(itemW, _itemH));
+                var row = _rows[i];
+                var rt = NewRect("Ligne_" + i, _listRoot);
+                SetTopCenter(rt, _listTop + line * (_itemH + _gap), new Vector2(itemW, _itemH));
 
-                var img = rt.gameObject.AddComponent<Image>();
-                StyleRounded(img, buttonColor, _itemH * 0.12f);
+                float deleteW = row.onDelete != null ? _itemH : 0f;
+                float space = row.onDelete != null ? _itemH * 0.15f : 0f;
 
-                var btn = rt.gameObject.AddComponent<Button>();
-                btn.targetGraphic = img;
-                StyleButtonColors(btn);
-                int index = i;
-                btn.onClick.AddListener(() => ChooseEntry(index));
+                var main = NewRect("Bouton", rt);
+                main.anchorMin = Vector2.zero;
+                main.anchorMax = Vector2.one;
+                main.offsetMin = Vector2.zero;
+                main.offsetMax = new Vector2(-(deleteW + space), 0f);
 
-                var text = NewRect("Texte", rt);
-                Stretch(text);
-                text.offsetMin = new Vector2(_itemH * 0.2f, 0f);
-                text.offsetMax = new Vector2(-_itemH * 0.2f, 0f);
-                AddText(text.gameObject, label, buttonTextColor, _itemH * 0.5f, FontStyles.Normal);
+                if (row.accent) CreateOutlinedButton(main, row.label, _itemH, row.onClick);
+                else CreateFilledButton(main, row.label, _itemH, row.onClick);
+
+                if (row.onDelete != null)
+                {
+                    var del = NewRect("Supprimer", rt);
+                    del.anchorMin = new Vector2(1f, 0f);
+                    del.anchorMax = new Vector2(1f, 1f);
+                    del.pivot = new Vector2(1f, 0.5f);
+                    del.sizeDelta = new Vector2(deleteW, 0f);
+                    del.anchoredPosition = Vector2.zero;
+                    CreateFilledButton(del, "×", _itemH, row.onDelete);   // ×
+                }
             }
 
             if (_pageText != null) _pageText.text = pageLabel + " " + (_page + 1);
@@ -518,18 +829,35 @@ namespace Bauprobe.UI
             }
         }
 
-        private void BuildBackButton(RectTransform parent, float width, float height, float bottom)
+        // ------------------------------------------------------------------ boutons génériques
+        /// <summary>Bouton crème plein, texte bordeaux.</summary>
+        private void CreateFilledButton(RectTransform rt, string label, float height, System.Action onClick)
         {
-            var rt = NewRect("Bouton_Retour", parent);
-            SetBottomCenter(rt, bottom, new Vector2(width, height));
+            var img = rt.gameObject.AddComponent<Image>();
+            StyleRounded(img, buttonColor, height * 0.12f);
 
+            var btn = rt.gameObject.AddComponent<Button>();
+            btn.targetGraphic = img;
+            StyleButtonColors(btn);
+            btn.onClick.AddListener(() => onClick?.Invoke());
+
+            var text = NewRect("Texte", rt);
+            Stretch(text);
+            text.offsetMin = new Vector2(height * 0.2f, 0f);
+            text.offsetMax = new Vector2(-height * 0.2f, 0f);
+            AddText(text.gameObject, label, buttonTextColor, height * 0.5f, FontStyles.Normal);
+        }
+
+        /// <summary>Bouton à cadre crème, fond sombre, texte crème (style du bouton Retour).</summary>
+        private void CreateOutlinedButton(RectTransform rt, string label, float height, System.Action onClick)
+        {
             var outer = rt.gameObject.AddComponent<Image>();
             StyleRounded(outer, accentColor, height * 0.15f);
 
             var btn = rt.gameObject.AddComponent<Button>();
             btn.targetGraphic = outer;
             StyleButtonColors(btn);
-            btn.onClick.AddListener(CloseDecors);
+            btn.onClick.AddListener(() => onClick?.Invoke());
 
             var inner = NewRect("Interieur", rt);
             Stretch(inner);
@@ -540,7 +868,7 @@ namespace Bauprobe.UI
             StyleRounded(innerImg, backFillColor, height * 0.1f);
             innerImg.raycastTarget = false;
 
-            AddText(inner.gameObject, backLabel, accentColor, height * 0.5f, FontStyles.Normal);
+            AddText(inner.gameObject, label, accentColor, height * 0.5f, FontStyles.Normal);
         }
 
         // ================================================================== mesures
@@ -622,7 +950,7 @@ namespace Bauprobe.UI
             tmp.enableAutoSizing = true;
             tmp.fontSizeMax = Mathf.Max(0.01f, maxSize);
             tmp.fontSizeMin = Mathf.Max(0.005f, maxSize * 0.3f);
-            tmp.enableWordWrapping = false;
+            tmp.textWrappingMode = TextWrappingModes.NoWrap;
             tmp.raycastTarget = false;
             if (font != null) tmp.font = font;
             return tmp;
