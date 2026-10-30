@@ -28,6 +28,13 @@ namespace Bauprobe.Manipulation
         [Tooltip("Espace entre deux pastilles, en proportion de la taille d'une pastille.")]
         [SerializeField, Range(0f, 0.6f)] float swatchGap = 0.25f;
 
+        [Header("Croix")]
+        [Tooltip("Le bouton de fermeture (Btn_Fermer). Sa place en haut à droite du menu est imposée à chaque ouverture.")]
+        [SerializeField] RectTransform closeButton;
+
+        [Tooltip("Décalage de la croix depuis le coin en haut à droite du menu (X vers la droite, Y vers le haut).")]
+        [SerializeField] Vector2 closeOffset = new Vector2(-10f, -10f);
+
         /// <summary>15 teintes de décor de théâtre, en 5 rangées de 3 (une famille par rangée).</summary>
         static readonly Color[] Colors =
         {
@@ -81,13 +88,36 @@ namespace Bauprobe.Manipulation
             }
 
             SetupPaletteLayout();
+            PlaceCloseButton();
             ClosePalette();
         }
 
         void OnEnable()
         {
-            // Le menu vient de s'ouvrir : la palette doit être fermée.
+            // Le menu vient de s'ouvrir : la palette doit être fermée et la croix à sa place.
+            PlaceCloseButton();
             ClosePalette();
+        }
+
+        /// <summary>
+        /// Colle la croix dans le coin en haut à droite du menu, hors de la mise en page des boutons,
+        /// et l'affiche par-dessus tout le reste (y compris la palette).
+        /// </summary>
+        void PlaceCloseButton()
+        {
+            if (closeButton == null) return;
+
+            var element = closeButton.GetComponent<LayoutElement>();
+            if (element == null) element = closeButton.gameObject.AddComponent<LayoutElement>();
+            element.ignoreLayout = true;
+
+            closeButton.anchorMin = Vector2.one;
+            closeButton.anchorMax = Vector2.one;
+            closeButton.pivot = Vector2.one;
+            closeButton.anchoredPosition = closeOffset;
+            closeButton.localRotation = Quaternion.identity;
+            closeButton.localScale = Vector3.one;
+            closeButton.SetAsLastSibling();
         }
 
         void Update()

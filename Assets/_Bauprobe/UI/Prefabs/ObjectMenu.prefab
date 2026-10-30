@@ -1529,6 +1529,8 @@ MonoBehaviour:
   palette: {fileID: 4681446294448608794}
   columns: 3
   swatchGap: 0.25
+  closeButton: {fileID: 7271828649083952514}
+  closeOffset: {x: -10, y: -10}
 --- !u!1 &8936307342582521326
 GameObject:
   m_ObjectHideFlags: 0
