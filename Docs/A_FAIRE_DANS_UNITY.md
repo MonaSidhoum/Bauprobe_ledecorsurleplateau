@@ -211,9 +211,10 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 
 ### Nettoyage du code
 
-- [ ] Deux limites de taille en double : `InteractableObject` (0,02 à 5) et le catalogue (0,1 à 10, via
-      `DecorConstraints`). Ensemble, elles donnent 0,1 à 5. Ne garder que celles du catalogue (réglables par décor).
-      La limite de **18 m** du cahier des charges est déjà appliquée en plus (section 3.3).
+- [x] Deux limites de taille en double : `InteractableObject` (0,02 à 5) et le catalogue (0,1 à 10, via
+      `DecorConstraints`). Il ne reste que celles du catalogue, réglables par décor (*Limites de taille* dans chaque
+      fiche `Decor/Catalog/<décor>.asset`), utilisées par le Scale à la manette comme à la main. La limite de **18 m**
+      du cahier des charges s'applique en plus (section 3.3).
 - [ ] `ObjectMenu` plante si l'un de ses 6 boutons n'est pas renseigné : le rendre tolérant.
 - [ ] `BauprobeMenuLogic` et `StageCalibrator` écoutent tous les deux MRUK : le menu pourrait lire
       `StageCalibrator.IsQrLocated`.

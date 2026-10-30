@@ -137,6 +137,8 @@ La scène de la branche de test (`menu général.unity`) est devenue `Scenes/Men
 3. Clic droit dans `Assets/_Bauprobe/Decor/Catalog/` > *Create > Bauprobe > Élément de décor*.
    Remplir le nom, glisser le prefab et choisir **Sol** ou **Cintre** (pour le cintre, régler aussi la
    hauteur d'accroche à l'import).
+   Régler si besoin les **Limites de taille** (échelle min / max de ce décor) : ce sont les seules limites du
+   Scale, avec en plus la limite de 18 m du cahier des charges.
 4. Ajouter cette fiche dans la liste du **`DecorCatalog`**.
 
 ## Le dossier ThirdParty

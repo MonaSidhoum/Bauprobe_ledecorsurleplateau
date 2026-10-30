@@ -51,8 +51,8 @@ namespace Bauprobe.Manipulation
 
         [Header("Scale")]
         [SerializeField] float scaleSpeed = 1f;      // facteur par seconde, joystick à fond
-        [SerializeField] float minScale = 0.02f;     // en localScale.x
-        [SerializeField] float maxScale = 5f;
+        // Les tailles min / max ne sont plus réglées ici : ce sont celles de la fiche du catalogue
+        // (Decor/Catalog/<décor>.asset > Limites de taille), plus la limite de 18 m du cahier des charges.
 
         [Header("Rotation")]
         [SerializeField] float rotationSpeed = 90f;  // degrés par seconde
@@ -226,6 +226,10 @@ namespace Bauprobe.Manipulation
                     // sur le plateau, un élément au cintre reste accroché par le haut.
                     if (stick.y != 0f)
                     {
+                        // Limites de la fiche du catalogue (réglables par décor)
+                        float minScale = _decor ? _decor.MinScale : DecorLimits.DefaultMinScale;
+                        float maxScale = _decor ? _decor.MaxScale : DecorLimits.DefaultMaxScale;
+
                         float current = transform.localScale.x;
                         float target = Mathf.Clamp(current * (1f + stick.y * scaleSpeed * dt), minScale, maxScale);
                         Vector3 newScale = transform.localScale * (target / current);

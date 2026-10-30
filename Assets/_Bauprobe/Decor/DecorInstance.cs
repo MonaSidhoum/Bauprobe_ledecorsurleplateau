@@ -60,6 +60,12 @@ namespace Bauprobe.Decor
             }
         }
 
+        /// <summary>Échelle minimale, réglée dans la fiche du catalogue (Limites de taille).</summary>
+        public float MinScale => Definition != null ? Definition.MinScale : DecorLimits.DefaultMinScale;
+
+        /// <summary>Échelle maximale, réglée dans la fiche du catalogue (Limites de taille).</summary>
+        public float MaxScale => Definition != null ? Definition.MaxScale : DecorLimits.DefaultMaxScale;
+
         /// <summary>Taille réelle de l'objet sur le plateau, en mètres.</summary>
         public Vector3 StageSize => Vector3.Scale(LocalSize, transform.localScale);
 
