@@ -363,6 +363,9 @@ namespace Bauprobe.UI
 
             // Panneau (même taille et même position que le menu principal)
             _pickerRoot = NewRect("Decors_Ecran", transform);
+            // Sans ça, le VerticalLayoutGroup du menu range l'écran Décors comme un bouton de plus
+            // (il l'écrase et l'empile sous les autres) au lieu de le superposer au menu.
+            _pickerRoot.gameObject.AddComponent<LayoutElement>().ignoreLayout = true;
             _pickerRoot.anchorMin = _pickerRoot.anchorMax = _rootRT.pivot;
             _pickerRoot.pivot = new Vector2(0.5f, 0.5f);
             _pickerRoot.sizeDelta = size;
