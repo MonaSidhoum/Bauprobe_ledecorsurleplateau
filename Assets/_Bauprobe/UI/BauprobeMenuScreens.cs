@@ -868,7 +868,12 @@ namespace Bauprobe.UI
             StyleRounded(innerImg, backFillColor, height * 0.1f);
             innerImg.raycastTarget = false;
 
-            AddText(inner.gameObject, label, accentColor, height * 0.5f, FontStyles.Normal);
+            // Le texte va sur son propre objet : un objet ne peut pas porter une Image ET un texte
+            var text = NewRect("Texte", inner);
+            Stretch(text);
+            text.offsetMin = new Vector2(height * 0.2f, 0f);
+            text.offsetMax = new Vector2(-height * 0.2f, 0f);
+            AddText(text.gameObject, label, accentColor, height * 0.5f, FontStyles.Normal);
         }
 
         // ================================================================== mesures
