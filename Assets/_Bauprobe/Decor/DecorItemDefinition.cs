@@ -34,7 +34,12 @@ namespace Bauprobe.Decor
         [SerializeField, Min(0f)] private float hangHeight = 3f;
 
         [Header("Limites de taille")]
+        [Tooltip("Échelle minimale de ce décor (1 = taille réelle du modèle). Seule limite utilisée par le Scale, " +
+                 "à la manette comme à la main.")]
         [SerializeField, Min(0.01f)] private float minScale = 0.1f;
+
+        [Tooltip("Échelle maximale de ce décor (1 = taille réelle du modèle). En plus, aucun décor ne dépasse jamais 18 m " +
+                 "(cahier des charges).")]
         [SerializeField, Min(0.01f)] private float maxScale = 10f;
 
         public string Id => id;

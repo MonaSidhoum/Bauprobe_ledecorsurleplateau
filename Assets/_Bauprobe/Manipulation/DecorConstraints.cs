@@ -81,8 +81,9 @@ namespace Bauprobe.Manipulation
 
         private void ClampScale(Transform t)
         {
-            var min = _instance != null && _instance.Definition != null ? _instance.Definition.MinScale : 0.01f;
-            var max = _instance != null && _instance.Definition != null ? _instance.Definition.MaxScale : 100f;
+            // Limites de la fiche du catalogue (réglables par décor) ; la limite de 18 m passe en plus, plus bas.
+            var min = _instance != null ? _instance.MinScale : DecorLimits.DefaultMinScale;
+            var max = _instance != null ? _instance.MaxScale : DecorLimits.DefaultMaxScale;
 
             var s = t.localScale;
             Vector3 clamped;

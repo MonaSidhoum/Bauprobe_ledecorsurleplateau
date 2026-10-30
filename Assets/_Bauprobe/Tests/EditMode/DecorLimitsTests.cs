@@ -52,5 +52,25 @@ namespace Bauprobe.Tests
 
             Object.DestroyImmediate(cube);
         }
+
+        [Test]
+        public void LimitesDeTaille_VenantDeLaFiche()
+        {
+            var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var instance = cube.AddComponent<DecorInstance>();
+
+            // Sans fiche : limites par défaut, très larges
+            Assert.That(instance.MinScale, Is.EqualTo(DecorLimits.DefaultMinScale));
+            Assert.That(instance.MaxScale, Is.EqualTo(DecorLimits.DefaultMaxScale));
+
+            // Avec une fiche : ses limites (0,1 à 10 par défaut)
+            var definition = ScriptableObject.CreateInstance<DecorItemDefinition>();
+            instance.Initialize(definition);
+            Assert.That(instance.MinScale, Is.EqualTo(definition.MinScale));
+            Assert.That(instance.MaxScale, Is.EqualTo(definition.MaxScale));
+
+            Object.DestroyImmediate(cube);
+            Object.DestroyImmediate(definition);
+        }
     }
 }
