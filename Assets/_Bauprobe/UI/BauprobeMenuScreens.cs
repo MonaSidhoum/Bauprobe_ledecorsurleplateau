@@ -461,7 +461,7 @@ namespace Bauprobe.UI
             float W = _pickerRoot.sizeDelta.x;
             float pad = Mathf.Min(W, _pickerRoot.sizeDelta.y) * 0.05f;
             float areaW = W - 2f * pad;
-            float kgap = _itemH * 0.12f;
+            float kgap = Mathf.Min(_itemH * 0.12f, areaW * 0.012f);
             int lines = rows.Length + 2;   // champ du nom + lignes de touches + ligne d'actions
             float keyH = Mathf.Min(_itemH * 1.05f, (_listH - (lines - 1) * kgap) / lines);
             float y = _listTop;
@@ -496,11 +496,15 @@ namespace Bauprobe.UI
                 y += keyH + kgap;
             }
 
-            // Ligne d'actions : Shift, Espace, Del, OK
+            // Ligne d'actions : Shift, Espace, Del, OK.
+            // Largeurs calculées à partir de la largeur d'une touche de lettre (pas de la hauteur),
+            // pour que la barre d'espace ait toujours de la place, même si le menu est étroit.
+            float unit = Mathf.Min((areaW - 9f * kgap) / 10f, keyH * 1.3f);
+            float actionsW = 10f * unit + 9f * kgap;
             var actions = NewRect("Actions", body);
-            SetTopCenter(actions, y, new Vector2(areaW, keyH));
-            float shiftW = keyH * 2.2f, delW = keyH * 2.0f, okW = keyH * 2.2f;
-            float spaceW = areaW - shiftW - delW - okW - 3f * kgap;
+            SetTopCenter(actions, y, new Vector2(actionsW, keyH));
+            float shiftW = unit * 1.9f, delW = unit * 1.6f, okW = unit * 1.9f;
+            float spaceW = actionsW - shiftW - delW - okW - 3f * kgap;
             float x = 0f;
 
             PlaceKey(actions, x, shiftW, keyH, keyShiftLabel, () => { _shift = !_shift; UpdateKeyLabels(); }, false);
@@ -542,6 +546,18 @@ namespace Bauprobe.UI
 
             if (accent) CreateOutlinedButton(rt, label, h, onClick);
             else CreateFilledButton(rt, label, h, onClick);
+
+            // Touches : même taille de texte partout (pas d'ajustement automatique touche par touche)
+            // et petites marges, pour que les lettres larges (m, w) et les touches étroites restent lisibles.
+            float fontSize = Mathf.Min(h, w * (label.Length > 1 ? 0.45f : 1f)) * 0.5f;
+            foreach (var t in rt.GetComponentsInChildren<TMP_Text>(true))
+            {
+                t.enableAutoSizing = false;
+                t.fontSize = fontSize;
+                var tr = t.rectTransform;
+                tr.offsetMin = new Vector2(w * 0.03f, 0f);
+                tr.offsetMax = new Vector2(-w * 0.03f, 0f);
+            }
             return rt;
         }
 

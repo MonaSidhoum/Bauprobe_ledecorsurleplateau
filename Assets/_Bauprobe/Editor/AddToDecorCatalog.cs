@@ -41,12 +41,16 @@ public static class AddToDecorCatalog
 
             if (AlreadyInCatalog(items, prefab)) { Debug.Log("[Catalogue] « " + prefab.name + " » est déjà dans le catalogue."); continue; }
 
-            var def = ScriptableObject.CreateInstance(defType);
+            // On part d'une copie d'une fiche existante du catalogue : les nouveaux objets héritent
+            // de ses réglages (limites de taille, etc.) au lieu de valeurs vides.
+            var template = FirstDefinition(items);
+            var def = template != null ? UnityEngine.Object.Instantiate(template) : ScriptableObject.CreateInstance(defType);
             def.name = prefab.name;
             var defSO = new SerializedObject(def);
             SetString(defSO, "id", UniqueId(items, prefab.name.ToLowerInvariant().Replace(' ', '_')));
             SetString(defSO, "displayname", prefab.name);
             SetObject(defSO, "prefab", prefab);
+            SetObject(defSO, "thumbnail", null);
             defSO.ApplyModifiedPropertiesWithoutUndo();
 
             var path = AssetDatabase.GenerateUniqueAssetPath(folder + "/" + prefab.name + ".asset");
@@ -82,6 +86,16 @@ public static class AddToDecorCatalog
         for (bool enter = true; it.NextVisible(enter); enter = false)
             if (it.isArray && it.propertyType == SerializedPropertyType.Generic && it.name != "m_Script")
                 return so.FindProperty(it.propertyPath);
+        return null;
+    }
+
+    private static ScriptableObject FirstDefinition(SerializedProperty items)
+    {
+        for (int i = 0; i < items.arraySize; i++)
+        {
+            var d = items.GetArrayElementAtIndex(i).objectReferenceValue as ScriptableObject;
+            if (d != null) return d;
+        }
         return null;
     }
 
