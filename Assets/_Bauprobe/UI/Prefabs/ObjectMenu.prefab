@@ -1196,7 +1196,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4681446294448608794
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1237,14 +1237,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9103774, g: 0.9736919, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1253,7 +1253,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 0.5
 --- !u!114 &2618679799937451486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1315,6 +1315,7 @@ GameObject:
   - component: {fileID: 1356763709726423782}
   - component: {fileID: 5900591061863661193}
   - component: {fileID: 3063717117568246617}
+  - component: {fileID: 548262149887307720}
   m_Layer: 5
   m_Name: ObjectMenu
   m_TagString: Untagged
@@ -1496,7 +1497,6 @@ MonoBehaviour:
   moveButton: {fileID: 5954314814050970775}
   scaleButton: {fileID: 6385048825077708184}
   rotateButton: {fileID: 4236275397504107554}
-  colorPalette: {fileID: 4681446294448608794}
   gapAboveObject: 0.05
   faceCamera: 1
 --- !u!114 &3063717117568246617
@@ -1513,6 +1513,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ContentSizeFitter
   m_HorizontalFit: 2
   m_VerticalFit: 2
+--- !u!114 &548262149887307720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8366143017710223703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a21887e514b247b5bf9a64878243e2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Bauprobe.Manipulation::Bauprobe.Manipulation.ObjectColorPalette
+  colorButton: {fileID: 141845835067980816}
+  palette: {fileID: 4681446294448608794}
+  columns: 3
+  swatchGap: 0.25
 --- !u!1 &8936307342582521326
 GameObject:
   m_ObjectHideFlags: 0

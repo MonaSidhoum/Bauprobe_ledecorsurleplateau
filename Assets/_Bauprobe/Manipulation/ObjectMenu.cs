@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,11 +21,6 @@ namespace Bauprobe.Manipulation
         [SerializeField] Button scaleButton;
         [SerializeField] Button rotateButton;
 
-        [Header("Palette de couleurs")]
-        [Tooltip("Panneau qui s'ouvre au clic sur Color (enfant du menu, avec un Grid Layout Group). " +
-                 "Les pastilles y sont créées automatiquement. Laissé vide = le bouton Color fait défiler les couleurs.")]
-        [SerializeField] RectTransform colorPalette;
-
         [Header("Placement")]
         [Tooltip("Espace (en mètres) entre le haut de l'objet et le bas du menu.")]
         [SerializeField] float gapAboveObject = 0.05f;
@@ -37,7 +31,6 @@ namespace Bauprobe.Manipulation
         Canvas _canvas;
         RectTransform _rect;
         Transform _camera;
-        readonly List<GameObject> _swatches = new List<GameObject>();
 
         void Awake()
         {
@@ -53,12 +46,11 @@ namespace Bauprobe.Manipulation
 
             closeButton.onClick.AddListener(Hide);
             deleteButton.onClick.AddListener(() => { if (Target) Target.Delete(); });
-            colorButton.onClick.AddListener(ToggleColorPalette);
+            colorButton.onClick.AddListener(() => { if (Target) Target.ChangeColor(); });
             moveButton.onClick.AddListener(() => { if (Target) Target.BeginManipulation(InteractableObject.Mode.Move); });
             scaleButton.onClick.AddListener(() => { if (Target) Target.BeginManipulation(InteractableObject.Mode.Scale); });
             rotateButton.onClick.AddListener(() => { if (Target) Target.BeginManipulation(InteractableObject.Mode.Rotate); });
 
-            CloseColorPalette();
             gameObject.SetActive(false);
         }
 
@@ -70,7 +62,6 @@ namespace Bauprobe.Manipulation
         public void Show(InteractableObject target)
         {
             Target = target;
-            CloseColorPalette();
             gameObject.SetActive(true);
             UpdatePose();
         }
@@ -78,63 +69,7 @@ namespace Bauprobe.Manipulation
         public void Hide()
         {
             Target = null;
-            CloseColorPalette();
             gameObject.SetActive(false);
-        }
-
-        // ------------------------------------------------------------------ palette de couleurs
-
-        /// <summary>Bouton Color : ouvre (ou referme) la palette de pastilles.</summary>
-        void ToggleColorPalette()
-        {
-            if (!Target) return;
-
-            // Pas de panneau assigné : on garde l'ancien comportement (couleur suivante).
-            if (colorPalette == null) { Target.ChangeColor(); return; }
-
-            if (colorPalette.gameObject.activeSelf) { CloseColorPalette(); return; }
-
-            BuildSwatches();
-            colorPalette.gameObject.SetActive(true);
-        }
-
-        void CloseColorPalette()
-        {
-            if (colorPalette != null) colorPalette.gameObject.SetActive(false);
-        }
-
-        /// <summary>Crée une pastille cliquable par couleur de la palette de l'objet ciblé.</summary>
-        void BuildSwatches()
-        {
-            foreach (var s in _swatches) if (s) { s.SetActive(false); Destroy(s); }
-            _swatches.Clear();
-
-            Color[] colors = Target.Palette;
-            if (colors == null) return;
-
-            for (int i = 0; i < colors.Length; i++)
-            {
-                int index = i; // copie locale, sinon tous les boutons utiliseraient le dernier i
-
-                var go = new GameObject("Pastille " + i, typeof(RectTransform), typeof(Image), typeof(Button));
-                go.layer = colorPalette.gameObject.layer;
-                go.transform.SetParent(colorPalette, false);
-
-                var image = go.GetComponent<Image>();
-                Color c = colors[i];
-                c.a = 1f;
-                image.color = c;
-
-                var button = go.GetComponent<Button>();
-                button.targetGraphic = image;
-                button.onClick.AddListener(() =>
-                {
-                    if (Target) Target.SetColor(index);
-                    CloseColorPalette();
-                });
-
-                _swatches.Add(go);
-            }
         }
 
         void LateUpdate()
