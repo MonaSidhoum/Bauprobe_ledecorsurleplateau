@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using Bauprobe.Decor;
 using Meta.XR.MRUtilityKit;
 using TMPro;
 using UnityEngine;
@@ -18,27 +20,16 @@ using UnityEngine.UI;
 /// </summary>
 public class BauprobeMenuLogic : MonoBehaviour
 {
-    [System.Serializable]
-    public class ImportItem
-    {
-        public string label = "Cube";
-        [Tooltip("Prefab à faire apparaître. Vide = un cube simple.")]
-        public GameObject prefab;
-    }
-
     [Header("Textes d'état (assignés par le générateur)")]
     public TMP_Text permissionStatus;
     public TMP_Text trackingLabel;
     public TMP_Text trackingStatus;
     public TMP_Text detectedStatus;
 
-    [Header("Importer")]
-    [Tooltip("Un élément par objet proposé dans l'écran Décors (dans l'ordre). Ajouter un objet = ajouter un élément ici.")]
-    public List<ImportItem> importItems = new List<ImportItem> { new ImportItem() };
-    [Tooltip("Parent des objets créés (ex : StageRoot, qui suit le QR code). Vide = cherche 'StageRoot'.")]
-    public Transform spawnParent;
-    public float spawnSpacing = 0.2f;
-    public float cubeSize = 0.1f;
+    [Header("Objets (catalogue)")]
+    [Tooltip("Vide = cherche automatiquement le DecorSpawner de la scène (objet Managers). " +
+             "La liste des objets proposés est celle du catalogue du DecorSpawner (asset du projet).")]
+    public DecorSpawner spawner;
 
     [Header("QR code")]
     public string scenePermission = "com.oculus.permission.USE_SCENE";
@@ -50,12 +41,10 @@ public class BauprobeMenuLogic : MonoBehaviour
     public Toggle originalTrackingToggle;
     public bool hideOriginalPanel = true;
 
-    private readonly List<GameObject> _spawned = new List<GameObject>();
     private Canvas _canvas;
     private RectTransform _canvasRect;
     private RectTransform _container;
     private bool _trackingOn;
-    private int _spawnCount;
     private float _nextRefresh;
     private string _lastPayload = "";
     private readonly HashSet<MRUKTrackable> _tracked = new HashSet<MRUKTrackable>();
@@ -181,57 +170,59 @@ public class BauprobeMenuLogic : MonoBehaviour
         RefreshStatus();
     }
 
+    // ------------------------------------------------------------------ objets (catalogue)
+    private bool EnsureSpawner()
+    {
+        if (spawner == null) spawner = FindFirstObjectByType<DecorSpawner>();
+        if (spawner == null) Debug.LogWarning("[BauprobeMenu] DecorSpawner introuvable dans la scène (objet Managers).", this);
+        return spawner != null;
+    }
+
+    /// <summary>Objets du catalogue de l'équipe (asset Decor Catalog), dans l'ordre de l'asset.</summary>
+    public List<DecorItemDefinition> GetCatalogItems()
+    {
+        var result = new List<DecorItemDefinition>();
+        if (!EnsureSpawner() || spawner.Catalog == null) return result;
+
+        // Le catalogue expose sa liste sous un nom que ce script n'a pas besoin de connaître :
+        // on prend la première liste de DecorItemDefinition trouvée dedans.
+        object catalog = spawner.Catalog;
+        const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+        foreach (var type in new[] { catalog.GetType(), catalog.GetType().BaseType })
+        {
+            if (type == null) continue;
+            foreach (var f in type.GetFields(flags))
+                if (TryCollect(f.GetValue(catalog), result)) return result;
+            foreach (var p in type.GetProperties(flags))
+                if (p.GetIndexParameters().Length == 0 && p.CanRead && TryCollect(p.GetValue(catalog), result)) return result;
+        }
+        return result;
+    }
+
+    private static bool TryCollect(object value, List<DecorItemDefinition> into)
+    {
+        if (value == null || value is string || !(value is IEnumerable<DecorItemDefinition> items)) return false;
+        foreach (var d in items) if (d != null) into.Add(d);
+        return true;
+    }
+
+    /// <summary>Fait apparaître l'objet n° index du catalogue devant la personne, posé sur le plateau.</summary>
     public void SpawnIndex(int index)
     {
-        if (importItems == null || index < 0 || index >= importItems.Count) { SpawnItem(new ImportItem()); return; }
-        SpawnItem(importItems[index]);
+        var items = GetCatalogItems();
+        if (index < 0 || index >= items.Count) { Debug.LogWarning("[BauprobeMenu] Objet n° " + index + " absent du catalogue.", this); return; }
+        if (items[index].Prefab == null) { Debug.LogWarning("[BauprobeMenu] « " + items[index].DisplayName + " » n'a pas de prefab dans le catalogue.", this); return; }
+
+        var instance = spawner.SpawnInFrontOfUser(items[index]);
+        if (instance != null) Debug.Log("[BauprobeMenu] Objet créé : " + instance.name);
     }
 
-    private void SpawnItem(ImportItem item)
-    {
-        if (spawnParent == null)
-        {
-            var stage = GameObject.Find("StageRoot");
-            if (stage != null) spawnParent = stage.transform;
-        }
-
-        GameObject obj;
-        if (item.prefab != null) obj = Instantiate(item.prefab);
-        else
-        {
-            obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            obj.transform.localScale = Vector3.one * cubeSize;
-        }
-        obj.name = item.label + "_" + _spawnCount;
-
-        if (spawnParent != null)
-        {
-            obj.transform.SetParent(spawnParent, false);
-            obj.transform.localPosition = new Vector3(_spawnCount * spawnSpacing, cubeSize * 0.5f, 0f);
-        }
-        else if (Camera.main != null)
-        {
-            var cam = Camera.main.transform;
-            obj.transform.position = cam.position + cam.forward + cam.right * (_spawnCount * spawnSpacing);
-            Debug.LogWarning("[BauprobeMenu] 'StageRoot' introuvable : objet placé devant toi. Assigne 'Spawn Parent'.", this);
-        }
-        _spawned.Add(obj);
-        _spawnCount++;
-        Debug.Log("[BauprobeMenu] Objet créé : " + obj.name);
-    }
-
-    /// <summary>Supprime tous les objets créés avec Importer.</summary>
+    /// <summary>Supprime tous les objets posés sur le plateau (ceux qui sont aussi sauvegardés).</summary>
     public void DeleteAll()
     {
-        int count = 0;
-        foreach (var obj in _spawned)
-        {
-            if (obj == null) continue;
-            Destroy(obj);
-            count++;
-        }
-        _spawned.Clear();
-        _spawnCount = 0;
+        if (!EnsureSpawner()) return;
+        int count = spawner.Instances.Count;
+        spawner.Clear();
         Debug.Log("[BauprobeMenu] Supprimer tout : " + count + " objet(s) supprimé(s)");
     }
 

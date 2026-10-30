@@ -2198,12 +2198,7 @@ MonoBehaviour:
   trackingLabel: {fileID: 3822838130431991153}
   trackingStatus: {fileID: 1521751907195787926}
   detectedStatus: {fileID: 8992327872553785144}
-  importItems:
-  - label: Cube
-    prefab: {fileID: 0}
-  spawnParent: {fileID: 0}
-  spawnSpacing: 0.2
-  cubeSize: 0.1
+  spawner: {fileID: 0}
   scenePermission: com.oculus.permission.USE_SCENE
   trackingInitiallyOn: 1
   originalRequestButton: {fileID: 0}
@@ -2236,6 +2231,19 @@ MonoBehaviour:
   pageLabel: page
   noDecorLabel: No object
   noSaveLabel: No Save
+  yesLabel: Yes
+  noLabel: No
+  okLabel: OK
+  overwriteMessage: Overwrite "{0}"?
+  deleteMessage: Delete "{0}"?
+  limitMessage: Limit of {0} reached
+  autoNamePrefix: 'Save '
+  nameHint: (empty = automatic name)
+  azerty: 1
+  keySpaceLabel: Space
+  keyDeleteLabel: Del
+  keyShiftLabel: Shift
+  keyOkLabel: OK
   maxSaves: 50
   maxNameLength: 30
   itemHeightRatio: 0.065

@@ -58,6 +58,26 @@ namespace Bauprobe.UI
         [SerializeField] private string pageLabel = "page";
         [SerializeField] private string noDecorLabel = "Aucun objet";
         [SerializeField] private string noSaveLabel = "Aucune sauvegarde";
+        [SerializeField] private string yesLabel = "Yes";
+        [SerializeField] private string noLabel = "No";
+        [SerializeField] private string okLabel = "OK";
+        [Tooltip("{0} = nom de la sauvegarde.")]
+        [SerializeField] private string overwriteMessage = "Overwrite \"{0}\"?";
+        [Tooltip("{0} = nom de la sauvegarde.")]
+        [SerializeField] private string deleteMessage = "Delete \"{0}\"?";
+        [Tooltip("{0} = nombre maximum de sauvegardes.")]
+        [SerializeField] private string limitMessage = "Limit of {0} reached";
+        [Tooltip("Nom donné quand on valide sans rien taper : « Save 1 », « Save 2 »...")]
+        [SerializeField] private string autoNamePrefix = "Save ";
+        [SerializeField] private string nameHint = "(empty = automatic name)";
+
+        [Header("Clavier du menu (écran du nom)")]
+        [Tooltip("Coché : AZERTY. Décoché : QWERTY.")]
+        [SerializeField] private bool azerty = true;
+        [SerializeField] private string keySpaceLabel = "Space";
+        [SerializeField] private string keyDeleteLabel = "Del";
+        [SerializeField] private string keyShiftLabel = "Shift";
+        [SerializeField] private string keyOkLabel = "OK";
 
         [Header("Sauvegardes")]
         [Tooltip("Nombre maximum de sauvegardes. Au-delà, il faut en supprimer une.")]
@@ -143,9 +163,22 @@ namespace Bauprobe.UI
         private float _gap;
         private float _listTop;
 
-        // saisie du nom
-        private TouchScreenKeyboard _keyboard;
+        // saisie du nom (clavier affiché dans le menu)
+        private struct KeyLabel
+        {
+            public TMP_Text text;
+            public string ch;
+        }
+
+        private static readonly string[] AzertyRows = { "1234567890", "azertyuiop", "qsdfghjklm", "wxcvbn-_", "éèêàùçô" };
+        private static readonly string[] QwertyRows = { "1234567890", "qwertyuiop", "asdfghjkl", "zxcvbnm-_", "éèêàùçô" };
+
+        private readonly List<KeyLabel> _keyLabels = new List<KeyLabel>();
+        private TMP_Text _nameText;
         private string _typed = "";
+        private bool _shift = true;
+        private System.Action<RectTransform> _body;
+        private float _listH;
 
         public bool IsCollapsed => _collapsed;
 
@@ -181,41 +214,6 @@ namespace Bauprobe.UI
             EnsureLayoutManager();
         }
 
-        private void OnDisable()
-        {
-            CloseKeyboard();
-        }
-
-        private void Update()
-        {
-            if (_keyboard == null) return;
-
-            var status = _keyboard.status;
-            string text = _keyboard.text;
-
-            if (status == TouchScreenKeyboard.Status.Visible)
-            {
-                if (text != _typed)
-                {
-                    _typed = text;
-                    if (_screen == MenuScreen.Naming) RefreshScreen();
-                }
-                return;
-            }
-
-            if (status == TouchScreenKeyboard.Status.Done)
-            {
-                _typed = text;
-                _keyboard = null;
-                if (_screen == MenuScreen.Naming) FinishNaming(_typed);
-                return;
-            }
-
-            // Annulé ou fermé sans valider : on reste sur l'écran, on peut rouvrir le clavier ou valider
-            _keyboard = null;
-            if (_screen == MenuScreen.Naming) RefreshScreen();
-        }
-
         // ================================================================== API publique
         public void Toggle() => SetCollapsed(!_collapsed);
 
@@ -248,7 +246,6 @@ namespace Bauprobe.UI
         /// <summary>Revient au menu principal.</summary>
         public void CloseToMain()
         {
-            CloseKeyboard();
             _screen = MenuScreen.Main;
             ApplyVisibility();
         }
@@ -345,15 +342,16 @@ namespace Bauprobe.UI
         private List<Row> BuildDecorRows()
         {
             var rows = new List<Row>();
-            int count = logic != null && logic.importItems != null ? logic.importItems.Count : 0;
-            for (int i = 0; i < count; i++)
+            if (logic == null) return rows;
+            var items = logic.GetCatalogItems();   // liste = asset Decor Catalog (modifiable dans Unity)
+            for (int i = 0; i < items.Count; i++)
             {
                 int index = i;
-                string l = logic.importItems[i] != null ? logic.importItems[i].label : "";
+                string l = items[i].DisplayName;
                 rows.Add(new Row
                 {
                     label = string.IsNullOrEmpty(l) ? "Objet " + (i + 1) : l,
-                    onClick = () => { if (logic != null) logic.SpawnIndex(index); CloseToMain(); }
+                    onClick = () => { logic.SpawnIndex(index); CloseToMain(); }
                 });
             }
             return rows;
@@ -420,12 +418,12 @@ namespace Bauprobe.UI
 
         private void ConfirmOverwrite(string name)
         {
-            Confirm("Écraser « " + Short(name) + " » ?", () => DoSave(name), OpenSave);
+            Confirm(string.Format(overwriteMessage, Short(name)), () => DoSave(name), OpenSave);
         }
 
         private void ConfirmDelete(string name, System.Action returnTo)
         {
-            Confirm("Supprimer « " + Short(name) + " » ?", () =>
+            Confirm(string.Format(deleteMessage, Short(name)), () =>
             {
                 try { File.Delete(Path.Combine(LayoutManager.Folder, name + ".json")); }
                 catch (System.Exception e) { Debug.LogWarning("[BauprobeMenuScreens] Suppression impossible : " + e.Message, this); }
@@ -439,7 +437,7 @@ namespace Bauprobe.UI
 
             if (!SaveExists(name) && SavedNames().Count >= maxSaves)
             {
-                ShowMessage("Limite de " + maxSaves + " atteinte", OpenSave);
+                ShowMessage(string.Format(limitMessage, maxSaves), OpenSave);
                 return;
             }
 
@@ -451,44 +449,144 @@ namespace Bauprobe.UI
         private void StartNaming()
         {
             _typed = "";
+            _shift = true;   // première lettre en majuscule
+            OpenScreen(MenuScreen.Naming, namingTitle, "", () => new List<Row>(), OpenSave, BuildKeyboard);
+        }
 
-            // Sans clavier système (éditeur Unity) : nom automatique
-            if (!TouchScreenKeyboard.isSupported)
+        private void BuildKeyboard(RectTransform body)
+        {
+            _keyLabels.Clear();
+            var rows = azerty ? AzertyRows : QwertyRows;
+
+            float W = _pickerRoot.sizeDelta.x;
+            float pad = Mathf.Min(W, _pickerRoot.sizeDelta.y) * 0.05f;
+            float areaW = W - 2f * pad;
+            float kgap = _itemH * 0.12f;
+            int lines = rows.Length + 2;   // champ du nom + lignes de touches + ligne d'actions
+            float keyH = Mathf.Min(_itemH * 1.05f, (_listH - (lines - 1) * kgap) / lines);
+            float y = _listTop;
+
+            // Champ du nom (cadre crème, fond sombre)
+            var field = NewRect("Champ_Nom", body);
+            SetTopCenter(field, y, new Vector2(areaW, keyH));
+            var fieldOuter = field.gameObject.AddComponent<Image>();
+            StyleRounded(fieldOuter, accentColor, keyH * 0.15f);
+            fieldOuter.raycastTarget = false;
+
+            var fieldInner = NewRect("Interieur", field);
+            Stretch(fieldInner);
+            float inset = keyH * 0.1f;
+            fieldInner.offsetMin = new Vector2(inset, inset);
+            fieldInner.offsetMax = new Vector2(-inset, -inset);
+            var fieldInnerImg = fieldInner.gameObject.AddComponent<Image>();
+            StyleRounded(fieldInnerImg, backFillColor, keyH * 0.1f);
+            fieldInnerImg.raycastTarget = false;
+
+            var fieldText = NewRect("Texte", fieldInner);
+            Stretch(fieldText);
+            fieldText.offsetMin = new Vector2(keyH * 0.3f, 0f);
+            fieldText.offsetMax = new Vector2(-keyH * 0.3f, 0f);
+            _nameText = AddText(fieldText.gameObject, "", accentColor, keyH * 0.55f, FontStyles.Normal);
+            y += keyH + kgap;
+
+            // Lignes de touches
+            foreach (var chars in rows)
             {
-                FinishNaming("");
-                return;
+                BuildKeyRow(body, y, chars, areaW, keyH, kgap);
+                y += keyH + kgap;
             }
 
-            OpenScreen(MenuScreen.Naming, namingTitle, "", BuildNamingRows, () => { CloseKeyboard(); OpenSave(); });
-            OpenKeyboard();
+            // Ligne d'actions : Shift, Espace, Del, OK
+            var actions = NewRect("Actions", body);
+            SetTopCenter(actions, y, new Vector2(areaW, keyH));
+            float shiftW = keyH * 2.2f, delW = keyH * 2.0f, okW = keyH * 2.2f;
+            float spaceW = areaW - shiftW - delW - okW - 3f * kgap;
+            float x = 0f;
+
+            PlaceKey(actions, x, shiftW, keyH, keyShiftLabel, () => { _shift = !_shift; UpdateKeyLabels(); }, false);
+            x += shiftW + kgap;
+            PlaceKey(actions, x, spaceW, keyH, keySpaceLabel, TypeSpace, false);
+            x += spaceW + kgap;
+            PlaceKey(actions, x, delW, keyH, keyDeleteLabel, DeleteChar, false);
+            x += delW + kgap;
+            PlaceKey(actions, x, okW, keyH, keyOkLabel, () => FinishNaming(_typed), true);
+
+            UpdateNameField();
+            UpdateKeyLabels();
         }
 
-        private List<Row> BuildNamingRows()
+        private void BuildKeyRow(RectTransform body, float y, string chars, float areaW, float keyH, float kgap)
         {
-            return new List<Row>
+            int n = chars.Length;
+            float keyW = Mathf.Min((areaW - (n - 1) * kgap) / n, keyH * 1.3f);
+            float rowW = n * keyW + (n - 1) * kgap;
+
+            var row = NewRect("Rangee", body);
+            SetTopCenter(row, y, new Vector2(rowW, keyH));
+
+            for (int i = 0; i < n; i++)
             {
-                new Row
-                {
-                    label = "Nom : " + (string.IsNullOrEmpty(_typed) ? "(toucher pour écrire)" : _typed),
-                    onClick = OpenKeyboard
-                },
-                new Row { label = "Valider", accent = true, onClick = () => { CloseKeyboard(); FinishNaming(_typed); } },
-                new Row { label = "Nom automatique", onClick = () => { CloseKeyboard(); FinishNaming(""); } }
-            };
+                string ch = chars[i].ToString();
+                var key = PlaceKey(row, i * (keyW + kgap), keyW, keyH, ch.ToUpperInvariant(), () => TypeChar(ch), false);
+                _keyLabels.Add(new KeyLabel { text = key.GetComponentInChildren<TMP_Text>(), ch = ch });
+            }
         }
 
-        private void OpenKeyboard()
+        private RectTransform PlaceKey(RectTransform parent, float x, float w, float h, string label, System.Action onClick, bool accent)
         {
-            _keyboard = TouchScreenKeyboard.Open(_typed, TouchScreenKeyboardType.Default, false, false, false, false,
-                "Nom", maxNameLength);
+            var rt = NewRect("Touche_" + label, parent);
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0f, 1f);
+            rt.sizeDelta = new Vector2(w, h);
+            rt.anchoredPosition = new Vector2(x, 0f);
+
+            if (accent) CreateOutlinedButton(rt, label, h, onClick);
+            else CreateFilledButton(rt, label, h, onClick);
+            return rt;
         }
 
-        private void CloseKeyboard()
+        private void TypeChar(string ch)
         {
-            if (_keyboard != null)
+            if (_typed.Length >= maxNameLength) return;
+
+            bool letter = char.IsLetter(ch[0]);
+            _typed += letter ? (_shift ? ch.ToUpperInvariant() : ch.ToLowerInvariant()) : ch;
+
+            if (letter && _shift)
             {
-                _keyboard.active = false;
-                _keyboard = null;
+                _shift = false;
+                UpdateKeyLabels();
+            }
+            UpdateNameField();
+        }
+
+        private void TypeSpace()
+        {
+            if (_typed.Length == 0 || _typed.Length >= maxNameLength || _typed.EndsWith(" ")) return;
+            _typed += " ";
+            UpdateNameField();
+        }
+
+        private void DeleteChar()
+        {
+            if (_typed.Length == 0) return;
+            _typed = _typed.Substring(0, _typed.Length - 1);
+            UpdateNameField();
+        }
+
+        private void UpdateNameField()
+        {
+            if (_nameText == null) return;
+            _nameText.text = _typed.Length == 0 ? nameHint : _typed + "|";
+        }
+
+        private void UpdateKeyLabels()
+        {
+            foreach (var k in _keyLabels)
+            {
+                if (k.text == null) continue;
+                bool letter = char.IsLetter(k.ch[0]);
+                k.text.text = letter && !_shift ? k.ch.ToLowerInvariant() : k.ch.ToUpperInvariant();
             }
         }
 
@@ -513,8 +611,8 @@ namespace Bauprobe.UI
         private string AutoName()
         {
             int i = SavedNames().Count + 1;
-            while (SaveExists("Scène " + i)) i++;
-            return "Scène " + i;
+            while (SaveExists(autoNamePrefix + i)) i++;
+            return autoNamePrefix + i;
         }
 
         private static string Short(string name) => name.Length <= 16 ? name : name.Substring(0, 15) + "...";
@@ -524,8 +622,8 @@ namespace Bauprobe.UI
         {
             OpenScreen(MenuScreen.Confirm, message, "", () => new List<Row>
             {
-                new Row { label = "Oui", accent = true, onClick = onYes },
-                new Row { label = "Non", onClick = onNo }
+                new Row { label = yesLabel, accent = true, onClick = onYes },
+                new Row { label = noLabel, onClick = onNo }
             }, onNo);
         }
 
@@ -533,7 +631,7 @@ namespace Bauprobe.UI
         {
             OpenScreen(MenuScreen.Confirm, message, "", () => new List<Row>
             {
-                new Row { label = "OK", accent = true, onClick = next }
+                new Row { label = okLabel, accent = true, onClick = next }
             }, next);
         }
 
@@ -598,9 +696,11 @@ namespace Bauprobe.UI
 
         // ================================================================== écran de liste (commun à tous les sous-menus)
         private void OpenScreen(MenuScreen screen, string title, string emptyText,
-                                System.Func<List<Row>> provider, System.Action back)
+                                System.Func<List<Row>> provider, System.Action back,
+                                System.Action<RectTransform> body = null)
         {
             _screen = screen;
+            _body = body;
             _title = title;
             _emptyText = emptyText;
             _provider = provider;
@@ -645,6 +745,7 @@ namespace Bauprobe.UI
             _listTop = pad + titleH + _gap;
             float bottomBase = pad + backH + _gap + dividerH + _gap;
             float listH = H - _listTop - bottomBase;
+            _listH = listH;
             int capacityNoNav = Mathf.Max(1, Mathf.FloorToInt((listH + _gap) / (_itemH + _gap)));
 
             if (_rows.Count <= capacityNoNav)
@@ -705,6 +806,15 @@ namespace Bauprobe.UI
             CreateOutlinedButton(back, backLabel, backH, () => _back?.Invoke());
 
             ShowPage(page);
+
+            // Contenu particulier de l'écran (ex : clavier de l'écran du nom)
+            if (_body != null)
+            {
+                var bodyRT = NewRect("Corps", _pickerRoot);
+                Stretch(bodyRT);
+                _body(bodyRT);
+            }
+
             _pickerRoot.SetAsLastSibling();
             _toggleRT.SetAsLastSibling();
         }
