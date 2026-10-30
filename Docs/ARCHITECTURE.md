@@ -91,6 +91,8 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    de `InteractableObject`, cochée par défaut).
    **Rotation** : joystick gauche / droite = tourner sur lui-même, haut / bas = basculer. La rotation se fait
    autour du centre de l'objet, et son point le plus bas (sol) ou le plus haut (cintre) reste à la même hauteur.
+   Pendant la Rotation, un bouton **Remettre à plat** (`LevelButton`, créé par le code, rien à ajouter dans la scène)
+   s'affiche au-dessus de l'objet : il le remet parallèle au sol sans changer son orientation gauche / droite.
    Pour interdire la bascule sur un décor, cocher *Keep Upright* sur son `DecorConstraints`
    (et décocher *Allow Tilt* sur son `InteractableObject`).
 6. **`LayoutManager.Save()`** écrit la liste des objets et leurs positions sur le plateau dans un fichier JSON

@@ -71,5 +71,20 @@ namespace Bauprobe.Tests
 
             Assert.That(_cube.transform.localPosition.y, Is.EqualTo(3f).Within(1e-4f));
         }
+
+        [Test]
+        public void RemettreAPlat_AnnuleLaBascule_GardeLOrientationEtLeSol()
+        {
+            _instance.RotateAroundCenter(Vector3.up, 40f);    // tourné de 40° sur lui-même
+            _instance.RotateAroundCenter(Vector3.right, 30f); // puis basculé de 30°
+
+            _instance.LevelWithStage();
+
+            Assert.That(Vector3.Angle(_cube.transform.up, Vector3.up), Is.LessThan(0.01f), "l'objet est de nouveau à plat");
+            var forward = Vector3.ProjectOnPlane(_cube.transform.forward, Vector3.up);
+            Assert.That(Vector3.SignedAngle(Vector3.forward, forward, Vector3.up), Is.EqualTo(40f).Within(0.01f),
+                "l'orientation gauche / droite n'a pas changé");
+            Assert.That(LowestPoint(), Is.EqualTo(0f).Within(1e-4f), "il est toujours posé au sol");
+        }
     }
 }

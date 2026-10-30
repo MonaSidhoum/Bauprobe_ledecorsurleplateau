@@ -17,7 +17,8 @@ namespace Bauprobe.Manipulation
     ///   (avant / arrière / gauche / droite par rapport à l'endroit où l'on regarde ;
     ///   en maintenant le bouton de saisie (grip) : haut / bas = monter / descendre, jusqu'au sol du plateau).
     /// Rotation : joystick gauche / droite = tourner sur lui-même,
-    ///   haut / bas = le basculer vers l'avant / l'arrière.
+    ///   haut / bas = le basculer vers l'avant / l'arrière ;
+    ///   le bouton « Remettre à plat » au-dessus de l'objet le remet parallèle au sol.
     /// </summary>
     public class InteractableObject : MonoBehaviour
     {
@@ -140,6 +141,28 @@ namespace Bauprobe.Manipulation
 
             // On cache le menu pendant la manipulation
             if (ObjectMenu.Instance) ObjectMenu.Instance.Hide();
+
+            // En Rotation : bouton « Remettre à plat » au-dessus de l'objet
+            if (mode == Mode.Rotate && allowTilt) LevelButton.Show(this, LevelWithFloor);
+        }
+
+        /// <summary>
+        /// Remet l'objet parallèle au sol (annule la bascule avant / arrière) sans changer
+        /// son orientation gauche / droite. Appelé par le bouton « Remettre à plat ».
+        /// </summary>
+        public void LevelWithFloor()
+        {
+            if (!_decor) _decor = GetComponent<DecorInstance>();
+            if (_decor)
+            {
+                // Autour du centre ; un objet au sol reste posé, un objet au cintre reste accroché.
+                _decor.LevelWithStage();
+            }
+            else
+            {
+                Vector3 up = transform.parent ? transform.parent.up : Vector3.up;
+                transform.rotation = Quaternion.FromToRotation(transform.up, up) * transform.rotation;
+            }
         }
 
         // ------------------------------------------------------------------
@@ -151,7 +174,10 @@ namespace Bauprobe.Manipulation
             // Ne pas valider dans la frame même où la manipulation a commencé
             if (Time.frameCount != _startFrame)
             {
-                if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controller)) { EndManipulation(true); return; }
+                // La gâchette valide, sauf si le laser vise le bouton « Remettre à plat » (c'est alors un clic sur le bouton).
+                bool onLevelButton = controllerAnchor &&
+                                     LevelButton.IsPointerOver(new Ray(controllerAnchor.position, controllerAnchor.forward));
+                if (!onLevelButton && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controller)) { EndManipulation(true); return; }
                 if (OVRInput.GetDown(OVRInput.Button.Two, controller)) { EndManipulation(false); return; } // B
             }
 
@@ -250,6 +276,7 @@ namespace Bauprobe.Manipulation
             CurrentMode = Mode.None;
             Active = null;
             s_lastEndFrame = Time.frameCount;
+            LevelButton.Hide();
 
             // On réaffiche le menu au-dessus de l'objet
             if (ObjectMenu.Instance) ObjectMenu.Instance.Show(this);
@@ -270,7 +297,7 @@ namespace Bauprobe.Manipulation
 
         void OnDisable()
         {
-            if (Active == this) { Active = null; s_lastEndFrame = Time.frameCount; }
+            if (Active == this) { Active = null; s_lastEndFrame = Time.frameCount; LevelButton.Hide(); }
             CurrentMode = Mode.None;
         }
     }

@@ -148,6 +148,24 @@ namespace Bauprobe.Decor
         }
 
         /// <summary>
+        /// Remet l'objet parallèle au plateau : son axe vertical redevient vertical, sans changer
+        /// son orientation gauche / droite. La rotation se fait autour de son centre ; son point le plus bas
+        /// (sol) ou le plus haut (cintre) reste à la même hauteur.
+        /// </summary>
+        public void LevelWithStage()
+        {
+            var up = transform.parent != null ? transform.parent.up : Vector3.up;
+            var delta = Quaternion.FromToRotation(transform.up, up);
+            if (Quaternion.Angle(delta, Quaternion.identity) < 0.01f)
+            {
+                return; // déjà à plat
+            }
+
+            delta.ToAngleAxis(out var degrees, out var axis);
+            RotateAroundCenter(axis, degrees);
+        }
+
+        /// <summary>
         /// Empêche l'objet de passer sous le plateau : si son point le plus bas est sous le sol,
         /// il est remonté juste au niveau du sol.
         /// </summary>
