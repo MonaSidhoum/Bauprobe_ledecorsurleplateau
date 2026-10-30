@@ -6,8 +6,8 @@ using UnityEngine.UI;
 namespace Bauprobe.Manipulation
 {
     /// <summary>
-    /// Bouton « Remettre à plat » affiché au-dessus de l'objet pendant le mode Rotation.
-    /// Un clic (laser + gâchette) remet l'objet parallèle au sol, sans changer son orientation gauche / droite.
+    /// Bouton « Aligner au sol » affiché au-dessus de l'objet pendant le mode Rotation.
+    /// Un clic (laser + gâchette) pose l'objet parallèle au sol, sur la face la plus proche de sa position actuelle.
     ///
     /// Le bouton est créé par le code la première fois qu'on en a besoin : il n'y a rien à ajouter
     /// dans la scène ni dans un prefab. Il est cliqué par l'OVRInputModule de l'EventSystem,
@@ -124,7 +124,7 @@ namespace Bauprobe.Manipulation
         // Construit le Canvas, le fond du bouton et son texte.
         static LevelButton Create()
         {
-            var root = new GameObject("BoutonRemettreAPlat", typeof(RectTransform));
+            var root = new GameObject("BoutonAlignerAuSol", typeof(RectTransform));
             root.SetActive(false);
 
             var canvas = root.AddComponent<Canvas>();
@@ -154,7 +154,7 @@ namespace Bauprobe.Manipulation
             label.transform.SetParent(background.transform, false);
             Stretch((RectTransform)label.transform);
             var text = label.AddComponent<TextMeshProUGUI>();
-            text.text = "Remettre à plat";
+            text.text = "Aligner au sol";
             text.fontSize = 36f;
             text.alignment = TextAlignmentOptions.Center;
             text.color = Color.white;

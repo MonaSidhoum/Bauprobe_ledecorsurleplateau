@@ -161,7 +161,7 @@ Le détail (premier lancement sur un nouvel ordinateur, installation sur le casq
 | Sélectionner un objet | viser avec le laser + **gâchette** → le menu de l'objet s'ouvre |
 | Déplacer | bouton *Déplacer*, puis bouger la manette ; **joystick** = avant / arrière / gauche / droite (par rapport à votre regard) ; **grip maintenu + joystick haut / bas** = monter / descendre |
 | Agrandir / rétrécir | bouton *Scale*, puis joystick haut / bas (l'objet reste posé au sol, ou accroché par le haut s'il est au cintre) |
-| Tourner | bouton *Rotation*, puis joystick gauche / droite = tourner sur lui-même ; joystick haut / bas = basculer vers l'avant / l'arrière ; laser + gâchette sur le bouton **Remettre à plat** (au-dessus de l'objet) = le remettre parallèle au sol |
+| Tourner | bouton *Rotation*, puis joystick gauche / droite = tourner sur lui-même ; joystick haut / bas = basculer vers l'avant / l'arrière ; laser + gâchette sur le bouton **Aligner au sol** (au-dessus de l'objet) = le poser parallèle au sol, sur la face la plus proche (un objet un peu penché se redresse, un objet très penché se couche sur le côté) |
 | Valider / Annuler | **gâchette** / bouton **B** |
 | Couleur, Supprimer | boutons du menu de l'objet ; ✕ pour fermer le menu |
 

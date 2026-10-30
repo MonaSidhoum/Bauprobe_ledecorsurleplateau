@@ -18,7 +18,7 @@ namespace Bauprobe.Manipulation
     ///   en maintenant le bouton de saisie (grip) : haut / bas = monter / descendre, jusqu'au sol du plateau).
     /// Rotation : joystick gauche / droite = tourner sur lui-même,
     ///   haut / bas = le basculer vers l'avant / l'arrière ;
-    ///   le bouton « Remettre à plat » au-dessus de l'objet le remet parallèle au sol.
+    ///   le bouton « Aligner au sol » au-dessus de l'objet le remet parallèle au sol.
     /// </summary>
     public class InteractableObject : MonoBehaviour
     {
@@ -142,13 +142,13 @@ namespace Bauprobe.Manipulation
             // On cache le menu pendant la manipulation
             if (ObjectMenu.Instance) ObjectMenu.Instance.Hide();
 
-            // En Rotation : bouton « Remettre à plat » au-dessus de l'objet
+            // En Rotation : bouton « Aligner au sol » au-dessus de l'objet
             if (mode == Mode.Rotate && allowTilt) LevelButton.Show(this, LevelWithFloor);
         }
 
         /// <summary>
-        /// Remet l'objet parallèle au sol (annule la bascule avant / arrière) sans changer
-        /// son orientation gauche / droite. Appelé par le bouton « Remettre à plat ».
+        /// Pose l'objet parallèle au sol, sur la face la plus proche de sa position actuelle
+        /// (voir DecorInstance.LevelWithStage). Appelé par le bouton « Aligner au sol ».
         /// </summary>
         public void LevelWithFloor()
         {
@@ -161,7 +161,10 @@ namespace Bauprobe.Manipulation
             else
             {
                 Vector3 up = transform.parent ? transform.parent.up : Vector3.up;
-                transform.rotation = Quaternion.FromToRotation(transform.up, up) * transform.rotation;
+                Vector3 closest = transform.up;
+                foreach (var axis in new[] { transform.up, -transform.up, transform.right, -transform.right, transform.forward, -transform.forward })
+                    if (Vector3.Dot(axis, up) > Vector3.Dot(closest, up)) closest = axis;
+                transform.rotation = Quaternion.FromToRotation(closest, up) * transform.rotation;
             }
         }
 
@@ -174,7 +177,7 @@ namespace Bauprobe.Manipulation
             // Ne pas valider dans la frame même où la manipulation a commencé
             if (Time.frameCount != _startFrame)
             {
-                // La gâchette valide, sauf si le laser vise le bouton « Remettre à plat » (c'est alors un clic sur le bouton).
+                // La gâchette valide, sauf si le laser vise le bouton « Aligner au sol » (c'est alors un clic sur le bouton).
                 bool onLevelButton = controllerAnchor &&
                                      LevelButton.IsPointerOver(new Ray(controllerAnchor.position, controllerAnchor.forward));
                 if (!onLevelButton && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controller)) { EndManipulation(true); return; }

@@ -148,21 +148,39 @@ namespace Bauprobe.Decor
         }
 
         /// <summary>
-        /// Remet l'objet parallèle au plateau : son axe vertical redevient vertical, sans changer
-        /// son orientation gauche / droite. La rotation se fait autour de son centre ; son point le plus bas
-        /// (sol) ou le plus haut (cintre) reste à la même hauteur.
+        /// Aligne l'objet avec le plateau en gardant la bascule la plus proche : parmi les 6 directions de l'objet
+        /// (haut, bas, avant, arrière, gauche, droite), celle qui est la plus proche de la verticale devient
+        /// exactement verticale. L'objet est donc posé à plat sur la face la plus proche de sa position actuelle
+        /// (un objet penché à 20° se redresse, un objet penché à 70° se couche sur le côté), avec la plus petite
+        /// rotation possible. La rotation se fait autour de son centre ; son point le plus bas (sol) ou le plus
+        /// haut (cintre) reste à la même hauteur.
         /// </summary>
         public void LevelWithStage()
         {
             var up = transform.parent != null ? transform.parent.up : Vector3.up;
-            var delta = Quaternion.FromToRotation(transform.up, up);
+
+            // Direction de l'objet la plus proche de la verticale
+            Vector3[] axes =
+            {
+                transform.up, -transform.up, transform.right, -transform.right, transform.forward, -transform.forward,
+            };
+            var closest = axes[0];
+            foreach (var axis in axes)
+            {
+                if (Vector3.Dot(axis, up) > Vector3.Dot(closest, up))
+                {
+                    closest = axis;
+                }
+            }
+
+            var delta = Quaternion.FromToRotation(closest, up);
             if (Quaternion.Angle(delta, Quaternion.identity) < 0.01f)
             {
                 return; // déjà à plat
             }
 
-            delta.ToAngleAxis(out var degrees, out var axis);
-            RotateAroundCenter(axis, degrees);
+            delta.ToAngleAxis(out var degrees, out var rotationAxis);
+            RotateAroundCenter(rotationAxis, degrees);
         }
 
         /// <summary>

@@ -54,7 +54,7 @@ namespace Bauprobe.Manipulation
                     ObjectMenu.Instance.Show(hovered);
             }
 
-            // Pendant la Rotation, le laser sert à viser le bouton « Remettre à plat »
+            // Pendant la Rotation, le laser sert à viser le bouton « Aligner au sol »
             bool overLevelButton = LevelButton.IsPointerOver(ray);
 
             UpdateLaser(ray, endDistance, hovered != null || overMenu || overLevelButton);
@@ -65,7 +65,7 @@ namespace Bauprobe.Manipulation
             if (laser == null) return;
 
             // Pas de laser pendant une manipulation (on garde la vue dégagée),
-            // sauf en Rotation, pour pouvoir viser le bouton « Remettre à plat ».
+            // sauf en Rotation, pour pouvoir viser le bouton « Aligner au sol ».
             var active = InteractableObject.Active;
             laser.enabled = active == null || active.CurrentMode == InteractableObject.Mode.Rotate;
             if (!laser.enabled) return;

@@ -73,7 +73,7 @@ namespace Bauprobe.Tests
         }
 
         [Test]
-        public void RemettreAPlat_AnnuleLaBascule_GardeLOrientationEtLeSol()
+        public void AlignerAuSol_PeuPenche_SeRedresse_GardeLOrientationEtLeSol()
         {
             _instance.RotateAroundCenter(Vector3.up, 40f);    // tourné de 40° sur lui-même
             _instance.RotateAroundCenter(Vector3.right, 30f); // puis basculé de 30°
@@ -84,6 +84,18 @@ namespace Bauprobe.Tests
             var forward = Vector3.ProjectOnPlane(_cube.transform.forward, Vector3.up);
             Assert.That(Vector3.SignedAngle(Vector3.forward, forward, Vector3.up), Is.EqualTo(40f).Within(0.01f),
                 "l'orientation gauche / droite n'a pas changé");
+            Assert.That(LowestPoint(), Is.EqualTo(0f).Within(1e-4f), "il est toujours posé au sol");
+        }
+
+        [Test]
+        public void AlignerAuSol_TresPenche_SeCoucheSurLaFaceLaPlusProche()
+        {
+            _instance.RotateAroundCenter(Vector3.right, 70f); // basculé de 70° : plus proche d'être couché que droit
+
+            _instance.LevelWithStage();
+
+            // L'arrière du cube (-forward) est maintenant tourné vers le haut : il est couché sur sa face avant.
+            Assert.That(Vector3.Angle(-_cube.transform.forward, Vector3.up), Is.LessThan(0.01f), "couché sur la face la plus proche");
             Assert.That(LowestPoint(), Is.EqualTo(0f).Within(1e-4f), "il est toujours posé au sol");
         }
     }
