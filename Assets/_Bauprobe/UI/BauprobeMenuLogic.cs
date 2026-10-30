@@ -242,20 +242,20 @@ public class BauprobeMenuLogic : MonoBehaviour
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             permissionStatus.text = UnityEngine.Android.Permission.HasUserAuthorizedPermission(scenePermission)
-                ? "Permission : accordée" : "Permission : non accordée";
+                ? "Permission: granted" : "Permission: not granted";
 #else
-            permissionStatus.text = "Permission : (hors casque)";
+            permissionStatus.text = "Permission: (not on headset)";
 #endif
         }
 
         bool known = originalTrackingToggle != null || originalTrackingButton != null;
         bool on = originalTrackingToggle != null ? originalTrackingToggle.isOn : _trackingOn;
-        if (trackingLabel != null) trackingLabel.text = !known ? "Suivi QR" : (on ? "Suivi QR : actif" : "Suivi QR : inactif");
-        if (trackingStatus != null) trackingStatus.text = !known ? "Contrôle d'origine introuvable" : (on ? "Détection en cours" : "Détection coupée");
+        if (trackingLabel != null) trackingLabel.text = !known ? "QR tracking" : (on ? "QR tracking: on" : "QR tracking: off");
+        if (trackingStatus != null) trackingStatus.text = !known ? "Original control not found" : (on ? "Detection running" : "Detection off");
 
         if (detectedStatus != null)
         {
-            string text = "QR détectés : " + _tracked.Count;
+            string text = "QR codes detected: " + _tracked.Count;
             if (_tracked.Count > 0 && !string.IsNullOrEmpty(_lastPayload))
                 text += "  (" + (_lastPayload.Length <= 22 ? _lastPayload : _lastPayload.Substring(0, 22) + "...") + ")";
             detectedStatus.text = text;
