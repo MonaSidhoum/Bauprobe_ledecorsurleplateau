@@ -36,6 +36,7 @@ Testé sur Meta Quest 3 :
 * ✅ **Importer** un décor depuis le menu (catalogue ; pour l'instant un cube de test)
 * ✅ Sélection au **laser** de la manette droite, puis **Déplacer / Scale / Rotation / Couleur / Supprimer**
 * ✅ Les objets se déplacent dans toutes les directions, se tournent et se **basculent** sans s'enfoncer dans le sol
+* ✅ **Étirer une face** (EXTRUDE) : prolonger ou raccourcir un objet par une de ses faces (ex. une porte plus haute)
 * ✅ **Supprimer tout**, **Sauvegarder** / **Charger** une implantation
 
 Ce qui reste à faire : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#3-cahier-des-charges--suivi) (suivi du cahier des charges, puis corrections techniques).
@@ -169,6 +170,7 @@ Le détail (premier lancement sur un nouvel ordinateur, installation sur le casq
 | Agrandir / rétrécir | bouton *Scale*, puis joystick haut / bas (l'objet reste posé au sol, ou accroché par le haut s'il est au cintre) |
 | Tourner | bouton *Rotation*, puis joystick gauche / droite = tourner sur lui-même ; joystick haut / bas = basculer vers l'avant / l'arrière ; laser + gâchette sur le bouton **Align with floor** (au-dessus de l'objet) = le poser parallèle au sol, sur la face la plus proche (un objet un peu penché se redresse, un objet très penché se couche sur le côté) |
 | Valider / Annuler | **gâchette** / bouton **B** |
+| Étirer une face | bouton *EXTRUDE*, viser une face au laser (bleu) + **gâchette** pour la choisir (orange) ; puis joystick haut / bas = pousser / rentrer la face (grip maintenu = plus lent) ; la longueur s'affiche sur la face, la face opposée ne bouge pas |
 | Couleur, Supprimer | boutons du menu de l'objet ; ✕ pour fermer le menu |
 
 ## L'équipe

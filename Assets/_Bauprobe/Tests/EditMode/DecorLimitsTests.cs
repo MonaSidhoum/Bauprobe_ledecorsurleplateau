@@ -72,5 +72,13 @@ namespace Bauprobe.Tests
             Object.DestroyImmediate(cube);
             Object.DestroyImmediate(definition);
         }
+
+        [Test]
+        public void ClampScaleToRange_GardeLesProportions()
+        {
+            AssertClose(DecorLimits.ClampScaleToRange(new Vector3(2f, 2f, 2f), 0.1f, 10f), new Vector3(2f, 2f, 2f));
+            AssertClose(DecorLimits.ClampScaleToRange(new Vector3(20f, 5f, 5f), 0.1f, 10f), new Vector3(10f, 2.5f, 2.5f));
+            AssertClose(DecorLimits.ClampScaleToRange(new Vector3(0.05f, 1f, 1f), 0.1f, 10f), new Vector3(0.1f, 2f, 2f));
+        }
     }
 }

@@ -24,7 +24,8 @@ namespace Bauprobe.Manipulation
                  "Décoché, on peut aussi le basculer avec le joystick haut / bas en mode Rotation.")]
         [SerializeField] private bool keepUpright = true;
 
-        [Tooltip("Garde les mêmes proportions quand on agrandit l'objet.")]
+        [Tooltip("Garde les proportions de l'objet quand on l'agrandit ou le rétrécit (un objet étiré par une face " +
+                 "reste étiré). Décoché : chaque axe est limité séparément.")]
         [SerializeField] private bool uniformScale = true;
 
         private DecorInstance _instance;
@@ -89,8 +90,9 @@ namespace Bauprobe.Manipulation
             Vector3 clamped;
             if (uniformScale)
             {
-                var uniform = Mathf.Clamp(s.x, min, max);
-                clamped = new Vector3(uniform, uniform, uniform);
+                // On garde les proportions actuelles (au lieu de forcer x = y = z), sinon l'étirement
+                // d'une face (bouton EXTRUDE) serait annulé à chaque image.
+                clamped = DecorLimits.ClampScaleToRange(s, min, max);
             }
             else
             {

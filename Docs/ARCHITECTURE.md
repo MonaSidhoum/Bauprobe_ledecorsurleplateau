@@ -36,7 +36,7 @@ Chaque dossier de `Assets/_Bauprobe` est un **module** : une partie de l'appli q
 | **Core** | Le repère du plateau, partagé par tous ; ses réglages (hauteur du QR code) | `StageSpace`, `StageSettings` |
 | **Calibration** | Trouver le QR code et y caler le plateau | `StageCalibrator` |
 | **Decor** | La liste des décors disponibles et leur apparition | `DecorItemDefinition`, `DecorCatalog`, `DecorSpawner`, `DecorInstance` |
-| **Manipulation** | Déplacer / tourner / agrandir un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `RightControllerRaySelector` |
+| **Manipulation** | Déplacer / tourner / agrandir / étirer un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `RightControllerRaySelector`, `LevelButton`, `FaceHighlight` |
 | **Persistence** | Sauvegarder / recharger une implantation (fichier JSON) | `LayoutManager`, `LayoutSerializer`, `LayoutData` |
 | **UI** | Les menus dans le casque | `BauprobeMenuLogic` (menu général : Importer, Supprimer tout, suivi QR) |
 | **Tests** | Tests automatiques (Window > General > Test Runner) | `StageSpaceTests`, `LayoutSerializerTests` |
@@ -96,6 +96,12 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    verticale, avec la plus petite rotation possible. L'objet est donc posé à plat sur la face la plus proche.
    Pour interdire la bascule sur un décor, cocher *Keep Upright* sur son `DecorConstraints`
    (et décocher *Allow Tilt* sur son `InteractableObject`).
+   **EXTRUDE** (étirer une face) : on vise une face au laser, gâchette pour la choisir, puis joystick pour la
+   pousser / rentrer. `DecorInstance.ExtrudeFace` change l'échelle de l'objet sur un seul axe et le recale pour
+   que la face opposée ne bouge pas. `FaceHighlight` (créé par le code) colore la face et affiche sa longueur.
+   Le bouton EXTRUDE est ajouté par `ObjectMenu` en copiant le bouton Scale : le prefab du menu n'est pas modifié.
+   Comme un objet peut maintenant avoir une échelle différente sur chaque axe, `DecorConstraints` garde ses
+   **proportions** (au lieu d'imposer x = y = z) quand il limite sa taille.
 6. **`LayoutManager.Save()`** écrit la liste des objets et leurs positions sur le plateau dans un fichier JSON
    sur le casque. **`LayoutManager.Load()`** la recharge.
 
