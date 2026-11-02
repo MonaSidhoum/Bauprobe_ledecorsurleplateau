@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Bauprobe.Core;
 using UnityEngine;
 
 namespace Bauprobe.Persistence
@@ -60,25 +61,5 @@ namespace Bauprobe.Persistence
         /// x = largeur, y = hauteur, z = profondeur. Pour information (recalculée à partir du modèle au chargement).
         /// </summary>
         public Vector3 size;
-    }
-
-    /// <summary>Position et angle du QR code dans le repère du bureau d'études (voir StageSettings).</summary>
-    [Serializable]
-    public class QrOffset
-    {
-        /// <summary>En mètres, X+ = à droite.</summary>
-        public float x;
-
-        /// <summary>En mètres, Y+ = vers l'avant (l'avant du QR code quand l'angle est nul).</summary>
-        public float y;
-
-        /// <summary>En degrés, sens inverse des aiguilles d'une montre vu de dessus.</summary>
-        public float angle;
-
-        public bool IsSameAs(QrOffset other, float tolerance = 1e-3f) =>
-            other != null &&
-            Mathf.Abs(x - other.x) < tolerance &&
-            Mathf.Abs(y - other.y) < tolerance &&
-            Mathf.Abs(angle - other.angle) < tolerance;
     }
 }

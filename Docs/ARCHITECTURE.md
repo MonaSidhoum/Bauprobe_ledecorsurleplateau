@@ -16,10 +16,11 @@ Si le metteur en scène pose une table « 2 m à gauche du QR code », elle sera
 endroit le lendemain, même si le casque a été éteint entre-temps.
 
 Le bureau d'études a souvent son propre **point zéro** (par ex. le centre du nez de scène), qui n'est pas forcément
-là où on a pu coller le QR code. On peut alors régler l'**offset du QR code** dans `StageSettings.asset` (où est le
-QR code par rapport au point zéro : X, Y en mètres et un angle). `StageCalibrator` décale `StageRoot` sur le point
-zéro : les positions sauvegardées et le tableau CSV sont alors mesurés **depuis le point zéro**, et plus depuis le
-QR code. Offset nul (par défaut) : le QR code **est** le point zéro.
+là où on a pu coller le QR code. On saisit alors l'**offset du QR code** **dans le casque**, au lancement de l'appli
+(où est le QR code par rapport au point zéro : X, Y en mètres et un angle). Il est gardé sur le casque
+(`QrOffsetStore`, pas besoin de *Build*). `StageCalibrator` décale `StageRoot` sur le point zéro : les positions
+sauvegardées et le tableau CSV sont alors mesurés **depuis le point zéro**, et plus depuis le QR code.
+Offset nul (par défaut) : le QR code **est** le point zéro.
 Détails : [A_FAIRE_DANS_UNITY.md](A_FAIRE_DANS_UNITY.md#offset-du-qr-code-point-zéro-du-bureau-détudes).
 
 Dans la scène Unity, ça donne cette hiérarchie :
@@ -40,12 +41,12 @@ Chaque dossier de `Assets/_Bauprobe` est un **module** : une partie de l'appli q
 
 | Module | Rôle | Scripts principaux |
 |---|---|---|
-| **Core** | Le repère du plateau, partagé par tous ; ses réglages (hauteur et offset du QR code) ; le passage au repère du bureau d'études | `StageSpace`, `StageSettings`, `StagePlan` |
+| **Core** | Le repère du plateau, partagé par tous ; ses réglages (hauteur du QR code) ; l'offset du QR code saisi dans le casque ; le passage au repère du bureau d'études | `StageSpace`, `StageSettings`, `QrOffset`, `QrOffsetStore`, `StagePlan` |
 | **Calibration** | Trouver le QR code et y caler le plateau | `StageCalibrator` |
 | **Decor** | La liste des décors disponibles et leur apparition | `DecorItemDefinition`, `DecorCatalog`, `DecorSpawner`, `DecorInstance` |
 | **Manipulation** | Déplacer / tourner / agrandir / étirer un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `RightControllerRaySelector`, `LevelButton`, `FaceHighlight` |
 | **Persistence** | Sauvegarder / recharger une implantation (fichier JSON) ; tableau CSV pour le bureau d'études | `LayoutManager`, `LayoutSerializer`, `LayoutData`, `LayoutCsv` |
-| **UI** | Les menus dans le casque | `BauprobeMenuLogic` (menu général : Importer, Supprimer tout, suivi QR) |
+| **UI** | Les menus dans le casque | `BauprobeMenuLogic` (menu général : Importer, Supprimer tout, suivi QR), `BauprobeMenuScreens` (écrans Décors, Sauvegarder, Charger, Offset du QR code) |
 | **Tests** | Tests automatiques (Window > General > Test Runner) | `StageSpaceTests`, `LayoutSerializerTests` |
 
 ### Qui a le droit d'utiliser qui ?

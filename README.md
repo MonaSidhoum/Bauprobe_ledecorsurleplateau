@@ -162,6 +162,9 @@ Le détail (premier lancement sur un nouvel ordinateur, installation sur le casq
 2. **Menu général** : il est attaché à la **main gauche**.
    * *Importer* > choisir un décor : il apparaît posé au sol, 1,5 m devant vous.
    * *Supprimer tout*, *Sauvegarder*, *Charger*.
+   * Au lancement : écran **Offset du QR code** (où est le QR code par rapport au point zéro de la scène ;
+     tout à 0 = le QR code est le point zéro). Il est pré-rempli : *Valider* si le QR code n'a pas bougé.
+     Aussi accessible par la première ligne de *Charger*. [Détails](Docs/A_FAIRE_DANS_UNITY.md#offset-du-qr-code-point-zéro-du-bureau-détudes)
 3. **Manipuler un objet** (manette droite) :
 
 | Action | Commande |

@@ -13,6 +13,3 @@ MonoBehaviour:
   m_Name: StageSettings
   m_EditorClassIdentifier: Bauprobe.Core::Bauprobe.Core.StageSettings
   qrBottomHeightAboveFloor: 0
-  qrOffsetX: 0
-  qrOffsetY: 0
-  qrOffsetAngle: 0

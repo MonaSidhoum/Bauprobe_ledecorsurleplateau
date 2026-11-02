@@ -60,8 +60,12 @@ namespace Bauprobe.Calibration
             if (stageRoot != null)
             {
                 _stageSpace = stageRoot.GetComponent<StageSpace>();
-                ApplyQrOffset();
             }
+
+            // Offset du QR code saisi dans le casque (écran « Offset du QR code ») : appliqué tout de suite,
+            // puis à chaque changement.
+            ApplyQrOffset(QrOffsetStore.Current);
+            QrOffsetStore.Changed += ApplyQrOffset;
 
             if (!MRUK.Instance)
             {
@@ -75,6 +79,8 @@ namespace Bauprobe.Calibration
 
         private void OnDestroy()
         {
+            QrOffsetStore.Changed -= ApplyQrOffset;
+
             if (MRUK.Instance)
             {
                 MRUK.Instance.SceneSettings.TrackableAdded.RemoveListener(OnTrackableAdded);
@@ -167,14 +173,14 @@ namespace Bauprobe.Calibration
         }
 
         /// <summary>
-        /// Place StageRoot (enfant de QRAnchor) au point zéro du bureau d'études, d'après l'offset du QR code
-        /// réglé dans StageSettings. Offset nul : StageRoot reste sur le QR code.
+        /// Place StageRoot (enfant de QRAnchor) au point zéro de la scène, d'après l'offset du QR code
+        /// saisi dans le casque. Offset nul : StageRoot reste sur le QR code.
         /// Le décor étant enfant de StageRoot, ses positions (sauvegarde JSON, tableau CSV) sont alors
-        /// mesurées depuis le point zéro, et plus depuis le QR code.
+        /// mesurées depuis le point zéro, et plus depuis le QR code : le décor déjà posé suit le point zéro.
         /// </summary>
-        private void ApplyQrOffset()
+        private void ApplyQrOffset(QrOffset offset)
         {
-            if (stageRoot == null || settings == null)
+            if (stageRoot == null || offset == null)
             {
                 return;
             }
@@ -185,7 +191,7 @@ namespace Bauprobe.Calibration
                 return;
             }
 
-            var reference = settings.ReferenceInQrFrame();
+            var reference = offset.ReferenceInQrFrame();
             stageRoot.SetLocalPositionAndRotation(reference.position, reference.rotation);
         }
 
@@ -200,7 +206,6 @@ namespace Bauprobe.Calibration
             var anchorPosition = new Vector3(qr.position.x, floorY, qr.position.z);
 
             qrAnchor.SetPositionAndRotation(anchorPosition, keepLevel ? LevelRotation(qr) : qr.rotation);
-            ApplyQrOffset();
             Debug.Log($"Plateau calé : sol à {qrBottomY - floorY:0.00} m sous le bas du QR code.");
 
             if (lockAfterFirstDetection)

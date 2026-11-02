@@ -60,7 +60,8 @@ Tout le décor est enfant de `StageRoot` : la hauteur 0 du décor est donc le vr
 l'apparition des objets, *Keep On Floor*, la hauteur d'accroche au cintre et le blocage « pas sous le sol ».
 
 **À savoir.**
-* Si on **déplace le QR code** ou qu'on change de lieu, il faut **remesurer** et refaire un *Build*.
+* Si on change la **hauteur** du QR code ou qu'on change de lieu, il faut **remesurer** et refaire un *Build*.
+  (Pour un QR code déplacé sur le sol, il suffit de saisir son nouvel **offset** dans le casque, voir ci-dessous.)
 * Une erreur de mesure de 5 cm décale tout le décor de 5 cm en hauteur.
 * Les positions sauvegardées sont relatives au **point zéro** : le point du sol sous le QR code si l'offset du QR code
   est nul (voir ci-dessous). Dans ce cas, remettre le QR code **au même endroit** pour retrouver une implantation.
@@ -70,6 +71,7 @@ l'apparition des objets, *Keep On Floor*, la hauteur d'accroche au cintre et le 
 Par défaut, **le QR code est le point zéro** : toutes les positions (sauvegarde et tableau CSV) sont mesurées depuis
 le point du sol sous son centre. Si le bureau d'études a son propre point zéro (par ex. le **centre du nez de scène**)
 et qu'on ne peut pas coller le QR code exactement dessus, on indique **où est le QR code par rapport à ce point zéro**.
+Cette valeur se saisit **dans le casque**, sans *Build*.
 
 1. **Choisir avec le bureau d'études** le point zéro et ses axes. Conseillé : X+ vers **cour**, Y+ vers le **lointain**,
    Z+ vers le haut (c'est le repère du tableau CSV).
@@ -80,20 +82,38 @@ et qu'on ne peut pas coller le QR code exactement dessus, on indique **où est l
 3. **Mesurer au mètre** la position du **centre du QR code** (au sol, à sa verticale) depuis le point zéro :
    X = vers cour (négatif vers jardin), Y = vers le lointain.
    Exemple : QR code au milieu du plateau, 2 m derrière le nez de scène → X = `0`, Y = `2`.
-4. **Indiquer les valeurs** dans `Core/Resources/StageSettings.asset` (*Qr Offset X*, *Qr Offset Y*,
-   *Qr Offset Angle*), puis **Build And Run** et **committer**, comme pour la hauteur.
+4. **Saisir les valeurs dans le casque** : au lancement, le menu général ouvre l'écran **« Offset du QR code »**,
+   pré-rempli avec le dernier offset validé. Cliquer sur un champ (X, Y, Angle) puis taper la valeur au pavé
+   (la première touche remplace l'ancienne valeur ; `+/-` change le signe), puis **Valider**.
+   Si le QR code n'a pas bougé depuis la dernière fois : **Valider** directement.
+   L'écran est aussi accessible à tout moment par la **première ligne de l'écran Charger** (« Offset QR : … »).
+   L'offset est gardé sur le casque d'un lancement à l'autre (`QrOffsetStore`, PlayerPrefs). Désinstaller l'appli
+   l'efface. Pour ne plus ouvrir l'écran au lancement : décocher *Ask Qr Offset At Startup* sur `BauprobeMenuScreens`.
 5. **Vérifier une fois dans le casque** (surtout avec un QR code vertical) : importer le cube, le poser sur le point
    zéro, sauvegarder : dans le CSV, X et Y doivent valoir environ 0. Le déplacer de 1 m vers le lointain et
    resauvegarder : Y doit augmenter de 1. Si Y diminue, l'avant du QR code pointe dans l'autre sens : ajouter `180`
    à l'angle (ou retourner le QR code).
 
 **Comment ça marche.** `StageCalibrator` cale toujours `QRAnchor` sur le QR code, puis décale `StageRoot` (son
-enfant) sur le point zéro. Tout le décor étant enfant de `StageRoot`, ses positions sont mesurées depuis le point
-zéro, sans autre changement dans le code.
+enfant) sur le point zéro, au lancement et à chaque *Valider* de l'écran d'offset (`QrOffsetStore.Changed`).
+Tout le décor étant enfant de `StageRoot`, ses positions sont mesurées depuis le point zéro, sans autre changement
+dans le code. Conséquence : si on change l'offset alors que du décor est déjà posé, **ce décor bouge avec le point
+zéro** (il garde sa position dans la scène, pas sur le plateau réel). Saisir l'offset **avant** de poser ou de
+charger le décor.
 
 **Recharger une implantation dans le casque.** Les positions du JSON sont mesurées **depuis le point zéro**, pas
 depuis le QR code. Le metteur en scène peut donc poser le QR code ailleurs le lendemain (ou dans un autre lieu) :
-il suffit de **remesurer son offset**, et le décor revient au même endroit du plateau. L'offset utilisé au moment
+il suffit de **saisir le nouvel offset au lancement**, puis *Charger* : le décor revient au même endroit du plateau.
+
+Exemple de journée :
+1. Jour 1 : lancer l'appli, saisir l'offset (QR code à X = 0, Y = 2), *Valider*.
+2. Placer le décor de la scène 1, *Sauvegarder* > *+ Nouvelle sauvegarde* > « Scene 1 ».
+3. *Supprimer tout* (sinon le décor de la scène 1 reste et sera aussi dans la scène 2), placer la scène 2,
+   *Sauvegarder* « Scene 2 ». Chaque sauvegarde est écrite sur le casque **au moment du clic** : rien d'autre à
+   enregistrer à la fin.
+4. Jour 2 : le QR code a été recollé ailleurs (X = 1,5, Y = 3). Lancer l'appli, saisir ce nouvel offset, *Valider*,
+   puis *Charger* « Scene 1 » : le décor est au même endroit que la veille.
+ L'offset utilisé au moment
 de la sauvegarde est recopié dans le JSON (`qrOffset`, pour information) ; s'il est différent de l'offset actuel,
 la Console le signale au chargement.
 Attention : les sauvegardes faites **avant** cette version (sans offset) sont relues comme si elles étaient mesurées
@@ -207,7 +227,7 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 - [ ] **Enregistrer dans la scène** : *Sauvegarder* écrit dans la scène affichée.
 - [x] **Exporter** le tableau modifié : un `.csv` à côté de chaque sauvegarde (`LayoutCsv`), récupérable par câble USB
       ou MQDH ([détails](#exporter-le-tableau-csv-pour-le-bureau-détudes)). Repère : point zéro du bureau d'études
-      (= QR code, ou offset réglé dans `StageSettings`).
+      (= QR code, ou offset du QR code saisi dans le casque).
       Reste à : faire valider les colonnes par le bureau d'études **et** le volet « Voir la même chose » ; lire ce
       même format à l'import ; éventuellement un seul fichier pour toutes les scènes ; partage réseau à étudier.
 - [ ] **Exporter les nouveaux modèles** : préciser avec les commanditaires ce qu'on appelle un « nouveau modèle »

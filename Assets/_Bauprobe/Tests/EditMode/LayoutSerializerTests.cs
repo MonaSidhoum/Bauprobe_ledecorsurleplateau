@@ -1,3 +1,4 @@
+using Bauprobe.Core;
 using Bauprobe.Persistence;
 using NUnit.Framework;
 using UnityEngine;
