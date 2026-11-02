@@ -794,7 +794,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2624990573474107925}
   - component: {fileID: 7039253054993817987}
-  - component: {fileID: 5976558927428712908}
   m_Layer: 5
   m_Name: QRCodeSampleUI
   m_TagString: Untagged
@@ -839,66 +838,6 @@ MonoBehaviour:
   _togTrackingEnabled: {fileID: 1778376455939394271}
   _txtNumActive: {fileID: 2718491410247633392}
   _txtLogs: {fileID: 7325107009590268096}
---- !u!114 &5976558927428712908
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2624990573474107924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e1427f5eddf645bd9d3f18dde363d4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BauprobeMenu
-  title: Bauprobe
-  qrSectionTitle: "Rep\xE8re QR code"
-  requestLabel: "Autoriser l'acc\xE8s"
-  requestDescription: "Demande \xE0 Quest l'acc\xE8s aux donn\xE9es spatiales (permission
-    Scene). Obligatoire pour d\xE9tecter le QR code. A faire une seule fois."
-  trackingDescription: "Active ou coupe la d\xE9tection du QR code. Quand il est
-    vu, le rep\xE8re se place dessus."
-  toolsSectionTitle: Outils
-  toolsDescription: "Fonctions \xE0 venir (pas encore actives)."
-  addLabel: Ajouter
-  editLabel: Modifier
-  deleteLabel: Supprimer
-  colorLabel: Changer la couleur
-  panelColor: {r: 0.42, g: 0, b: 0.012, a: 1}
-  buttonColor: {r: 0.91, g: 0.77, b: 0.58, a: 1}
-  buttonTextColor: {r: 0.42, g: 0, b: 0.012, a: 1}
-  accentColor: {r: 0.91, g: 0.77, b: 0.58, a: 1}
-  font: {fileID: 0}
-  roundedSprite: {fileID: 0}
-  panelWidth: 760
-  padding: 48
-  spacing: 16
-  titleSize: 96
-  captionSize: 30
-  buttonHeight: 110
-  buttonFontSize: 46
-  descriptionSize: 26
-  statusSize: 28
-  panelCorner: 1.2
-  buttonCorner: 0.6
-  scenePermission: com.oculus.permission.USE_SCENE
-  trackingInitiallyOn: 1
-  originalRequestButton: {fileID: 0}
-  originalTrackingButton: {fileID: 0}
-  originalTrackingToggle: {fileID: 0}
-  hideOriginalPanel: 1
-  onAdd:
-    m_PersistentCalls:
-      m_Calls: []
-  onEdit:
-    m_PersistentCalls:
-      m_Calls: []
-  onDelete:
-    m_PersistentCalls:
-      m_Calls: []
-  onChangeColor:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &2624990573642283394
 GameObject:
   m_ObjectHideFlags: 0
