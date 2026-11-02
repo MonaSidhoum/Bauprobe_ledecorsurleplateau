@@ -15,11 +15,18 @@ Ensuite, **chaque objet de décor est placé par rapport à ce QR code**, et pas
 Si le metteur en scène pose une table « 2 m à gauche du QR code », elle sera encore au même
 endroit le lendemain, même si le casque a été éteint entre-temps.
 
+Le bureau d'études a souvent son propre **point zéro** (par ex. le centre du nez de scène), qui n'est pas forcément
+là où on a pu coller le QR code. On peut alors régler l'**offset du QR code** dans `StageSettings.asset` (où est le
+QR code par rapport au point zéro : X, Y en mètres et un angle). `StageCalibrator` décale `StageRoot` sur le point
+zéro : les positions sauvegardées et le tableau CSV sont alors mesurés **depuis le point zéro**, et plus depuis le
+QR code. Offset nul (par défaut) : le QR code **est** le point zéro.
+Détails : [A_FAIRE_DANS_UNITY.md](A_FAIRE_DANS_UNITY.md#offset-du-qr-code-point-zéro-du-bureau-détudes).
+
 Dans la scène Unity, ça donne cette hiérarchie :
 
 ```
 QRAnchor          ← déplacé sur le QR code par StageCalibrator
-└── StageRoot     ← porte le composant StageSpace : c'est « le plateau »
+└── StageRoot     ← porte le composant StageSpace : c'est « le plateau » (décalé au point zéro si offset)
     ├── Table     ← les objets de décor sont TOUJOURS enfants de StageRoot
     ├── Escalier
     └── ...
@@ -33,11 +40,11 @@ Chaque dossier de `Assets/_Bauprobe` est un **module** : une partie de l'appli q
 
 | Module | Rôle | Scripts principaux |
 |---|---|---|
-| **Core** | Le repère du plateau, partagé par tous ; ses réglages (hauteur du QR code) | `StageSpace`, `StageSettings` |
+| **Core** | Le repère du plateau, partagé par tous ; ses réglages (hauteur et offset du QR code) ; le passage au repère du bureau d'études | `StageSpace`, `StageSettings`, `StagePlan` |
 | **Calibration** | Trouver le QR code et y caler le plateau | `StageCalibrator` |
 | **Decor** | La liste des décors disponibles et leur apparition | `DecorItemDefinition`, `DecorCatalog`, `DecorSpawner`, `DecorInstance` |
 | **Manipulation** | Déplacer / tourner / agrandir / étirer un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `RightControllerRaySelector`, `LevelButton`, `FaceHighlight` |
-| **Persistence** | Sauvegarder / recharger une implantation (fichier JSON) | `LayoutManager`, `LayoutSerializer`, `LayoutData` |
+| **Persistence** | Sauvegarder / recharger une implantation (fichier JSON) ; tableau CSV pour le bureau d'études | `LayoutManager`, `LayoutSerializer`, `LayoutData`, `LayoutCsv` |
 | **UI** | Les menus dans le casque | `BauprobeMenuLogic` (menu général : Importer, Supprimer tout, suivi QR) |
 | **Tests** | Tests automatiques (Window > General > Test Runner) | `StageSpaceTests`, `LayoutSerializerTests` |
 
@@ -112,7 +119,11 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    Comme un objet peut maintenant avoir une échelle différente sur chaque axe, `DecorConstraints` garde ses
    **proportions** (au lieu d'imposer x = y = z) quand il limite sa taille.
 6. **`LayoutManager.Save()`** écrit la liste des objets et leurs positions sur le plateau dans un fichier JSON
-   sur le casque. **`LayoutManager.Load()`** la recharge.
+   sur le casque, **et le même contenu en tableau CSV** pour le bureau d'études (`LayoutCsv`, même nom, `.csv`).
+   **`LayoutManager.Load()`** recharge le JSON (le CSV sert seulement à l'export).
+   Le CSV est dans le **repère du bureau d'études** (`StagePlan`) : X à droite, Y vers l'avant, **Z = hauteur**,
+   angle en degrés dans le sens inverse des aiguilles d'une montre vu de dessus. Le JSON garde le repère de Unity
+   (Y = hauteur). Format détaillé : [A_FAIRE_DANS_UNITY.md](A_FAIRE_DANS_UNITY.md#exporter-le-tableau-csv-pour-le-bureau-détudes).
 
 ## Code venu de la branche `test/mr-quest3`
 

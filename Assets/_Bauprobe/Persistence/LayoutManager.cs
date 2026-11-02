@@ -1,4 +1,6 @@
 using System.IO;
+using System.Text;
+using Bauprobe.Core;
 using Bauprobe.Decor;
 using UnityEngine;
 
@@ -6,6 +8,7 @@ namespace Bauprobe.Persistence
 {
     /// <summary>
     /// Sauvegarde et recharge une implantation dans un fichier JSON, sur le casque.
+    /// Chaque sauvegarde écrit aussi un tableau CSV (même nom, extension .csv) pour le bureau d'études.
     /// Les méthodes Save() et Load() peuvent être branchées directement sur des boutons.
     /// </summary>
     public class LayoutManager : MonoBehaviour
@@ -15,8 +18,23 @@ namespace Bauprobe.Persistence
         [Tooltip("Nom utilisé par Save() et Load() sans paramètre.")]
         [SerializeField] private string defaultLayoutName = "implantation";
 
+        [Tooltip("Réglages du plateau (offset du QR code, recopié dans la sauvegarde). " +
+                 "Vide = le fichier Assets/_Bauprobe/Core/Resources/StageSettings.asset.")]
+        [SerializeField] private StageSettings settings;
+
+        [Header("Tableau CSV (bureau d'études)")]
+        [Tooltip("Écrit aussi un fichier .csv à chaque sauvegarde, à côté du .json.")]
+        [SerializeField] private bool exportCsv = true;
+
+        [Tooltip("Coché : nombres avec une virgule (1,25), pour Excel en français. " +
+                 "Décoché : nombres avec un point (1.25).")]
+        [SerializeField] private bool csvDecimalComma = true;
+
         /// <summary>Dossier des sauvegardes (sur le Quest : stockage interne de l'appli).</summary>
         public static string Folder => Path.Combine(Application.persistentDataPath, "Layouts");
+
+        /// <summary>Chemin du tableau CSV d'une sauvegarde.</summary>
+        public static string CsvPathFor(string layoutName) => Path.Combine(Folder, layoutName + ".csv");
 
         public void Save() => Save(defaultLayoutName);
 
@@ -24,10 +42,17 @@ namespace Bauprobe.Persistence
 
         public void Save(string layoutName)
         {
-            var data = LayoutSerializer.Capture(spawner.Instances);
+            var data = LayoutSerializer.Capture(spawner.Instances, layoutName, CurrentQrOffset());
             Directory.CreateDirectory(Folder);
             File.WriteAllText(PathFor(layoutName), LayoutSerializer.ToJson(data));
             Debug.Log($"Implantation '{layoutName}' sauvegardée ({data.items.Count} objets) : {PathFor(layoutName)}");
+
+            if (exportCsv)
+            {
+                // UTF-8 avec BOM : sinon Excel affiche mal les accents (« ScÃ¨ne »).
+                File.WriteAllText(CsvPathFor(layoutName), LayoutCsv.ToCsv(data, csvDecimalComma), new UTF8Encoding(true));
+                Debug.Log($"Tableau CSV écrit : {CsvPathFor(layoutName)}");
+            }
         }
 
         public void Load(string layoutName)
@@ -40,6 +65,17 @@ namespace Bauprobe.Persistence
             }
 
             var data = LayoutSerializer.FromJson(File.ReadAllText(path));
+
+            // Les positions sont mesurées depuis le point zéro du bureau d'études : si le QR code a été posé
+            // ailleurs depuis (et son offset mis à jour), le décor revient quand même au même endroit du plateau.
+            var current = CurrentQrOffset();
+            if (data.version >= 3 && !current.IsSameAs(data.qrOffset))
+            {
+                Debug.Log($"Implantation '{layoutName}' sauvegardée avec un autre offset du QR code " +
+                          $"({data.qrOffset.x:0.###} ; {data.qrOffset.y:0.###} ; {data.qrOffset.angle:0.#}°) " +
+                          $"que l'offset actuel ({current.x:0.###} ; {current.y:0.###} ; {current.angle:0.#}°) : " +
+                          "le décor est replacé par rapport au point zéro, pas par rapport au QR code.");
+            }
 
             spawner.Clear();
             foreach (var entry in data.items)
@@ -61,6 +97,30 @@ namespace Bauprobe.Persistence
             }
 
             Debug.Log($"Implantation '{layoutName}' chargée ({data.items.Count} objets).");
+        }
+
+        /// <summary>Supprime une sauvegarde (le .json et son tableau .csv).</summary>
+        public static void Delete(string layoutName)
+        {
+            foreach (var file in new[] { PathFor(layoutName), CsvPathFor(layoutName) })
+            {
+                if (File.Exists(file))
+                {
+                    File.Delete(file);
+                }
+            }
+        }
+
+        private QrOffset CurrentQrOffset()
+        {
+            if (settings == null)
+            {
+                settings = StageSettings.LoadDefault();
+            }
+
+            return settings == null
+                ? new QrOffset()
+                : new QrOffset { x = settings.QrOffsetX, y = settings.QrOffsetY, angle = settings.QrOffsetAngle };
         }
 
         private static string PathFor(string layoutName) => Path.Combine(Folder, layoutName + ".json");

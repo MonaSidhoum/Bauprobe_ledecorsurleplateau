@@ -62,8 +62,75 @@ l'apparition des objets, *Keep On Floor*, la hauteur d'accroche au cintre et le 
 **À savoir.**
 * Si on **déplace le QR code** ou qu'on change de lieu, il faut **remesurer** et refaire un *Build*.
 * Une erreur de mesure de 5 cm décale tout le décor de 5 cm en hauteur.
-* Les positions sauvegardées sont relatives au point du sol sous le QR code : remettre le QR code **au même endroit**
-  pour retrouver une implantation.
+* Les positions sauvegardées sont relatives au **point zéro** : le point du sol sous le QR code si l'offset du QR code
+  est nul (voir ci-dessous). Dans ce cas, remettre le QR code **au même endroit** pour retrouver une implantation.
+
+### Offset du QR code (point zéro du bureau d'études)
+
+Par défaut, **le QR code est le point zéro** : toutes les positions (sauvegarde et tableau CSV) sont mesurées depuis
+le point du sol sous son centre. Si le bureau d'études a son propre point zéro (par ex. le **centre du nez de scène**)
+et qu'on ne peut pas coller le QR code exactement dessus, on indique **où est le QR code par rapport à ce point zéro**.
+
+1. **Choisir avec le bureau d'études** le point zéro et ses axes. Conseillé : X+ vers **cour**, Y+ vers le **lointain**,
+   Z+ vers le haut (c'est le repère du tableau CSV).
+2. **Orienter le QR code** : l'« avant » du QR code est la direction de son **bord du haut** s'il est à plat au sol,
+   ou la direction **perpendiculaire** au QR code s'il est vertical (mur, pied). Le poser l'avant vers le **lointain**
+   (Y+) : son angle est alors 0. Sinon, mesurer l'angle de son avant en degrés, **sens inverse des aiguilles d'une
+   montre vu de dessus** : avant vers jardin → `90`, vers cour → `-90`, vers la salle → `180`.
+3. **Mesurer au mètre** la position du **centre du QR code** (au sol, à sa verticale) depuis le point zéro :
+   X = vers cour (négatif vers jardin), Y = vers le lointain.
+   Exemple : QR code au milieu du plateau, 2 m derrière le nez de scène → X = `0`, Y = `2`.
+4. **Indiquer les valeurs** dans `Core/Resources/StageSettings.asset` (*Qr Offset X*, *Qr Offset Y*,
+   *Qr Offset Angle*), puis **Build And Run** et **committer**, comme pour la hauteur.
+5. **Vérifier une fois dans le casque** (surtout avec un QR code vertical) : importer le cube, le poser sur le point
+   zéro, sauvegarder : dans le CSV, X et Y doivent valoir environ 0. Le déplacer de 1 m vers le lointain et
+   resauvegarder : Y doit augmenter de 1. Si Y diminue, l'avant du QR code pointe dans l'autre sens : ajouter `180`
+   à l'angle (ou retourner le QR code).
+
+**Comment ça marche.** `StageCalibrator` cale toujours `QRAnchor` sur le QR code, puis décale `StageRoot` (son
+enfant) sur le point zéro. Tout le décor étant enfant de `StageRoot`, ses positions sont mesurées depuis le point
+zéro, sans autre changement dans le code.
+
+**Recharger une implantation dans le casque.** Les positions du JSON sont mesurées **depuis le point zéro**, pas
+depuis le QR code. Le metteur en scène peut donc poser le QR code ailleurs le lendemain (ou dans un autre lieu) :
+il suffit de **remesurer son offset**, et le décor revient au même endroit du plateau. L'offset utilisé au moment
+de la sauvegarde est recopié dans le JSON (`qrOffset`, pour information) ; s'il est différent de l'offset actuel,
+la Console le signale au chargement.
+Attention : les sauvegardes faites **avant** cette version (sans offset) sont relues comme si elles étaient mesurées
+depuis le point zéro. Elles restent justes tant que l'offset est nul.
+
+### Exporter le tableau CSV pour le bureau d'études
+
+À chaque **Sauvegarder**, l'appli écrit deux fichiers dans le dossier des sauvegardes du casque :
+`<nom>.json` (relu par *Charger*) et `<nom>.csv` (le tableau pour le bureau d'études, qui s'ouvre dans Excel).
+*Supprimer* une sauvegarde supprime les deux.
+
+**Récupérer les fichiers sur un ordinateur** : brancher le casque en USB-C, accepter l'accès aux fichiers dans le
+casque, puis ouvrir *Quest 3 > Stockage partagé interne > Android > data > fr.minesparis.bauprobe > files > Layouts*
+(explorateur Windows, ou *Android File Transfer* sur Mac, ou le gestionnaire de fichiers de Meta Quest Developer Hub).
+En ligne de commande :
+
+```bash
+adb pull /sdcard/Android/data/fr.minesparis.bauprobe/files/Layouts
+```
+
+**Format** : une ligne par élément, colonnes séparées par des **points-virgules**, nombres avec une **virgule**
+(réglages d'Excel en français ; décocher *Csv Decimal Comma* sur `LayoutManager` pour avoir des points).
+Positions et angles dans le **repère du bureau d'études** (depuis le point zéro, voir ci-dessus) :
+
+| Colonne | Contenu |
+|---|---|
+| Scène | Nom de la sauvegarde (en attendant la gestion de plusieurs scènes) |
+| Identifiant / Nom | Identifiant et nom de l'élément dans le catalogue |
+| Accroche | `Sol` ou `Cintre` |
+| X / Y / Z (m) | Position du **point d'origine** (bas au centre au sol, haut au centre au cintre). X+ à droite (cour), Y+ vers l'avant (lointain), **Z = hauteur** |
+| Angle (°) | Rotation autour de la verticale, sens inverse des aiguilles d'une montre vu de dessus (comme AutoCAD) |
+| Bascule X / Bascule Y (°) | 0 si l'objet n'est pas penché. Ordre : bascule Y, puis bascule X, puis angle |
+| Largeur / Profondeur / Hauteur (m) | Taille réelle de l'objet, le long de ses propres axes (avant rotation) |
+| Échelle X / Y / Z | Facteur appliqué au modèle 3D (largeur / profondeur / hauteur) |
+
+Attention : le JSON garde le repère de Unity (**Y = hauteur**) ; seul le CSV utilise **Z = hauteur**.
+Modifier le CSV ne change rien dans le casque (pas encore d'import du tableau).
 
 ---
 
@@ -120,7 +187,7 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 | 1 | Importer le décor du bureau d'études et le tableau de positionnement | 🟡 | *Importer* propose les **7 premiers décors du bureau d'études** (OBJ, en mm convertis en m) en plus du cube de test. Pas encore de lecture du tableau. |
 | 2 | Afficher en AR la scène 1, puis les suivantes | ⬜ | Le calage sur le QR code marche, mais il n'y a qu'**une seule implantation** à la fois : pas de notion de « scène 1, 2, 3… ». |
 | 3 | Modifier placement et transformation, puis enregistrer dans la scène | 🟡 | Déplacer / Scale / Rotation et *Sauvegarder* marchent, mais toujours dans le même fichier (`implantation`). |
-| 4 | Exporter le tableau modifié et les nouveaux modèles | ⬜ | La sauvegarde est un fichier JSON sur le casque, qu'on ne peut pas ouvrir dans Excel. |
+| 4 | Exporter le tableau modifié et les nouveaux modèles | 🟡 | Chaque sauvegarde écrit aussi un **tableau CSV** (Excel) dans le repère du bureau d'études, avec un offset du QR code réglable ([détails](#exporter-le-tableau-csv-pour-le-bureau-détudes)). Pas d'export des modèles. |
 
 **Tâches :**
 
@@ -138,8 +205,11 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 - [ ] **Gérer plusieurs scènes** : ajouter au menu général un choix « Scène précédente / Scène suivante » qui
       affiche l'implantation de la scène choisie (remplace l'actuel nom unique `implantation`).
 - [ ] **Enregistrer dans la scène** : *Sauvegarder* écrit dans la scène affichée.
-- [ ] **Exporter** le tableau modifié dans le même format que l'import, et le récupérer sur un ordinateur
-      (câble USB / MQDH, ou partage réseau à étudier).
+- [x] **Exporter** le tableau modifié : un `.csv` à côté de chaque sauvegarde (`LayoutCsv`), récupérable par câble USB
+      ou MQDH ([détails](#exporter-le-tableau-csv-pour-le-bureau-détudes)). Repère : point zéro du bureau d'études
+      (= QR code, ou offset réglé dans `StageSettings`).
+      Reste à : faire valider les colonnes par le bureau d'études **et** le volet « Voir la même chose » ; lire ce
+      même format à l'import ; éventuellement un seul fichier pour toutes les scènes ; partage réseau à étudier.
 - [ ] **Exporter les nouveaux modèles** : préciser avec les commanditaires ce qu'on appelle un « nouveau modèle »
       (un modèle redimensionné ? un modèle créé dans l'appli ?).
 
@@ -178,7 +248,7 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 | Livrable | État |
 |---|---|
 | Tableau de positionnement par scène (Excel en première approche) | ⬜ format à définir (section 3.1) |
-| Tableau modifié et nouveaux modèles 3D | ⬜ dépend de l'export (section 3.1) |
+| Tableau modifié et nouveaux modèles 3D | 🟡 tableau : CSV écrit à chaque sauvegarde ; modèles : à préciser (section 3.1) |
 | Code source | 🟡 ce dépôt ; à finaliser |
 | Documentation utilisateur | 🟡 le README explique l'utilisation dans le casque ; à compléter par un **mode d'emploi pour le technicien** (sans Unity) |
 

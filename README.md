@@ -38,6 +38,7 @@ Testé sur Meta Quest 3 :
 * ✅ Les objets se déplacent dans toutes les directions, se tournent et se **basculent** sans s'enfoncer dans le sol
 * ✅ **Étirer une face** (EXTRUDE) : prolonger ou raccourcir un objet par une de ses faces (ex. une porte plus haute)
 * ✅ **Supprimer tout**, **Sauvegarder** / **Charger** une implantation
+* ✅ **Tableau CSV** pour le bureau d'études (Excel), écrit à chaque sauvegarde : position X / Y / Z, angle, dimensions, scène ; repère = le QR code ou un point zéro choisi (offset du QR code). Voir [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#exporter-le-tableau-csv-pour-le-bureau-détudes)
 
 Ce qui reste à faire : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#3-cahier-des-charges--suivi) (suivi du cahier des charges, puis corrections techniques).
 

@@ -425,7 +425,7 @@ namespace Bauprobe.UI
         {
             Confirm(string.Format(deleteMessage, Short(name)), () =>
             {
-                try { File.Delete(Path.Combine(LayoutManager.Folder, name + ".json")); }
+                try { LayoutManager.Delete(name); }   // le .json et son tableau .csv
                 catch (System.Exception e) { Debug.LogWarning("[BauprobeMenuScreens] Suppression impossible : " + e.Message, this); }
                 returnTo();
             }, returnTo);
