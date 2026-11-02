@@ -51,7 +51,7 @@ namespace Bauprobe.Tests
         [Test]
         public void OffsetNul_LePointZeroEstLeQrCode()
         {
-            var pose = StagePlan.ReferenceInQrFrame(0f, 0f, 0f);
+            var pose = StagePlan.ReferenceInQrFrame(0f, 0f);
             Assert.That(pose.position, Is.EqualTo(Vector3.zero));
             Assert.That(Quaternion.Angle(pose.rotation, Quaternion.identity), Is.LessThan(1e-3f));
         }
@@ -59,18 +59,15 @@ namespace Bauprobe.Tests
         [Test]
         public void Offset_LeQrCodeEstAuBonEndroitDuPlan()
         {
-            // QR code 2 m à droite et 3 m devant le point zéro, tourné de 90° vers la gauche.
-            var reference = StagePlan.ReferenceInQrFrame(2f, 3f, 90f);
+            // QR code 2 m à droite (cour) et 3 m devant (lointain) le point zéro.
+            var reference = StagePlan.ReferenceInQrFrame(2f, 3f);
 
             // Le centre du QR code, vu depuis le point zéro : (2 ; 3).
             Assert.That(Vector3.Distance(QrToPlan(reference, Vector3.zero), new Vector3(2f, 3f, 0f)), Is.LessThan(1e-4f));
 
-            // 1 m devant le QR code (son « avant ») : il pointe vers -X du plan → (1 ; 3).
-            Assert.That(Vector3.Distance(QrToPlan(reference, Vector3.forward), new Vector3(1f, 3f, 0f)), Is.LessThan(1e-4f));
-
-            // Un objet posé face au QR code (rotation nulle par rapport au QR code) a un Angle de 90° dans le plan.
-            var rotationInPlan = Quaternion.Inverse(reference.rotation);
-            Assert.That(StagePlan.ToPlanAngles(rotationInPlan).z, Is.EqualTo(90f).Within(1e-3f));
+            // 1 m devant le QR code : (2 ; 4). 1 m à sa droite : (3 ; 3).
+            Assert.That(Vector3.Distance(QrToPlan(reference, Vector3.forward), new Vector3(2f, 4f, 0f)), Is.LessThan(1e-4f));
+            Assert.That(Vector3.Distance(QrToPlan(reference, Vector3.right), new Vector3(3f, 3f, 0f)), Is.LessThan(1e-4f));
         }
 
         /// <summary>Point dans le repère du QR code (Unity) → point dans le plan du bureau d'études.</summary>

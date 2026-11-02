@@ -20,11 +20,6 @@ namespace Bauprobe.Calibration
         [Tooltip("Objet qui contient tout le décor (avec le composant StageSpace).")]
         [SerializeField] private Transform stageRoot;
 
-        [Header("Hauteur du QR code")]
-        [Tooltip("Réglages du plateau (distance entre le bas du QR code et le sol). " +
-                 "Vide = le fichier Assets/_Bauprobe/Core/Resources/StageSettings.asset.")]
-        [SerializeField] private StageSettings settings;
-
         [Header("Réglages")]
         [Tooltip("Texte contenu dans le QR code du plateau. Vide = accepte n'importe quel QR code.")]
         [SerializeField] private string expectedPayload = "";
@@ -40,6 +35,10 @@ namespace Bauprobe.Calibration
         private MRUKTrackable _trackedQr;
         private StageSpace _stageSpace;
 
+        // Hauteur (repère du monde) du bas du QR code au dernier calage : pour replacer le sol
+        // quand on change la hauteur du QR code dans le casque, même si le QR code n'est plus visible.
+        private float? _lastQrBottomY;
+
         /// <summary>Vrai tant que le casque voit le QR code du plateau.</summary>
         public bool IsQrLocated => _trackedQr != null;
 
@@ -48,15 +47,6 @@ namespace Bauprobe.Calibration
 
         private void Start()
         {
-            if (settings == null)
-            {
-                settings = StageSettings.LoadDefault();
-                if (settings == null)
-                {
-                    Debug.LogWarning("StageSettings introuvable : on considère que le QR code est posé au sol.");
-                }
-            }
-
             if (stageRoot != null)
             {
                 _stageSpace = stageRoot.GetComponent<StageSpace>();
@@ -136,18 +126,49 @@ namespace Bauprobe.Calibration
         }
 
         /// <summary>
-        /// Rotation horizontale (seulement le cap) tirée du QR code, qu'il soit posé
-        /// au sol ou accroché à un mur : on prend l'un de ses axes qui est à plat.
+        /// Rotation horizontale (seulement le cap) tirée du QR code. L'« avant » du plateau (Y+ du tableau) est :
+        ///   - QR code vertical (mur, pied) : la direction dans laquelle on regarde quand on le lit, du côté
+        ///     imprimé vers l'arrière du QR code. Le côté est choisi d'après la position du casque, qui voit
+        ///     forcément le côté imprimé : le résultat ne dépend pas des conventions de MRUK.
+        ///     QR code lu depuis la salle → avant = lointain, droite = cour ;
+        ///   - QR code à plat au sol : la direction de son bord du haut.
+        /// On prend l'axe du QR code le plus proche de l'horizontale, pour qu'un QR code un peu penché
+        /// ne fasse pas basculer le repère d'un demi-tour.
         /// </summary>
-        private static Quaternion LevelRotation(Transform qr)
+        private static Quaternion LevelRotation(Transform qr, Vector3 viewerPosition)
         {
-            var forward = Vector3.ProjectOnPlane(qr.up, Vector3.up);
-            if (forward.sqrMagnitude < 0.01f)
+            var top = Vector3.ProjectOnPlane(qr.up, Vector3.up);         // bord du haut
+            var normal = Vector3.ProjectOnPlane(qr.forward, Vector3.up); // perpendiculaire au QR code
+
+            Vector3 forward;
+            if (normal.sqrMagnitude > top.sqrMagnitude)
             {
-                forward = Vector3.ProjectOnPlane(qr.forward, Vector3.up);
+                // QR code plutôt vertical : sa perpendiculaire, dans le sens du regard de celui qui le lit.
+                forward = normal;
+                var viewerToQr = Vector3.ProjectOnPlane(qr.position - viewerPosition, Vector3.up);
+                if (Vector3.Dot(forward, viewerToQr) < 0f)
+                {
+                    forward = -forward;
+                }
+            }
+            else
+            {
+                forward = top; // QR code plutôt à plat
             }
 
+            if (forward.sqrMagnitude < 1e-6f)
+            {
+                forward = Vector3.forward;
+            }
             return Quaternion.LookRotation(forward.normalized, Vector3.up);
+        }
+
+        /// <summary>Position du casque (pour savoir de quel côté du QR code on se trouve).</summary>
+        private static Vector3 ViewerPosition(Transform qr)
+        {
+            var cam = Camera.main;
+            // Sans caméra : on se place « devant » le QR code au sens de MRUK.
+            return cam != null ? cam.transform.position : qr.position + qr.forward;
         }
 
         /// <summary>Hauteur (repère du monde) du bord le plus bas du QR code.</summary>
@@ -173,14 +194,27 @@ namespace Bauprobe.Calibration
         }
 
         /// <summary>
-        /// Place StageRoot (enfant de QRAnchor) au point zéro de la scène, d'après l'offset du QR code
-        /// saisi dans le casque. Offset nul : StageRoot reste sur le QR code.
+        /// Applique l'offset du QR code saisi dans le casque :
+        ///   - la hauteur du QR code replace le sol (QRAnchor) si le QR code a déjà été vu ;
+        ///   - X / Y placent StageRoot (enfant de QRAnchor) au point zéro de la scène. Offset nul : StageRoot
+        ///     reste sur le QR code.
         /// Le décor étant enfant de StageRoot, ses positions (sauvegarde JSON, tableau CSV) sont alors
         /// mesurées depuis le point zéro, et plus depuis le QR code : le décor déjà posé suit le point zéro.
         /// </summary>
         private void ApplyQrOffset(QrOffset offset)
         {
-            if (stageRoot == null || offset == null)
+            if (offset == null)
+            {
+                return;
+            }
+
+            if (_lastQrBottomY is { } qrBottomY && qrAnchor != null)
+            {
+                var p = qrAnchor.position;
+                qrAnchor.position = new Vector3(p.x, offset.FloorHeight(qrBottomY), p.z);
+            }
+
+            if (stageRoot == null)
             {
                 return;
             }
@@ -200,12 +234,13 @@ namespace Bauprobe.Calibration
             var qr = _trackedQr.transform;
 
             // Le repère du plateau est posé AU SOL, à la verticale du centre du QR code :
-            // sol = bas du QR code - distance mesurée entre le bas du QR code et le sol (StageSettings).
+            // sol = bas du QR code - distance mesurée entre le bas du QR code et le sol (saisie dans le casque).
             var qrBottomY = QrBottomY(_trackedQr);
-            var floorY = settings != null ? settings.FloorHeight(qrBottomY) : qrBottomY;
+            _lastQrBottomY = qrBottomY;
+            var floorY = QrOffsetStore.Current.FloorHeight(qrBottomY);
             var anchorPosition = new Vector3(qr.position.x, floorY, qr.position.z);
 
-            qrAnchor.SetPositionAndRotation(anchorPosition, keepLevel ? LevelRotation(qr) : qr.rotation);
+            qrAnchor.SetPositionAndRotation(anchorPosition, keepLevel ? LevelRotation(qr, ViewerPosition(qr)) : qr.rotation);
             Debug.Log($"Plateau calé : sol à {qrBottomY - floorY:0.00} m sous le bas du QR code.");
 
             if (lockAfterFirstDetection)

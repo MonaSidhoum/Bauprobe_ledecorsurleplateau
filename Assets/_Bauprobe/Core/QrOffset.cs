@@ -4,9 +4,9 @@ using UnityEngine;
 namespace Bauprobe.Core
 {
     /// <summary>
-    /// Offset du QR code : où est le QR code par rapport au point zéro de la scène (du bureau d'études).
+    /// Où est le QR code par rapport au point zéro de la scène (du bureau d'études), saisi dans le casque.
     /// Repère du plan (voir <see cref="StagePlan"/>) : X+ à droite (cour), Y+ vers l'avant (lointain).
-    /// Tout à 0 : le QR code EST le point zéro.
+    /// X = Y = 0 : le QR code EST le point zéro (en plan). La hauteur sert à retrouver le sol.
     /// </summary>
     [Serializable]
     public class QrOffset
@@ -17,20 +17,16 @@ namespace Bauprobe.Core
         /// <summary>Position Y du QR code (point du sol sous son centre) depuis le point zéro, en mètres.</summary>
         public float y;
 
-        /// <summary>
-        /// Angle de l'avant du QR code par rapport au Y+ du point zéro, en degrés, sens inverse des aiguilles
-        /// d'une montre vu de dessus. L'avant est le bord du haut d'un QR code posé au sol, la perpendiculaire
-        /// d'un QR code vertical.
-        /// </summary>
-        public float angle;
+        /// <summary>Distance verticale entre le BAS du QR code et le sol du plateau, en mètres (0 = posé au sol).</summary>
+        public float height;
 
         public QrOffset() { }
 
-        public QrOffset(float x, float y, float angle)
+        public QrOffset(float x, float y, float height)
         {
             this.x = x;
             this.y = y;
-            this.angle = angle;
+            this.height = Mathf.Max(0f, height);
         }
 
         public bool IsZero => IsSameAs(new QrOffset());
@@ -39,13 +35,19 @@ namespace Bauprobe.Core
             other != null &&
             Mathf.Abs(x - other.x) < tolerance &&
             Mathf.Abs(y - other.y) < tolerance &&
-            Mathf.Abs(angle - other.angle) < tolerance;
+            Mathf.Abs(height - other.height) < tolerance;
 
         /// <summary>Position et rotation du point zéro (StageRoot) dans le repère du QR code (QRAnchor).</summary>
-        public Pose ReferenceInQrFrame() => StagePlan.ReferenceInQrFrame(x, y, angle);
+        public Pose ReferenceInQrFrame() => StagePlan.ReferenceInQrFrame(x, y);
 
-        public QrOffset Copy() => new QrOffset(x, y, angle);
+        /// <summary>Hauteur du sol (repère du monde) : hauteur du bas du QR code moins sa distance au sol.</summary>
+        public float FloorHeight(float qrBottomY) => FloorHeight(qrBottomY, height);
 
-        public override string ToString() => $"X {x:0.###} m ; Y {y:0.###} m ; angle {angle:0.#}°";
+        /// <summary>Hauteur du sol : hauteur du bas du QR code moins sa distance au sol.</summary>
+        public static float FloorHeight(float qrBottomY, float qrBottomHeightAboveFloor) => qrBottomY - qrBottomHeightAboveFloor;
+
+        public QrOffset Copy() => new QrOffset(x, y, height);
+
+        public override string ToString() => $"X {x:0.###} m ; Y {y:0.###} m ; hauteur {height:0.###} m";
     }
 }

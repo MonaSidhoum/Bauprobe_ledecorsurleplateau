@@ -29,8 +29,8 @@ namespace Bauprobe.Persistence
         public string scene;
 
         /// <summary>
-        /// Offset du QR code au moment de la sauvegarde (pour information : les positions ne dépendent pas
-        /// de l'endroit où était le QR code, elles sont mesurées depuis le point zéro).
+        /// Offset du QR code (X, Y, hauteur) au moment de la sauvegarde (pour information : les positions ne
+        /// dépendent pas de l'endroit où était le QR code, elles sont mesurées depuis le point zéro, au sol).
         /// </summary>
         public QrOffset qrOffset = new QrOffset();
 

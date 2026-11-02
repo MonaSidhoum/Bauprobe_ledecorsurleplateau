@@ -9,8 +9,8 @@ namespace Bauprobe.Core
     /// Plan  : X à droite, Y devant (profondeur), Z en haut (repère « main droite », comme AutoCAD / SketchUp).
     ///
     /// Sur le plateau, « devant » est l'avant du repère du QR code (voir StageCalibrator) : pour un QR code
-    /// à plat au sol, la direction de son bord du haut ; pour un QR code vertical (mur, pied), la direction
-    /// perpendiculaire au QR code. Si cette direction pointe vers le lointain : X+ = cour, Y+ = lointain, Z+ = hauteur.
+    /// vertical (mur, pied), la direction dans laquelle on regarde quand on le lit ; pour un QR code à plat
+    /// au sol, la direction de son bord du haut. QR code lu depuis la salle : X+ = cour, Y+ = lointain, Z+ = hauteur.
     ///
     /// Angles du plan, en degrés :
     ///   Angle     = rotation autour de la verticale (Z), sens inverse des aiguilles d'une montre vu de dessus ;
@@ -42,19 +42,15 @@ namespace Bauprobe.Core
             Quaternion.Euler(-planAngles.x, -planAngles.z, -planAngles.y);
 
         /// <summary>
-        /// Position et rotation de StageRoot (le point zéro du bureau d'études) dans le repère du QR code,
-        /// à partir de l'offset du QR code : la position du QR code (le point du sol sous son centre) mesurée
-        /// dans le repère du bureau d'études, en mètres, et son angle en degrés (sens inverse des aiguilles
-        /// d'une montre vu de dessus, 0 = l'avant du QR code pointe vers le Y+ du bureau d'études).
+        /// Position de StageRoot (le point zéro du bureau d'études) dans le repère du QR code, à partir de la
+        /// position du QR code (le point du sol sous son centre) mesurée depuis le point zéro, en mètres.
+        /// Les axes sont ceux du QR code : X+ à droite, Y+ vers l'avant (voir StageCalibrator).
         /// Offset nul → StageRoot est exactement sur le QR code.
         /// </summary>
-        public static Pose ReferenceInQrFrame(float qrOffsetX, float qrOffsetY, float qrOffsetAngle)
+        public static Pose ReferenceInQrFrame(float qrOffsetX, float qrOffsetY)
         {
-            // Le QR code, vu depuis le point zéro : décalé de (X, Y) et tourné de « Angle ».
-            // StageRoot, vu depuis le QR code : la transformation inverse.
-            var rotation = Quaternion.Euler(0f, qrOffsetAngle, 0f);
-            var position = rotation * -FromPlan(new Vector3(qrOffsetX, qrOffsetY, 0f));
-            return new Pose(position, rotation);
+            // Le QR code est en (X, Y) depuis le point zéro : le point zéro est en (-X, -Y) depuis le QR code.
+            return new Pose(-FromPlan(new Vector3(qrOffsetX, qrOffsetY, 0f)), Quaternion.identity);
         }
 
         /// <summary>Ramène un angle entre -180 et 180 degrés (et évite d'écrire « -0 »).</summary>

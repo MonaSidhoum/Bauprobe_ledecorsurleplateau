@@ -2,26 +2,23 @@
 
 Ce document explique **comment le code est rangé et pourquoi**. Il est écrit pour des débutant·e·s en Unity.
 
-## L'idée centrale : le QR code est le « point zéro » du plateau
+## L'idée centrale : un point zéro sur le plateau, retrouvé grâce au QR code
 
 On pose un QR code sur le plateau (par exemple au centre, au bord de la scène) : à plat au sol, ou collé sur un
 support. Quand le casque le voit, il sait où est la scène.
 
-Si le QR code n'est pas au sol, on indique la distance entre **le bas du QR code et le sol** dans
-`Core/Resources/StageSettings.asset`. `StageCalibrator` place alors le repère du plateau **au sol, à la verticale
-du centre du QR code** : la hauteur 0 du décor est le vrai sol. Détails : [A_FAIRE_DANS_UNITY.md](A_FAIRE_DANS_UNITY.md#régler-la-hauteur-du-qr-code-à-refaire-à-chaque-nouveau-lieu).
+Toutes les positions sont mesurées depuis le **point zéro de la scène** choisi avec le bureau d'études (par ex. le
+centre du nez de scène), **au sol**, et pas forcément depuis le QR code. Au lancement, l'écran **« Offset du QR code »**
+du menu général demande où est le QR code par rapport à ce point zéro (X, Y en mètres) et la hauteur de son bord
+du bas au-dessus du sol. Ces valeurs sont gardées sur le casque (`QrOffsetStore`) : pas besoin de *Build*.
+`StageCalibrator` place alors le repère du plateau **au sol, à la verticale du centre du QR code**, puis décale
+`StageRoot` sur le point zéro. X = Y = 0 : le QR code **est** le point zéro.
+Détails : [A_FAIRE_DANS_UNITY.md](A_FAIRE_DANS_UNITY.md#offset-et-hauteur-du-qr-code-dans-le-casque).
 
-Ensuite, **chaque objet de décor est placé par rapport à ce QR code**, et pas par rapport au casque.
-Si le metteur en scène pose une table « 2 m à gauche du QR code », elle sera encore au même
-endroit le lendemain, même si le casque a été éteint entre-temps.
-
-Le bureau d'études a souvent son propre **point zéro** (par ex. le centre du nez de scène), qui n'est pas forcément
-là où on a pu coller le QR code. On saisit alors l'**offset du QR code** **dans le casque**, au lancement de l'appli
-(où est le QR code par rapport au point zéro : X, Y en mètres et un angle). Il est gardé sur le casque
-(`QrOffsetStore`, pas besoin de *Build*). `StageCalibrator` décale `StageRoot` sur le point zéro : les positions
-sauvegardées et le tableau CSV sont alors mesurés **depuis le point zéro**, et plus depuis le QR code.
-Offset nul (par défaut) : le QR code **est** le point zéro.
-Détails : [A_FAIRE_DANS_UNITY.md](A_FAIRE_DANS_UNITY.md#offset-du-qr-code-point-zéro-du-bureau-détudes).
+Ensuite, **chaque objet de décor est placé par rapport à ce point zéro**, et pas par rapport au casque.
+Si le metteur en scène pose une table « 2 m à gauche du point zéro », elle sera encore au même
+endroit le lendemain, même si le casque a été éteint entre-temps ou si le QR code a été recollé ailleurs
+(il suffit de saisir son nouvel offset).
 
 Dans la scène Unity, ça donne cette hiérarchie :
 
@@ -41,7 +38,7 @@ Chaque dossier de `Assets/_Bauprobe` est un **module** : une partie de l'appli q
 
 | Module | Rôle | Scripts principaux |
 |---|---|---|
-| **Core** | Le repère du plateau, partagé par tous ; ses réglages (hauteur du QR code) ; l'offset du QR code saisi dans le casque ; le passage au repère du bureau d'études | `StageSpace`, `StageSettings`, `QrOffset`, `QrOffsetStore`, `StagePlan` |
+| **Core** | Le repère du plateau, partagé par tous ; l'offset et la hauteur du QR code saisis dans le casque ; le passage au repère du bureau d'études | `StageSpace`, `QrOffset`, `QrOffsetStore`, `StagePlan` |
 | **Calibration** | Trouver le QR code et y caler le plateau | `StageCalibrator` |
 | **Decor** | La liste des décors disponibles et leur apparition | `DecorItemDefinition`, `DecorCatalog`, `DecorSpawner`, `DecorInstance` |
 | **Manipulation** | Déplacer / tourner / agrandir / étirer un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `RightControllerRaySelector`, `LevelButton`, `FaceHighlight` |

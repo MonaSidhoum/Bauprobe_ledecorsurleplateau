@@ -33,7 +33,7 @@ namespace Bauprobe.Tests
             var data = new LayoutData
             {
                 scene = "Acte 1 - scène 2",
-                qrOffset = new QrOffset { x = 1.5f, y = -3f, angle = 90f },
+                qrOffset = new QrOffset(1.5f, -3f, 1.2f),
             };
             data.items.Add(new LayoutEntry { itemId = "table", name = "Table", attachment = "Sol", size = new Vector3(2f, 0.8f, 1f) });
 

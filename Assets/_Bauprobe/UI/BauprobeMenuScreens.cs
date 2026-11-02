@@ -17,8 +17,8 @@ namespace Bauprobe.UI
     ///   2. un écran "Décors" (liste d'objets paginée) à la place du menu principal quand on clique sur Importer ;
     ///   3. un écran "Sauvegarder" : « + Nouvelle sauvegarde » (avec un nom) ou écraser une sauvegarde existante ;
     ///   4. un écran "Charger" : la liste de toutes les sauvegardes, un clic recharge l'implantation ;
-    ///   5. un écran "Offset du QR code" : où est le QR code par rapport au point zéro de la scène (X, Y, angle),
-    ///      saisi au pavé numérique. Il s'ouvre au lancement (pré-rempli avec le dernier offset) et depuis la
+    ///   5. un écran "Offset du QR code" : où est le QR code par rapport au point zéro de la scène (X, Y) et
+    ///      la hauteur de son bord du bas au-dessus du sol, saisis au pavé numérique. Il s'ouvre au lancement (pré-rempli avec le dernier offset) et depuis la
     ///      première ligne de l'écran "Charger". L'offset est gardé sur le casque (QrOffsetStore) : pas de Build.
     ///
     /// A mettre sur la RACINE du prefab BauprobeMenu (l'objet qui contient tous les boutons).
@@ -92,8 +92,8 @@ namespace Bauprobe.UI
         [Tooltip("Première ligne de l'écran Charger. {0} = offset actuel.")]
         [SerializeField] private string offsetRowLabel = "Offset QR : {0}";
         [SerializeField] private string offsetValidateLabel = "Valider";
-        [Tooltip("Noms des 3 champs : X (vers cour), Y (vers le lointain), angle.")]
-        [SerializeField] private string[] offsetFieldLabels = { "X (m)", "Y (m)", "Angle (°)" };
+        [Tooltip("Noms des 3 champs : X (vers cour), Y (vers le lointain), hauteur du bas du QR code au-dessus du sol.")]
+        [SerializeField] private string[] offsetFieldNames = { "X (m)", "Y (m)", "Hauteur QR (m)" };
 
         [Header("Sauvegardes")]
         [Tooltip("Nombre maximum de sauvegardes. Au-delà, il faut en supprimer une.")]
@@ -419,7 +419,7 @@ namespace Bauprobe.UI
             rows.Add(new Row
             {
                 label = string.Format(offsetRowLabel,
-                    FormatNumber(offset.x) + " ; " + FormatNumber(offset.y) + " ; " + FormatNumber(offset.angle) + "°"),
+                    FormatNumber(offset.x) + " ; " + FormatNumber(offset.y) + " ; h " + FormatNumber(offset.height)),
                 accent = true,
                 onClick = () => OpenQrOffset(OpenLoad)
             });
@@ -686,7 +686,7 @@ namespace Bauprobe.UI
             var offset = QrOffsetStore.Current;
             _offsetTexts[0] = FormatNumber(offset.x);
             _offsetTexts[1] = FormatNumber(offset.y);
-            _offsetTexts[2] = FormatNumber(offset.angle);
+            _offsetTexts[2] = FormatNumber(offset.height);
             _offsetField = 0;
             _offsetReplace = true;
             _offsetDone = done;
@@ -747,7 +747,7 @@ namespace Bauprobe.UI
 
         private string OffsetFieldText(int i)
         {
-            string label = offsetFieldLabels != null && i < offsetFieldLabels.Length ? offsetFieldLabels[i] : "";
+            string label = offsetFieldNames != null && i < offsetFieldNames.Length ? offsetFieldNames[i] : "";
             string value = _offsetTexts[i] ?? "";
             return label + " :  " + value + (i == _offsetField ? "|" : "");
         }
@@ -795,6 +795,7 @@ namespace Bauprobe.UI
 
         private void ValidateOffset()
         {
+            // La hauteur ne peut pas être négative (QrOffset la ramène à 0).
             QrOffsetStore.Set(new QrOffset(ParseNumber(_offsetTexts[0]), ParseNumber(_offsetTexts[1]), ParseNumber(_offsetTexts[2])));
             (_offsetDone ?? CloseToMain)();
         }

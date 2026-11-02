@@ -10,9 +10,9 @@ namespace Bauprobe.Persistence
     /// Écrit une implantation sous forme de tableau CSV pour le bureau d'études (s'ouvre dans Excel).
     /// Une ligne par élément de décor.
     ///
-    /// Repère « plan » (voir <see cref="StagePlan"/>), mesuré depuis le point zéro du bureau d'études
-    /// (= le QR code si l'offset du QR code est nul) :
-    ///   X (m) à droite, Y (m) vers l'avant (l'avant du QR code si l'angle est nul), Z (m) hauteur ;
+    /// Repère « plan » (voir <see cref="StagePlan"/>), dont l'origine est le point zéro du bureau d'études,
+    /// AU SOL (= le point du sol sous le QR code si l'offset X / Y du QR code est nul) :
+    ///   X (m) à droite (cour), Y (m) vers l'avant (lointain), Z (m) hauteur au-dessus du sol du plateau ;
     ///   la position est celle du point d'origine (bas au centre pour le sol, haut au centre pour le cintre) ;
     ///   Angle (°) = rotation autour de la verticale, sens inverse des aiguilles d'une montre vu de dessus ;
     ///   Bascule X / Y (°) = 0 tant que l'objet n'est pas penché ;
