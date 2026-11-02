@@ -221,15 +221,18 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 
 - [x] **Scale** : l'objet grandit désormais autour de son **point d'origine** (section 3.2) : un élément au sol
       reste posé sur le plateau, un élément au cintre reste accroché par le haut.
-- [x] **Déplacer** : le joystick déplace l'objet dans toutes les directions (avant / arrière / gauche / droite par
-      rapport au regard ; grip maintenu = monter / descendre), en plus de suivre la manette, sans limite de hauteur.
+- [x] **Déplacer** : l'objet est accroché au bout du laser (tourner la manette le déplace, loin s'il est loin) ;
+      joystick haut / bas = l'éloigner / le rapprocher le long du laser, gauche / droite = sur le côté, grip maintenu
+      = monter / descendre ; la vitesse augmente avec la distance (plus d'amplitude au loin). Avant, le déplacement
+      au joystick ne suivait plus la manette et restait lent au loin.
       L'objet ne descend pas sous le sol du plateau (option *Prevent Below Stage* de `InteractableObject`, cochée
       par défaut ; le sol vient de la hauteur du QR code réglée dans `StageSettings`). Pour un décor qui doit
       glisser au sol uniquement, cocher *Keep On Floor* sur son `DecorConstraints`.
 - [x] **Rotation** : joystick gauche / droite = tourner sur lui-même ; haut / bas = basculer vers l'avant / l'arrière
       (avant, seule la rotation autour de la verticale était possible). L'objet tourne autour de son centre sans
       s'enfoncer dans le sol. *Keep Upright* est décoché sur le prefab Cube pour permettre la bascule.
-      Un bouton **Align with floor** apparaît au-dessus de l'objet pendant la Rotation (laser + gâchette) : il pose
+      Un bouton **Align with floor** apparaît à la main gauche, à côté du menu général, pendant la Rotation
+      (laser + gâchette) : il pose
       l'objet parallèle au sol sur la face la plus proche de sa position (un peu penché → redressé, très penché →
       couché sur le côté).
 - [x] **Menu objet** : il s'affichait au-dessus de l'objet, hors de portée pour un grand décor. Il s'affiche maintenant

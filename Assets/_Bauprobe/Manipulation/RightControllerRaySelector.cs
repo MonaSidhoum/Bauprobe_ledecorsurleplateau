@@ -64,9 +64,23 @@ namespace Bauprobe.Manipulation
         {
             if (laser == null) return;
 
-            // Pas de laser pendant une manipulation (on garde la vue dégagée),
-            // sauf en Rotation (pour viser le bouton « Align with floor ») et en EXTRUDE (pour viser une face).
             var active = InteractableObject.Active;
+
+            // Pendant Déplacer : le laser relie la manette au centre de l'objet déplacé (il le « tient »).
+            if (active != null && active.CurrentMode == InteractableObject.Mode.Move)
+            {
+                laser.enabled = true;
+                laser.useWorldSpace = true;
+                laser.positionCount = 2;
+                laser.SetPosition(0, ray.origin);
+                laser.SetPosition(1, active.GetWorldBounds().center);
+                laser.startColor = hoverColor;
+                laser.endColor = hoverColor;
+                return;
+            }
+
+            // Pas de laser pendant Scale (on garde la vue dégagée),
+            // mais oui en Rotation (pour viser le bouton « Align with floor ») et en EXTRUDE (pour viser une face).
             laser.enabled = active == null
                             || active.CurrentMode == InteractableObject.Mode.Rotate
                             || active.CurrentMode == InteractableObject.Mode.Extrude;

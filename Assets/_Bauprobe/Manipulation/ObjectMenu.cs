@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -57,12 +56,6 @@ namespace Bauprobe.Manipulation
         RectTransform _rect;
         Transform _camera;
 
-        // Menu général : hauteur quand il est ouvert (la plus grande hauteur visible observée)
-        float _generalMenuOpenHeight;
-        bool _searchedGeneralMenu;
-        readonly List<Graphic> _graphics = new List<Graphic>();
-        readonly Vector3[] _corners = new Vector3[4];
-
         void Awake()
         {
             Instance = this;
@@ -71,6 +64,10 @@ namespace Bauprobe.Manipulation
 
             // Menu plus grand (le prefab est réglé à 0,0005 : boutons de 10 cm de large)
             transform.localScale *= sizeMultiplier;
+
+            // Menu général auprès duquel se placer (main gauche)
+            if (!string.IsNullOrEmpty(generalMenuName)) GeneralMenuDock.MenuName = generalMenuName;
+            if (generalMenu != null) GeneralMenuDock.SetMenu(generalMenu);
 
             if (Camera.main != null)
             {
@@ -136,7 +133,7 @@ namespace Bauprobe.Manipulation
         {
             if (!Target) return;
 
-            if (dockToGeneralMenu && TryDockToGeneralMenu()) return;
+            if (dockToGeneralMenu && GeneralMenuDock.TryPlace(_rect, gapToGeneralMenu)) return;
 
             // Pas de menu général : au-dessus de l'objet, tourné vers la personne
             Bounds b = Target.GetWorldBounds();
@@ -153,90 +150,6 @@ namespace Bauprobe.Manipulation
         // ------------------------------------------------------------------
         // À côté du menu général (main gauche)
         // ------------------------------------------------------------------
-
-        /// <summary>Place le menu à côté du menu général. Renvoie false si le menu général est introuvable ou caché.</summary>
-        bool TryDockToGeneralMenu()
-        {
-            var dock = FindGeneralMenu();
-            if (dock == null || !dock.gameObject.activeInHierarchy) return false;
-            if (!TryGetVisibleRect(dock, out var visible)) return false;
-
-            // Replié ou ouvert ? (replié = il ne reste que le petit bouton « + »)
-            _generalMenuOpenHeight = Mathf.Max(_generalMenuOpenHeight, visible.height, dock.rect.height);
-            bool collapsed = MenuDocking.IsCollapsed(visible.height, _generalMenuOpenHeight);
-
-            // Taille du menu objet et espace, convertis dans les unités du menu général
-            Vector3 dockScale = dock.lossyScale;
-            if (Mathf.Abs(dockScale.x) < 1e-8f || Mathf.Abs(dockScale.y) < 1e-8f) return false;
-            Vector3 menuScale = _rect.lossyScale;
-            var menuSize = new Vector2(_rect.rect.width * menuScale.x / dockScale.x,
-                                       _rect.rect.height * menuScale.y / dockScale.y);
-            float gap = gapToGeneralMenu / Mathf.Abs(dockScale.y);
-
-            Vector2 center = MenuDocking.DockedCenter(visible, menuSize, collapsed, gap);
-
-            // Le centre du menu objet est son pivot seulement si le pivot est au milieu : on corrige sinon.
-            Vector2 pivotOffset = (_rect.pivot - new Vector2(0.5f, 0.5f)) * menuSize;
-            transform.position = dock.TransformPoint(new Vector3(center.x + pivotOffset.x, center.y + pivotOffset.y, 0f));
-            transform.rotation = dock.rotation; // dans le même plan que le menu général
-            return true;
-        }
-
-        RectTransform FindGeneralMenu()
-        {
-            if (generalMenu != null || _searchedGeneralMenu) return generalMenu;
-            _searchedGeneralMenu = true;
-
-            var rig = FindAnyObjectByType<OVRCameraRig>();
-            if (rig == null || rig.leftHandAnchor == null) return null;
-
-            foreach (var rt in rig.leftHandAnchor.GetComponentsInChildren<RectTransform>(true))
-            {
-                if (rt.name == generalMenuName)
-                {
-                    generalMenu = rt;
-                    return generalMenu;
-                }
-            }
-
-            Debug.LogWarning($"[ObjectMenu] Menu général « {generalMenuName} » introuvable sous la main gauche : " +
-                             "le menu objet s'affichera au-dessus de l'objet.", this);
-            return null;
-        }
-
-        /// <summary>
-        /// Rectangle de la partie VISIBLE du menu général (dans son repère local) : on réunit les éléments
-        /// affichés (images, textes) dont la transparence n'est pas nulle. Quand le menu est replié,
-        /// seul le bouton « + » est visible.
-        /// </summary>
-        bool TryGetVisibleRect(RectTransform dock, out Rect visible)
-        {
-            visible = default;
-            bool any = false;
-            float xMin = 0f, xMax = 0f, yMin = 0f, yMax = 0f;
-
-            dock.GetComponentsInChildren(false, _graphics);
-            foreach (var g in _graphics)
-            {
-                if (!g.isActiveAndEnabled || g.color.a < 0.01f || g.canvasRenderer.GetInheritedAlpha() < 0.01f) continue;
-
-                g.rectTransform.GetWorldCorners(_corners);
-                for (int i = 0; i < 4; i++)
-                {
-                    Vector3 p = dock.InverseTransformPoint(_corners[i]);
-                    if (!any) { xMin = xMax = p.x; yMin = yMax = p.y; any = true; }
-                    else
-                    {
-                        xMin = Mathf.Min(xMin, p.x); xMax = Mathf.Max(xMax, p.x);
-                        yMin = Mathf.Min(yMin, p.y); yMax = Mathf.Max(yMax, p.y);
-                    }
-                }
-            }
-
-            if (!any) return false;
-            visible = Rect.MinMaxRect(xMin, yMin, xMax, yMax);
-            return true;
-        }
 
         /// <summary>
         /// Le rayon touche-t-il le rectangle du menu ? Utilisé pour que la gâchette
