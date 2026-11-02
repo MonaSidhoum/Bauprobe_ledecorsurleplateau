@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "Bauprobe.Core",
         "Bauprobe.Decor",
-        "Bauprobe.Persistence"
+        "Bauprobe.Persistence",
+        "Bauprobe.Manipulation"
     ],
     "includePlatforms": [
         "Editor"

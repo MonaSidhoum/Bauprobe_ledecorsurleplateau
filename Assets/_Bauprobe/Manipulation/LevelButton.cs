@@ -6,7 +6,8 @@ using UnityEngine.UI;
 namespace Bauprobe.Manipulation
 {
     /// <summary>
-    /// Bouton « Align with floor » affiché au-dessus de l'objet pendant le mode Rotation.
+    /// Bouton « Align with floor » affiché pendant le mode Rotation, à la MAIN GAUCHE, collé au menu général
+    /// (à la place du menu objet, caché pendant la rotation). Sans menu général : au-dessus de l'objet.
     /// Un clic (laser + gâchette) pose l'objet parallèle au sol, sur la face la plus proche de sa position actuelle.
     ///
     /// Le bouton est créé par le code la première fois qu'on en a besoin : il n'y a rien à ajouter
@@ -18,6 +19,7 @@ namespace Bauprobe.Manipulation
         const float CanvasScale = 0.001f;          // 1 unité du Canvas = 1 mm
         static readonly Vector2 Size = new Vector2(320f, 80f);
         const float GapAboveObject = 0.05f;        // en mètres
+        const float GapToGeneralMenu = 0.02f;      // en mètres
 
         static LevelButton s_instance;
 
@@ -93,10 +95,15 @@ namespace Bauprobe.Manipulation
             }
         }
 
-        // Au-dessus de l'objet (même penché), tourné vers la personne.
+        // À la main gauche, à côté du menu général ; sinon au-dessus de l'objet (même penché), tourné vers la personne.
         void UpdatePose()
         {
             if (!_target)
+            {
+                return;
+            }
+
+            if (GeneralMenuDock.TryPlace(_rect, GapToGeneralMenu))
             {
                 return;
             }

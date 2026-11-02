@@ -83,7 +83,7 @@ MenuGeneral
 ├── MRUK                                  détection des QR codes (Meta)
 ├── QRAnchor                              Stage Calibrator : se cale sur le QR code
 │   └── StageRoot                         Stage Space : le repère du plateau, parent de tous les décors
-└── ObjectMenu                            (prefab _Bauprobe/UI/Prefabs/ObjectMenu) : menu au-dessus de l'objet sélectionné
+└── ObjectMenu                            (prefab _Bauprobe/UI/Prefabs/ObjectMenu) : menu de l'objet sélectionné, collé au menu général (main gauche)
 ```
 
 | Élément | Où | Rôle |
@@ -91,7 +91,7 @@ MenuGeneral
 | Menu général | `BauprobeMenu` (main gauche) | Permission, suivi QR, **Importer**, **Supprimer tout**, **Sauvegarder**, **Charger** |
 | Catalogue | `Decor/Catalog/DecorCatalog.asset` | Liste des décors importables : `Cube` (test) et 7 éléments du bureau d'études pour *La Cage aux Folles* (`CafePlagePartieA/B`, `LogesPartieA/B`, `SalonPartieA/B`, `Volumecentral`) |
 | Laser | `Laser` (main droite) | Vise un objet ; gâchette = ouvre son menu |
-| Menu objet | `ObjectMenu` (racine) | Supprimer, Couleur, Déplacer, Scale, Rotation, Extrude (ajouté par le code sous Scale) |
+| Menu objet | `ObjectMenu` (racine) | Supprimer, Couleur, Déplacer, Scale, Rotation, Extrude (ajouté par le code sous Scale). S'affiche à la main gauche, à droite du menu général (au-dessus du « + » s'il est replié). Taille : *Size Multiplier* |
 | Décors | prefabs `Decor/Prefabs/` (`Cube` + les 7 décors) | *Interactable Object* (manette) + *Decor Constraints* (taille, sol). Modèles OBJ dans `Decor/Models/<décor>/`, importés en mm → m (*Scale Factor* 0,001) |
 | Réglages du plateau | `Core/Resources/StageSettings.asset` | Distance entre le bas du QR code et le sol ([voir plus haut](#régler-la-hauteur-du-qr-code-à-refaire-à-chaque-nouveau-lieu)) |
 
@@ -221,19 +221,23 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 
 - [x] **Scale** : l'objet grandit désormais autour de son **point d'origine** (section 3.2) : un élément au sol
       reste posé sur le plateau, un élément au cintre reste accroché par le haut.
-- [x] **Déplacer** : le joystick déplace l'objet dans toutes les directions (avant / arrière / gauche / droite par
-      rapport au regard ; grip maintenu = monter / descendre), en plus de suivre la manette, sans limite de hauteur.
+- [x] **Déplacer** : l'objet est accroché au bout du laser (tourner la manette le déplace, loin s'il est loin) ;
+      joystick haut / bas = l'éloigner / le rapprocher le long du laser, gauche / droite = sur le côté, grip maintenu
+      = monter / descendre ; la vitesse augmente avec la distance (plus d'amplitude au loin). Avant, le déplacement
+      au joystick ne suivait plus la manette et restait lent au loin.
       L'objet ne descend pas sous le sol du plateau (option *Prevent Below Stage* de `InteractableObject`, cochée
       par défaut ; le sol vient de la hauteur du QR code réglée dans `StageSettings`). Pour un décor qui doit
       glisser au sol uniquement, cocher *Keep On Floor* sur son `DecorConstraints`.
 - [x] **Rotation** : joystick gauche / droite = tourner sur lui-même ; haut / bas = basculer vers l'avant / l'arrière
       (avant, seule la rotation autour de la verticale était possible). L'objet tourne autour de son centre sans
       s'enfoncer dans le sol. *Keep Upright* est décoché sur le prefab Cube pour permettre la bascule.
-      Un bouton **Align with floor** apparaît au-dessus de l'objet pendant la Rotation (laser + gâchette) : il pose
+      Un bouton **Align with floor** apparaît à la main gauche, à côté du menu général, pendant la Rotation
+      (laser + gâchette) : il pose
       l'objet parallèle au sol sur la face la plus proche de sa position (un peu penché → redressé, très penché →
       couché sur le côté).
-- [ ] **Menu objet** : il s'affiche au-dessus de l'objet. Pour un grand décor (mur de 4 m), il est hors de portée.
-      Le placer plutôt à hauteur des yeux, devant l'objet.
+- [x] **Menu objet** : il s'affichait au-dessus de l'objet, hors de portée pour un grand décor. Il s'affiche maintenant
+      **à la main gauche**, à droite du menu général (au-dessus du bouton « + » quand le menu général est replié),
+      et il est **2 fois plus grand** (*Size Multiplier* sur `ObjectMenu`).
 - [ ] **Laser** : le menu général ne bloque pas le laser. Viser un bouton du menu général avec un objet
       derrière sélectionne aussi l'objet.
 

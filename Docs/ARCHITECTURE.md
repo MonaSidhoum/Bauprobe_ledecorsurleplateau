@@ -83,16 +83,25 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    « Supprimer tout » passe aussi par `DecorSpawner`.
 5. **Le metteur en scène manipule l'objet à la manette droite** :
    * il vise l'objet avec le laser (`RightControllerRaySelector`) et appuie sur la gâchette ;
-   * un petit menu s'ouvre au-dessus de l'objet (`ObjectMenu`) : Supprimer, Couleur, Déplacer, Scale, Rotation ;
+   * le menu de l'objet s'ouvre (`ObjectMenu`) : Supprimer, Couleur, Déplacer, Scale, Rotation, Extrude.
+     Il se place **à la main gauche, collé au menu général** : à sa droite quand il est ouvert, au-dessus du
+     bouton « + » quand il est replié. Le menu général est trouvé tout seul sous la main gauche (objet
+     « BauprobeMenu ») ; « replié » est détecté en regardant ce qui en est visible (`MenuDocking`), donc sans
+     dépendre du code du menu général. Sans menu général, le menu objet s'affiche au-dessus de l'objet ;
    * pendant Déplacer / Scale / Rotation (`InteractableObject`) : joystick = ajuster, gâchette = valider, B = annuler.
 
-   **Déplacer** : l'objet suit la manette, et le joystick le déplace dans toutes les directions
-   (grip maintenu = monter / descendre). Il ne descend pas sous le sol du plateau (option *Prevent Below Stage*
-   de `InteractableObject`, cochée par défaut).
+   **Déplacer** : l'objet est accroché à la manette, comme au bout du laser (sa position est gardée dans le repère
+   de la manette) : tourner le poignet le déplace, d'autant plus loin qu'il est loin. Le joystick l'éloigne /
+   le rapproche le long du laser (ligne manette → objet), le décale sur le côté, ou le monte / descend (grip
+   maintenu) ; la vitesse augmente avec la distance (*Distance Speed Factor*), entre *Min / Max Move Distance*.
+   Le laser relie la manette à l'objet pendant le déplacement ; le laser de Meta (`OVRRayHelper` de la manette
+   droite, toujours tout droit) est caché pendant ce temps par `RightControllerRaySelector` (*Hide Meta Ray While Moving*). Il ne descend pas sous le sol du plateau
+   (option *Prevent Below Stage* de `InteractableObject`, cochée par défaut).
    **Rotation** : joystick gauche / droite = tourner sur lui-même, haut / bas = basculer. La rotation se fait
    autour du centre de l'objet, et son point le plus bas (sol) ou le plus haut (cintre) reste à la même hauteur.
    Pendant la Rotation, un bouton **Align with floor** (`LevelButton`, créé par le code, rien à ajouter dans la scène)
-   s'affiche au-dessus de l'objet : la direction de l'objet la plus proche de la verticale devient exactement
+   s'affiche à la main gauche, collé au menu général comme le menu objet (`GeneralMenuDock`) : la direction de
+   l'objet la plus proche de la verticale devient exactement
    verticale, avec la plus petite rotation possible. L'objet est donc posé à plat sur la face la plus proche.
    Pour interdire la bascule sur un décor, cocher *Keep Upright* sur son `DecorConstraints`
    (et décocher *Allow Tilt* sur son `InteractableObject`).
@@ -113,7 +122,7 @@ Les scripts écrits sur la branche de test ont été intégrés :
 |---|---|---|
 | `BauprobeMenuLogic` | `UI/` | Menu général : permission QR, suivi QR, Importer, Supprimer tout |
 | `InteractableObject` | `Manipulation/` | Les 5 actions sur un objet : supprimer, couleur, déplacer, scale, rotation (manette droite) |
-| `ObjectMenu` | `Manipulation/` | Le petit menu qui s'affiche au-dessus de l'objet sélectionné |
+| `ObjectMenu` | `Manipulation/` | Le menu de l'objet sélectionné, collé au menu général de la main gauche |
 | `RightControllerRaySelector` | `Manipulation/` | Le laser de la manette droite qui sélectionne un objet |
 
 `ObjectMenu` est dans `Manipulation` (et pas dans `UI`) parce qu'il appelle `InteractableObject` et

@@ -5,8 +5,13 @@ using UnityEngine.UI;
 namespace Bauprobe.Manipulation
 {
     /// <summary>
-    /// Menu contextuel (Canvas World Space) affiché au-dessus de l'objet sélectionné.
-    /// Un seul menu dans la scène, partagé par tous les objets interactifs.
+    /// Menu de l'objet sélectionné (Canvas World Space). Un seul menu dans la scène, partagé par tous les objets.
+    ///
+    /// Il s'affiche quand on clique sur un objet, et se place à la MAIN GAUCHE, collé au menu général :
+    ///   - menu général ouvert : à sa droite ;
+    ///   - menu général replié (bouton − / +) : au-dessus du bouton « + ».
+    /// Le menu général est trouvé tout seul sous la main gauche (objet « BauprobeMenu ») ; s'il n'y en a pas,
+    /// le menu objet s'affiche au-dessus de l'objet, comme avant.
     /// IMPORTANT : laisser le GameObject ACTIF dans l'éditeur, il se cache tout seul au lancement.
     /// </summary>
     [RequireComponent(typeof(Canvas))]
@@ -25,7 +30,22 @@ namespace Bauprobe.Manipulation
                  "juste en dessous de lui : pas besoin de modifier le prefab.")]
         [SerializeField] Button extrudeButton;
 
-        [Header("Placement")]
+        [Header("Taille")]
+        [Tooltip("Agrandit le menu (1 = taille du prefab). 2 = deux fois plus grand.")]
+        [SerializeField, Min(0.1f)] float sizeMultiplier = 2f;
+
+        [Header("Placement à côté du menu général (main gauche)")]
+        [Tooltip("Coché : le menu objet se place à côté du menu général de la main gauche. " +
+                 "Décoché : au-dessus de l'objet sélectionné.")]
+        [SerializeField] bool dockToGeneralMenu = true;
+        [Tooltip("Le menu général. Vide = trouvé automatiquement sous la main gauche (objet nommé « BauprobeMenu »).")]
+        [SerializeField] RectTransform generalMenu;
+        [Tooltip("Nom de l'objet du menu général, pour le trouver automatiquement sous la main gauche.")]
+        [SerializeField] string generalMenuName = "BauprobeMenu";
+        [Tooltip("Espace (en mètres) entre le menu général et le menu objet.")]
+        [SerializeField] float gapToGeneralMenu = 0.02f;
+
+        [Header("Placement au-dessus de l'objet (si pas de menu général)")]
         [Tooltip("Espace (en mètres) entre le haut de l'objet et le bas du menu.")]
         [SerializeField] float gapAboveObject = 0.05f;
         [SerializeField] bool faceCamera = true;
@@ -41,6 +61,13 @@ namespace Bauprobe.Manipulation
             Instance = this;
             _canvas = GetComponent<Canvas>();
             _rect = (RectTransform)transform;
+
+            // Menu plus grand (le prefab est réglé à 0,0005 : boutons de 10 cm de large)
+            transform.localScale *= sizeMultiplier;
+
+            // Menu général auprès duquel se placer (main gauche)
+            if (!string.IsNullOrEmpty(generalMenuName)) GeneralMenuDock.MenuName = generalMenuName;
+            if (generalMenu != null) GeneralMenuDock.SetMenu(generalMenu);
 
             if (Camera.main != null)
             {
@@ -106,6 +133,9 @@ namespace Bauprobe.Manipulation
         {
             if (!Target) return;
 
+            if (dockToGeneralMenu && GeneralMenuDock.TryPlace(_rect, gapToGeneralMenu)) return;
+
+            // Pas de menu général : au-dessus de l'objet, tourné vers la personne
             Bounds b = Target.GetWorldBounds();
             float halfMenuHeight = _rect.rect.height * _rect.lossyScale.y * 0.5f;
             transform.position = b.center + Vector3.up * (b.extents.y + gapAboveObject + halfMenuHeight);
@@ -116,6 +146,10 @@ namespace Bauprobe.Manipulation
                 transform.rotation = Quaternion.LookRotation(transform.position - _camera.position);
             }
         }
+
+        // ------------------------------------------------------------------
+        // À côté du menu général (main gauche)
+        // ------------------------------------------------------------------
 
         /// <summary>
         /// Le rayon touche-t-il le rectangle du menu ? Utilisé pour que la gâchette

@@ -13,9 +13,10 @@ namespace Bauprobe.Manipulation
     ///   - bouton B         = annuler (retour à l'état d'avant)
     ///   - joystick droit   = ajuster (voir chaque mode)
     ///
-    /// Déplacer : l'objet suit la manette ; en plus, le joystick le déplace dans toutes les directions
-    ///   (avant / arrière / gauche / droite par rapport à l'endroit où l'on regarde ;
-    ///   en maintenant le bouton de saisie (grip) : haut / bas = monter / descendre, jusqu'au sol du plateau).
+    /// Déplacer : l'objet est accroché à la manette, comme au bout du laser (tourner le poignet le déplace loin) ;
+    ///   joystick haut / bas = l'éloigner / le rapprocher le long du laser, gauche / droite = le décaler sur le côté ;
+    ///   grip maintenu + joystick haut / bas = monter / descendre. Plus l'objet est loin, plus il va vite.
+    ///   Il ne descend pas sous le sol du plateau.
     /// Rotation : joystick gauche / droite = tourner sur lui-même,
     ///   haut / bas = le basculer vers l'avant / l'arrière ;
     ///   le bouton « Align with floor » au-dessus de l'objet le pose parallèle au sol, sur la face la plus proche.
@@ -46,8 +47,15 @@ namespace Bauprobe.Manipulation
         };
 
         [Header("Déplacer")]
-        [Tooltip("Vitesse (m/s) du déplacement au joystick, joystick à fond.")]
+        [Tooltip("Vitesse de base (m/s) du déplacement au joystick, joystick à fond, quand l'objet est tout près.")]
         [SerializeField, FormerlySerializedAs("pushPullSpeed")] float moveSpeed = 1f;
+        [Tooltip("Vitesse en plus, proportionnelle à la distance : à 10 m de la manette, l'objet va " +
+                 "1 + 10 × ce facteur m/s. Plus grand = plus d'amplitude au loin.")]
+        [SerializeField, Min(0f)] float distanceSpeedFactor = 1f;
+        [Tooltip("Distance minimale (m) entre la manette et l'objet.")]
+        [SerializeField, Min(0.05f)] float minMoveDistance = 0.3f;
+        [Tooltip("Distance maximale (m) entre la manette et l'objet.")]
+        [SerializeField, Min(1f)] float maxMoveDistance = 40f;
         [Tooltip("Empêche de descendre l'objet sous le sol du plateau. La hauteur du sol vient de la distance " +
                  "QR code → sol réglée dans Core/Resources/StageSettings.asset.")]
         [SerializeField] bool preventBelowStage = true;
@@ -83,10 +91,9 @@ namespace Bauprobe.Manipulation
         DecorFace _extrudeFace;
         bool _faceSelected;
 
-        // offset de l'objet dans le repère de la manette (pour Déplacer)
+        // position de l'objet dans le repère de la manette (pour Déplacer) : il suit la manette comme
+        // s'il était au bout du laser ; le joystick modifie cette position.
         Vector3 _grabLocalPos;
-        // déplacement ajouté au joystick pendant Déplacer (repère du monde)
-        Vector3 _stickOffset;
         Transform _head;
 
         void Awake()
@@ -150,7 +157,6 @@ namespace Bauprobe.Manipulation
             if (mode == Mode.Move)
             {
                 _grabLocalPos = controllerAnchor.InverseTransformPoint(transform.position);
-                _stickOffset = Vector3.zero;
             }
             _faceSelected = false;
 
@@ -216,29 +222,44 @@ namespace Bauprobe.Manipulation
             {
                 case Mode.Move:
                 {
-                    // Le joystick déplace l'objet dans toutes les directions, par rapport à l'endroit où l'on regarde :
-                    //   - haut / bas = avant / arrière, gauche / droite = gauche / droite ;
-                    //   - en maintenant le grip : haut / bas = monter / descendre.
-                    Vector3 forward = Vector3.forward, right = Vector3.right;
-                    if (_head)
+                    // L'objet est accroché à la manette (comme au bout du laser) : tourner le poignet le déplace,
+                    // d'autant plus loin qu'il est loin. Le joystick l'éloigne / le rapproche LE LONG DU LASER
+                    // (la ligne manette → objet), le décale sur le côté, ou le monte / descend (grip maintenu).
+                    Vector3 hand = controllerAnchor.position;
+                    Vector3 target = controllerAnchor.TransformPoint(_grabLocalPos);
+                    Vector3 toObject = target - hand;
+                    float distance = toObject.magnitude;
+                    Vector3 alongLaser = distance > 1e-4f ? toObject / distance : controllerAnchor.forward;
+
+                    // Plus l'objet est loin, plus il va vite : assez d'amplitude au loin, assez de précision de près.
+                    float speed = (moveSpeed + distanceSpeedFactor * distance) * dt;
+
+                    Vector3 delta;
+                    if (OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, controller))
                     {
-                        forward = Vector3.ProjectOnPlane(_head.forward, Vector3.up);
-                        right = Vector3.ProjectOnPlane(_head.right, Vector3.up);
-                        if (forward.sqrMagnitude < 1e-4f) forward = Vector3.ProjectOnPlane(_head.up, Vector3.up); // regard vertical
-                        if (right.sqrMagnitude < 1e-4f) right = Vector3.Cross(Vector3.up, forward);
-                        forward.Normalize();
-                        right.Normalize();
+                        delta = Vector3.up * (stick.y * speed);
+                    }
+                    else
+                    {
+                        Vector3 side = Vector3.Cross(Vector3.up, alongLaser); // vers la droite, à l'horizontale
+                        if (side.sqrMagnitude < 1e-4f) side = _head ? _head.right : controllerAnchor.right;
+                        side.Normalize();
+                        delta = alongLaser * (stick.y * speed) + side * (stick.x * speed);
                     }
 
-                    bool vertical = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, controller);
-                    Vector3 direction = vertical ? Vector3.up * stick.y : forward * stick.y + right * stick.x;
-                    _stickOffset += direction * moveSpeed * dt;
+                    // Distance manette → objet entre le minimum et le maximum
+                    Vector3 offset = target + delta - hand;
+                    float newDistance = offset.magnitude;
+                    if (newDistance < 1e-4f) offset = alongLaser * minMoveDistance;
+                    else offset *= Mathf.Clamp(newDistance, minMoveDistance, maxMoveDistance) / newDistance;
 
-                    // L'objet suit aussi la manette, comme avant.
-                    transform.position = controllerAnchor.TransformPoint(_grabLocalPos) + _stickOffset;
+                    transform.position = hand + offset;
 
                     // Il ne passe pas sous le sol du plateau (option, cochée par défaut).
                     if (preventBelowStage && _decor) _decor.KeepAboveStage();
+
+                    // On garde la nouvelle position dans le repère de la manette : l'objet reste accroché au laser.
+                    _grabLocalPos = controllerAnchor.InverseTransformPoint(transform.position);
                     break;
                 }
 
