@@ -94,7 +94,8 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    de la manette) : tourner le poignet le déplace, d'autant plus loin qu'il est loin. Le joystick l'éloigne /
    le rapproche le long du laser (ligne manette → objet), le décale sur le côté, ou le monte / descend (grip
    maintenu) ; la vitesse augmente avec la distance (*Distance Speed Factor*), entre *Min / Max Move Distance*.
-   Le laser relie la manette à l'objet pendant le déplacement. Il ne descend pas sous le sol du plateau
+   Le laser relie la manette à l'objet pendant le déplacement ; le laser de Meta (`OVRRayHelper` de la manette
+   droite, toujours tout droit) est caché pendant ce temps par `RightControllerRaySelector` (*Hide Meta Ray While Moving*). Il ne descend pas sous le sol du plateau
    (option *Prevent Below Stage* de `InteractableObject`, cochée par défaut).
    **Rotation** : joystick gauche / droite = tourner sur lui-même, haut / bas = basculer. La rotation se fait
    autour du centre de l'objet, et son point le plus bas (sol) ou le plus haut (cintre) reste à la même hauteur.
