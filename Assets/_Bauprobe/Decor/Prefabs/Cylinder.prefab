@@ -12,6 +12,10 @@ GameObject:
   - component: {fileID: 8735894607935489579}
   - component: {fileID: 4242000950655469418}
   - component: {fileID: 2313340998359856855}
+  - component: {fileID: 7676526552695827100}
+  - component: {fileID: 6019375039347790325}
+  - component: {fileID: 6920433226092792525}
+  - component: {fileID: 9146141680253868919}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -114,3 +118,96 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!54 &7676526552695827100
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3111194104847881782}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &6019375039347790325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3111194104847881782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43f86b14a27b52f4f9298c33015b5c26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Oculus.Interaction::Oculus.Interaction.Grabbable
+  _transferOnSecondSelection: 0
+  _addNewPointsToFront: 0
+  _forwardElement: {fileID: 0}
+  _oneGrabTransformer: {fileID: 0}
+  _twoGrabTransformer: {fileID: 0}
+  _targetTransform: {fileID: 3836875660839037283}
+  _maxGrabPoints: -1
+  _rigidbody: {fileID: 7676526552695827100}
+  _kinematicWhileSelected: 1
+  _throwWhenUnselected: 1
+  _forceKinematicDisabled: 0
+--- !u!114 &6920433226092792525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3111194104847881782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9ddf98079a04a60985e49c1e27b61f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Bauprobe.Manipulation::Bauprobe.Manipulation.DecorConstraints
+  keepOnFloor: 0
+  keepUpright: 1
+  uniformScale: 1
+--- !u!114 &9146141680253868919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3111194104847881782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5d6cf7a576e4ebaae2768f06f312616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Bauprobe.Manipulation::Bauprobe.Manipulation.InteractableObject
+  controller: 2
+  controllerAnchor: {fileID: 0}
+  stickDeadZone: 0.15
+  palette:
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0.9, g: 0.2, b: 0.2, a: 1}
+  - {r: 0.2, g: 0.75, b: 0.3, a: 1}
+  - {r: 0.2, g: 0.45, b: 0.95, a: 1}
+  - {r: 1, g: 0.8, b: 0.1, a: 1}
+  - {r: 0.7, g: 0.3, b: 0.9, a: 1}
+  pushPullSpeed: 1
+  minGrabDistance: 0.1
+  scaleSpeed: 1
+  minScale: 0.02
+  maxScale: 5
+  rotationSpeed: 90
