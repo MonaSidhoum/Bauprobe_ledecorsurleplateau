@@ -89,7 +89,7 @@ MenuGeneral
 | Élément | Où | Rôle |
 |---|---|---|
 | Menu général | `BauprobeMenu` (main gauche) | Permission, suivi QR, **Importer**, **Supprimer tout**, **Sauvegarder**, **Charger** |
-| Catalogue | `Decor/Catalog/DecorCatalog.asset` | Liste des décors importables : `Cube` (test) et 7 éléments du bureau d'études (`CafePlagePartieA/B`, `LogesPartieA/B`, `SalonPartieA/B`, `Volumecentral`) |
+| Catalogue | `Decor/Catalog/DecorCatalog.asset` | Liste des décors importables : `Cube` (test) et 7 éléments du bureau d'études pour *La Cage aux Folles* (`CafePlagePartieA/B`, `LogesPartieA/B`, `SalonPartieA/B`, `Volumecentral`) |
 | Laser | `Laser` (main droite) | Vise un objet ; gâchette = ouvre son menu |
 | Menu objet | `ObjectMenu` (racine) | Supprimer, Couleur, Déplacer, Scale, Rotation, Extrude (ajouté par le code sous Scale) |
 | Décors | prefabs `Decor/Prefabs/` (`Cube` + les 7 décors) | *Interactable Object* (manette) + *Decor Constraints* (taille, sol). Modèles OBJ dans `Decor/Models/<décor>/`, importés en mm → m (*Scale Factor* 0,001) |
@@ -156,7 +156,8 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
       (par exemple 1:1, 1:2, 1:5) dans le menu général. La sauvegarde doit rester en mètres réels.
 - [ ] **Bibliothèque standard** : modéliser et ajouter au catalogue des praticables, une draperie simple, des
       pendrillons et des frises, en tailles standard. Demander les dimensions standard au théâtre.
-- [ ] **Premier jeu de modèles** : récupérer auprès de Thomas les modèles de *La Cage aux Folles*.
+- [x] **Premier jeu de modèles** : récupérer auprès de Thomas les modèles de *La Cage aux Folles*.
+      Fait : 7 éléments au catalogue (Café-plage, Loges, Salon en deux parties chacun, Volume central).
 - [ ] **Vue de dessus** : prévue en V6, pas pour l'instant.
 
 ### 3.3 Contraintes
@@ -184,6 +185,7 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 ### 3.5 Tests prévus
 
 - [ ] Une scène de *La Cage aux Folles* sur le plateau.
+      Les modèles sont prêts (7 éléments au catalogue) ; reste à les placer selon une scène et tester sur le plateau.
 - [ ] Un décor sans lien avec ce spectacle (pour vérifier que l'import marche avec d'autres modèles).
 - [ ] Test commun avec le volet « Voir la même chose » : date à fixer.
 
