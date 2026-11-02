@@ -89,13 +89,17 @@ MenuGeneral
 | Élément | Où | Rôle |
 |---|---|---|
 | Menu général | `BauprobeMenu` (main gauche) | Permission, suivi QR, **Importer**, **Supprimer tout**, **Sauvegarder**, **Charger** |
-| Catalogue | `Decor/Catalog/DecorCatalog.asset` | Liste des décors importables (pour l'instant : `Cube`) |
+| Catalogue | `Decor/Catalog/DecorCatalog.asset` | Liste des décors importables : `Cube` (test) et 7 éléments du bureau d'études (`CafePlagePartieA/B`, `LogesPartieA/B`, `SalonPartieA/B`, `Volumecentral`) |
 | Laser | `Laser` (main droite) | Vise un objet ; gâchette = ouvre son menu |
 | Menu objet | `ObjectMenu` (racine) | Supprimer, Couleur, Déplacer, Scale, Rotation, Extrude (ajouté par le code sous Scale) |
-| Décor | prefab `Decor/Prefabs/Cube` | *Interactable Object* (manette) + *Decor Constraints* (taille, sol) |
+| Décors | prefabs `Decor/Prefabs/` (`Cube` + les 7 décors) | *Interactable Object* (manette) + *Decor Constraints* (taille, sol). Modèles OBJ dans `Decor/Models/<décor>/`, importés en mm → m (*Scale Factor* 0,001) |
 | Réglages du plateau | `Core/Resources/StageSettings.asset` | Distance entre le bas du QR code et le sol ([voir plus haut](#régler-la-hauteur-du-qr-code-à-refaire-à-chaque-nouveau-lieu)) |
 
 Pour ajouter un nouveau décor au catalogue : voir [ARCHITECTURE.md](ARCHITECTURE.md#ajouter-un-nouveau-décor-sans-code).
+Deux raccourcis aident à préparer un prefab de décor (`Decor/Editor/DecorPrefabTools.cs`), par clic droit sur le
+composant dans l'Inspector : *Transform > Bauprobe : poser les modèles sur le pivot (centre-bas)* et
+*BoxCollider > Bauprobe : ajuster aux modèles 3D enfants* (affiche aussi les dimensions en mètres dans la Console,
+pour vérifier l'échelle par rapport aux plans).
 
 Rappel : **une seule personne à la fois** modifie `MenuGeneral.unity`. Pour modifier un menu,
 ouvrez son prefab (`_Bauprobe/UI/Prefabs/`) plutôt que la scène.
@@ -113,7 +117,7 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 
 | # | Étape du cahier des charges | État | Ce qui existe / ce qui manque |
 |---|---|---|---|
-| 1 | Importer le décor du bureau d'études et le tableau de positionnement | 🟡 | *Importer* fait apparaître un décor du catalogue, mais seul un **cube de test** existe. Pas encore de vrais modèles, ni de lecture du tableau. |
+| 1 | Importer le décor du bureau d'études et le tableau de positionnement | 🟡 | *Importer* propose les **7 premiers décors du bureau d'études** (OBJ, en mm convertis en m) en plus du cube de test. Pas encore de lecture du tableau. |
 | 2 | Afficher en AR la scène 1, puis les suivantes | ⬜ | Le calage sur le QR code marche, mais il n'y a qu'**une seule implantation** à la fois : pas de notion de « scène 1, 2, 3… ». |
 | 3 | Modifier placement et transformation, puis enregistrer dans la scène | 🟡 | Déplacer / Scale / Rotation et *Sauvegarder* marchent, mais toujours dans le même fichier (`implantation`). |
 | 4 | Exporter le tableau modifié et les nouveaux modèles | ⬜ | La sauvegarde est un fichier JSON sur le casque, qu'on ne peut pas ouvrir dans Excel. |
@@ -126,8 +130,11 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
       Piste : un **CSV**, qu'Excel ouvre et enregistre, est bien plus simple à lire dans Unity qu'un `.xlsx`.
 - [ ] **Importer le tableau** : lire le fichier et créer les éléments à leur place, scène par scène
       (réutiliser `LayoutSerializer` / `LayoutData`, à compléter avec le numéro de scène).
-- [ ] **Importer les modèles du bureau d'études** : choisir le format d'échange (FBX, glTF, OBJ…), les placer
-      dans `Decor/Models/` et les ajouter au catalogue, avec un bouton par décor dans la liste « Importer ».
+- [x] **Importer les modèles du bureau d'études** : format retenu **OBJ** (unités en mm, *Scale Factor* 0,001 à
+      l'import). 7 éléments ajoutés dans `Decor/Models/`, avec prefab et fiche catalogue chacun ; ils apparaissent
+      dans la liste « Importer ».
+      Reste à vérifier dans le casque (taille réelle par rapport aux plans, pose au sol) et à confirmer le format
+      avec le volet « Voir la même chose ».
 - [ ] **Gérer plusieurs scènes** : ajouter au menu général un choix « Scène précédente / Scène suivante » qui
       affiche l'implantation de la scène choisie (remplace l'actuel nom unique `implantation`).
 - [ ] **Enregistrer dans la scène** : *Sauvegarder* écrit dans la scène affichée.
