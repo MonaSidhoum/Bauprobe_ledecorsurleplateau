@@ -6,7 +6,7 @@ namespace Bauprobe.Manipulation
 {
     /// <summary>
     /// À mettre sur le cube (ou sur la racine de n'importe quel objet avec un Collider).
-    /// Contient les 5 actions du menu : supprimer, couleur, déplacer, scale, rotation.
+    /// Contient les actions du menu : supprimer, couleur, déplacer, scale, rotation, étirer une face (EXTRUDE).
     ///
     /// Pendant Déplacer / Scale / Rotation :
     ///   - gâchette droite  = valider
@@ -19,10 +19,13 @@ namespace Bauprobe.Manipulation
     /// Rotation : joystick gauche / droite = tourner sur lui-même,
     ///   haut / bas = le basculer vers l'avant / l'arrière ;
     ///   le bouton « Align with floor » au-dessus de l'objet le pose parallèle au sol, sur la face la plus proche.
+    /// Étirer (EXTRUDE) : viser une face au laser (elle s'éclaire en bleu) et appuyer sur la gâchette pour la choisir
+    ///   (elle devient orange) ; puis joystick haut = pousser la face (allonger), bas = la rentrer (raccourcir),
+    ///   grip maintenu = plus lent, pour être précis. La face opposée ne bouge pas. Gâchette = valider, B = annuler.
     /// </summary>
     public class InteractableObject : MonoBehaviour
     {
-        public enum Mode { None, Move, Scale, Rotate }
+        public enum Mode { None, Move, Scale, Rotate, Extrude }
 
         // --- état global : une seule manipulation à la fois ---
         public static InteractableObject Active { get; private set; }
@@ -60,6 +63,11 @@ namespace Bauprobe.Manipulation
                  "Penser aussi à décocher « Keep Upright » sur Decor Constraints, sinon l'objet se redresse aussitôt.")]
         [SerializeField] bool allowTilt = true;
 
+        [Header("Étirer une face (EXTRUDE)")]
+        [Tooltip("Vitesse (m/s) à laquelle la face avance ou recule, joystick à fond. " +
+                 "En maintenant le grip, 5 fois plus lent pour être précis.")]
+        [SerializeField] float extrudeSpeed = 0.5f;
+
         public Mode CurrentMode { get; private set; } = Mode.None;
 
         Renderer[] _renderers;
@@ -70,6 +78,10 @@ namespace Bauprobe.Manipulation
         // sauvegarde pour annuler
         Vector3 _savedPos, _savedScale;
         Quaternion _savedRot;
+
+        // face choisie (pour Étirer)
+        DecorFace _extrudeFace;
+        bool _faceSelected;
 
         // offset de l'objet dans le repère de la manette (pour Déplacer)
         Vector3 _grabLocalPos;
@@ -119,9 +131,15 @@ namespace Bauprobe.Manipulation
         public void BeginManipulation(Mode mode)
         {
             if (mode == Mode.None || IsAnyManipulating) return;
-            if (mode == Mode.Move && !controllerAnchor)
+            if ((mode == Mode.Move || mode == Mode.Extrude) && !controllerAnchor)
             {
-                Debug.LogWarning($"{name}: pas d'ancre de manette, impossible de déplacer.", this);
+                Debug.LogWarning($"{name}: pas d'ancre de manette, impossible de {(mode == Mode.Move ? "déplacer" : "viser une face")}.", this);
+                return;
+            }
+            if (!_decor) _decor = GetComponent<DecorInstance>(); // ajouté après Awake par le spawner
+            if (mode == Mode.Extrude && !_decor)
+            {
+                Debug.LogWarning($"{name}: seul un décor du catalogue peut être étiré.", this);
                 return;
             }
 
@@ -134,6 +152,7 @@ namespace Bauprobe.Manipulation
                 _grabLocalPos = controllerAnchor.InverseTransformPoint(transform.position);
                 _stickOffset = Vector3.zero;
             }
+            _faceSelected = false;
 
             CurrentMode = mode;
             Active = this;
@@ -177,10 +196,13 @@ namespace Bauprobe.Manipulation
             // Ne pas valider dans la frame même où la manipulation a commencé
             if (Time.frameCount != _startFrame)
             {
-                // La gâchette valide, sauf si le laser vise le bouton « Align with floor » (c'est alors un clic sur le bouton).
+                // La gâchette valide, sauf :
+                //  - si le laser vise le bouton « Align with floor » (c'est alors un clic sur le bouton) ;
+                //  - en EXTRUDE tant qu'aucune face n'est choisie (la gâchette sert alors à choisir la face).
                 bool onLevelButton = controllerAnchor &&
                                      LevelButton.IsPointerOver(new Ray(controllerAnchor.position, controllerAnchor.forward));
-                if (!onLevelButton && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controller)) { EndManipulation(true); return; }
+                bool choosingFace = CurrentMode == Mode.Extrude && !_faceSelected;
+                if (!onLevelButton && !choosingFace && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controller)) { EndManipulation(true); return; }
                 if (OVRInput.GetDown(OVRInput.Button.Two, controller)) { EndManipulation(false); return; } // B
             }
 
@@ -230,9 +252,9 @@ namespace Bauprobe.Manipulation
                         float minScale = _decor ? _decor.MinScale : DecorLimits.DefaultMinScale;
                         float maxScale = _decor ? _decor.MaxScale : DecorLimits.DefaultMaxScale;
 
-                        float current = transform.localScale.x;
-                        float target = Mathf.Clamp(current * (1f + stick.y * scaleSpeed * dt), minScale, maxScale);
-                        Vector3 newScale = transform.localScale * (target / current);
+                        // Agrandit tous les axes du même facteur : un objet étiré par une face garde sa forme.
+                        Vector3 newScale = DecorLimits.ClampScaleToRange(
+                            transform.localScale * (1f + stick.y * scaleSpeed * dt), minScale, maxScale);
 
                         if (_decor)
                         {
@@ -269,7 +291,47 @@ namespace Bauprobe.Manipulation
                     }
                     break;
                 }
+
+                case Mode.Extrude:
+                    UpdateExtrude(stick.y, dt);
+                    break;
             }
+        }
+
+        // Étirer une face : 1) viser et choisir la face ; 2) la pousser / rentrer au joystick.
+        void UpdateExtrude(float stickY, float dt)
+        {
+            if (!_decor) return;
+
+            if (!_faceSelected)
+            {
+                // 1) La face visée par le laser s'éclaire ; gâchette = la choisir.
+                var ray = new Ray(controllerAnchor.position, controllerAnchor.forward);
+                if (Physics.Raycast(ray, out var hit, 30f, ~0, QueryTriggerInteraction.Ignore)
+                    && hit.collider.GetComponentInParent<InteractableObject>() == this
+                    && _decor.TryGetFace(hit.point, out var face))
+                {
+                    if (Time.frameCount != _startFrame && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controller))
+                    {
+                        _extrudeFace = face;
+                        _faceSelected = true;
+                    }
+                    FaceHighlight.Show(_decor, face, _faceSelected);
+                }
+                else
+                {
+                    FaceHighlight.Hide();
+                }
+                return;
+            }
+
+            // 2) Joystick haut = pousser la face (allonger), bas = la rentrer (raccourcir). Grip = plus lent.
+            if (stickY != 0f)
+            {
+                bool fine = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, controller);
+                _decor.ExtrudeFace(_extrudeFace, stickY * extrudeSpeed * (fine ? 0.2f : 1f) * dt);
+            }
+            FaceHighlight.Show(_decor, _extrudeFace, true);
         }
 
         void EndManipulation(bool confirm)
@@ -284,6 +346,8 @@ namespace Bauprobe.Manipulation
             Active = null;
             s_lastEndFrame = Time.frameCount;
             LevelButton.Hide();
+            FaceHighlight.Hide();
+            _faceSelected = false;
 
             // On réaffiche le menu au-dessus de l'objet
             if (ObjectMenu.Instance) ObjectMenu.Instance.Show(this);
@@ -304,7 +368,7 @@ namespace Bauprobe.Manipulation
 
         void OnDisable()
         {
-            if (Active == this) { Active = null; s_lastEndFrame = Time.frameCount; LevelButton.Hide(); }
+            if (Active == this) { Active = null; s_lastEndFrame = Time.frameCount; LevelButton.Hide(); FaceHighlight.Hide(); }
             CurrentMode = Mode.None;
         }
     }

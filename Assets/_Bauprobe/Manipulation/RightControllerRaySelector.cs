@@ -65,9 +65,11 @@ namespace Bauprobe.Manipulation
             if (laser == null) return;
 
             // Pas de laser pendant une manipulation (on garde la vue dégagée),
-            // sauf en Rotation, pour pouvoir viser le bouton « Align with floor ».
+            // sauf en Rotation (pour viser le bouton « Align with floor ») et en EXTRUDE (pour viser une face).
             var active = InteractableObject.Active;
-            laser.enabled = active == null || active.CurrentMode == InteractableObject.Mode.Rotate;
+            laser.enabled = active == null
+                            || active.CurrentMode == InteractableObject.Mode.Rotate
+                            || active.CurrentMode == InteractableObject.Mode.Extrude;
             if (!laser.enabled) return;
 
             laser.useWorldSpace = true;

@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,9 @@ namespace Bauprobe.Manipulation
         [SerializeField] Button moveButton;
         [SerializeField] Button scaleButton;
         [SerializeField] Button rotateButton;
+        [Tooltip("Bouton EXTRUDE (étirer une face). Laissé vide = créé automatiquement en copiant le bouton Scale, " +
+                 "juste en dessous de lui : pas besoin de modifier le prefab.")]
+        [SerializeField] Button extrudeButton;
 
         [Header("Placement")]
         [Tooltip("Espace (en mètres) entre le haut de l'objet et le bas du menu.")]
@@ -51,12 +55,32 @@ namespace Bauprobe.Manipulation
             scaleButton.onClick.AddListener(() => { if (Target) Target.BeginManipulation(InteractableObject.Mode.Scale); });
             rotateButton.onClick.AddListener(() => { if (Target) Target.BeginManipulation(InteractableObject.Mode.Rotate); });
 
+            if (!extrudeButton) extrudeButton = CopyButton(scaleButton, "Btn_Extrude", "EXTRUDE");
+            if (extrudeButton)
+                extrudeButton.onClick.AddListener(() => { if (Target) Target.BeginManipulation(InteractableObject.Mode.Extrude); });
+
             gameObject.SetActive(false);
         }
 
         void OnDestroy()
         {
             if (Instance == this) Instance = null;
+        }
+
+        // Crée un nouveau bouton en copiant un bouton existant du menu (même style, même taille),
+        // placé juste en dessous de lui. Le menu s'agrandit tout seul (Vertical Layout Group + Content Size Fitter).
+        static Button CopyButton(Button model, string objectName, string label)
+        {
+            if (!model) return null;
+
+            var copy = Instantiate(model, model.transform.parent);
+            copy.name = objectName;
+            copy.transform.SetSiblingIndex(model.transform.GetSiblingIndex() + 1);
+            copy.onClick = new Button.ButtonClickedEvent(); // pas les actions du bouton copié
+
+            var text = copy.GetComponentInChildren<TMP_Text>(true);
+            if (text) text.text = label;
+            return copy;
         }
 
         public void Show(InteractableObject target)

@@ -91,7 +91,7 @@ MenuGeneral
 | Menu général | `BauprobeMenu` (main gauche) | Permission, suivi QR, **Importer**, **Supprimer tout**, **Sauvegarder**, **Charger** |
 | Catalogue | `Decor/Catalog/DecorCatalog.asset` | Liste des décors importables (pour l'instant : `Cube`) |
 | Laser | `Laser` (main droite) | Vise un objet ; gâchette = ouvre son menu |
-| Menu objet | `ObjectMenu` (racine) | Supprimer, Couleur, Déplacer, Scale, Rotation |
+| Menu objet | `ObjectMenu` (racine) | Supprimer, Couleur, Déplacer, Scale, Rotation, Extrude (ajouté par le code sous Scale) |
 | Décor | prefab `Decor/Prefabs/Cube` | *Interactable Object* (manette) + *Decor Constraints* (taille, sol) |
 | Réglages du plateau | `Core/Resources/StageSettings.asset` | Distance entre le bas du QR code et le sol ([voir plus haut](#régler-la-hauteur-du-qr-code-à-refaire-à-chaque-nouveau-lieu)) |
 
@@ -184,6 +184,25 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 
 - [ ] **Points de vue depuis la salle** (orchestre, balcons…) : prévu au départ du projet, absent du cahier des
       charges. Demander aux commanditaires si c'est encore souhaité.
+
+### 3.7 Demandes des commanditaires (réponses de novembre 2026)
+
+> **Priorité** : d'abord une RA et un positionnement **fonctionnels** (calage QR code, placement, sauvegarde).
+> Les fonctionnalités ci-dessous viennent ensuite.
+
+- [x] **Extrusion de face** sur les bouts de décor : sélectionner une face et la prolonger ou la raccourcir
+      (dans les deux sens), par ex. pour prolonger une porte ; c'est une manière d'étirer un côté pour faire
+      d'un cube un rectangle.
+      **Fait (première version)** : bouton **EXTRUDE** du menu objet. On vise une face au laser (bleu), gâchette pour
+      la choisir (orange), puis joystick haut / bas = pousser / rentrer la face ; la longueur s'affiche sur la face.
+      La face opposée ne bouge pas ; un objet au sol reste posé. Limites : au moins 5 cm, au plus 18 m, et les
+      *Limites de taille* de la fiche du catalogue. L'étirement est gardé dans la sauvegarde (échelle par axe).
+      **Limite** : on étire la boîte englobante de l'objet, donc tout le modèle est étiré. C'est parfait pour les
+      éléments simples (porte pleine, mur, praticable, pendrillon), mais un modèle détaillé (porte avec poignée,
+      moulures) aura ses détails déformés.
+- [ ] **Extrusion « vraie » d'un modèle détaillé** (seulement si besoin après les tests) : ne prolonger qu'une partie
+      du modèle sans déformer ses détails. Pistes : découper le modèle en morceaux (partie fixe + partie extensible),
+      ou modifier le maillage (ProBuilder, Read/Write activé sur les modèles importés).
 
 ---
 

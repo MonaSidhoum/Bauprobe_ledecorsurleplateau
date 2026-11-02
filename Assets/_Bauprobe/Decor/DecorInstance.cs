@@ -20,6 +20,7 @@ namespace Bauprobe.Decor
 
         private Vector3 _originLocal;
         private Vector3 _localSize;
+        private Bounds _localBounds;
         private bool _originComputed;
 
         public void Initialize(DecorItemDefinition definition)
@@ -60,6 +61,19 @@ namespace Bauprobe.Decor
             }
         }
 
+        /// <summary>Boîte englobante des modèles 3D, dans le repère local de l'objet (sans son échelle).</summary>
+        public Bounds LocalBounds
+        {
+            get
+            {
+                if (!_originComputed)
+                {
+                    RecomputeOrigin();
+                }
+                return _localBounds;
+            }
+        }
+
         /// <summary>Échelle minimale, réglée dans la fiche du catalogue (Limites de taille).</summary>
         public float MinScale => Definition != null ? Definition.MinScale : DecorLimits.DefaultMinScale;
 
@@ -82,11 +96,13 @@ namespace Bauprobe.Decor
             {
                 _originLocal = DecorOrigin.OriginFromBounds(bounds, Attachment);
                 _localSize = bounds.size;
+                _localBounds = bounds;
             }
             else
             {
                 _originLocal = Vector3.zero;
                 _localSize = Vector3.zero;
+                _localBounds = new Bounds(Vector3.zero, Vector3.zero);
             }
             _originComputed = true;
         }
@@ -187,6 +203,111 @@ namespace Bauprobe.Decor
 
             delta.ToAngleAxis(out var degrees, out var rotationAxis);
             RotateAroundCenter(rotationAxis, degrees);
+        }
+
+        // ------------------------------------------------------------------
+        // Étirer une face (« extrusion » de la boîte englobante)
+        // ------------------------------------------------------------------
+
+        /// <summary>Longueur réelle de l'objet le long d'un de ses axes locaux (0 = X, 1 = Y, 2 = Z), en mètres.</summary>
+        public float GetLength(int axis) => LocalSize[axis] * Mathf.Abs(transform.localScale[axis]);
+
+        /// <summary>
+        /// Face de l'objet la plus proche d'un point (par ex. l'endroit touché par le laser).
+        /// Renvoie false si l'objet n'a pas de modèle 3D.
+        /// </summary>
+        public bool TryGetFace(Vector3 worldPoint, out DecorFace face)
+        {
+            face = default;
+            var b = LocalBounds;
+            var size = b.size;
+            var scale = transform.localScale;
+            var p = transform.InverseTransformPoint(worldPoint);
+            var best = float.MaxValue;
+
+            for (var i = 0; i < 3; i++)
+            {
+                if (size[i] < 1e-5f)
+                {
+                    continue;
+                }
+
+                // Distances en mètres (on tient compte de l'échelle de l'objet)
+                var k = Mathf.Abs(scale[i]);
+                var toMax = Mathf.Abs(p[i] - b.max[i]) * k;
+                var toMin = Mathf.Abs(p[i] - b.min[i]) * k;
+                if (toMax < best) { best = toMax; face = new DecorFace(i, 1); }
+                if (toMin < best) { best = toMin; face = new DecorFace(i, -1); }
+            }
+
+            return best < float.MaxValue;
+        }
+
+        /// <summary>
+        /// Position et dimensions d'une face, dans le monde : son centre, sa normale (vers l'extérieur)
+        /// et ses deux côtés (vecteurs dont la longueur est celle du côté).
+        /// </summary>
+        public void GetFaceGeometry(DecorFace face, out Vector3 center, out Vector3 normal, out Vector3 sideU, out Vector3 sideV)
+        {
+            var b = LocalBounds;
+            int i = face.Axis, u = (i + 1) % 3, v = (i + 2) % 3;
+
+            var c = b.center;
+            c[i] = face.Sign > 0 ? b.max[i] : b.min[i];
+            center = transform.TransformPoint(c);
+
+            var du = Vector3.zero;
+            du[u] = b.size[u];
+            var dv = Vector3.zero;
+            dv[v] = b.size[v];
+            sideU = transform.TransformVector(du);
+            sideV = transform.TransformVector(dv);
+
+            // Une échelle négative retourne la face : on en tient compte pour garder la normale vers l'extérieur.
+            var localNormal = face.LocalNormal * Mathf.Sign(transform.localScale[i] == 0f ? 1f : transform.localScale[i]);
+            normal = (transform.rotation * localNormal).normalized;
+        }
+
+        /// <summary>
+        /// Étire (ou raccourcit) l'objet en poussant une de ses faces : la face opposée ne bouge pas.
+        /// Un cube devient ainsi un pavé (par ex. pour prolonger une porte).
+        /// <paramref name="deltaMeters"/> &gt; 0 allonge, &lt; 0 raccourcit.
+        /// La longueur reste entre les limites de la fiche du catalogue, au moins 5 cm, et au plus 18 m.
+        /// Un objet au sol reste posé (un objet au cintre reste accroché), même si on tire sa face du bas (du haut).
+        /// Renvoie la nouvelle longueur, en mètres.
+        /// </summary>
+        public float ExtrudeFace(DecorFace face, float deltaMeters)
+        {
+            var i = face.Axis;
+            var b = LocalBounds;
+            var size = b.size[i];
+            if (size < 1e-5f)
+            {
+                return 0f;
+            }
+
+            var scale = transform.localScale;
+            var length = size * Mathf.Abs(scale[i]);
+            var minLength = Mathf.Max(DecorLimits.MinFaceLength, size * MinScale);
+            var maxLength = Mathf.Max(minLength, Mathf.Min(DecorLimits.MaxSizeMeters, size * MaxScale));
+            var newLength = Mathf.Clamp(length + deltaMeters, minLength, maxLength);
+            if (Mathf.Approximately(newLength, length))
+            {
+                return length;
+            }
+
+            // Centre de la face opposée : ce point ne doit pas bouger.
+            var fixedPoint = b.center;
+            fixedPoint[i] = face.Sign > 0 ? b.min[i] : b.max[i];
+            var fixedWorld = transform.TransformPoint(fixedPoint);
+            var height = AttachmentHeight();
+
+            scale[i] = (scale[i] < 0f ? -1f : 1f) * newLength / size;
+            transform.localScale = scale;
+            transform.position += fixedWorld - transform.TransformPoint(fixedPoint);
+
+            RestoreAttachmentHeight(height);
+            return newLength;
         }
 
         /// <summary>
