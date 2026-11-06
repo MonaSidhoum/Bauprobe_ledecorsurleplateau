@@ -8,6 +8,8 @@ namespace Bauprobe.Manipulation
     /// Rayon partant de la manette droite (à mettre sur un enfant de RightHandAnchor).
     /// - Affiche un laser (LineRenderer optionnel).
     /// - Gâchette droite sur un objet qui a un InteractableObject => ouvre le menu au-dessus.
+    /// - Quand on est À L'INTÉRIEUR d'un objet (ex. le module central), le laser ne peut pas le toucher :
+    ///   si le laser ne vise aucun autre objet, c'est l'objet dans lequel est la manette qui est visé.
     /// Les boutons du menu (Canvas) sont cliqués par l'OVRInputModule de l'EventSystem,
     /// exactement comme dans le sample QRCodeDetection.
     ///
@@ -50,6 +52,11 @@ namespace Bauprobe.Manipulation
                 overMenu = true;
                 endDistance = menuDistance;
             }
+            // Les panneaux de la main gauche (INFO, pavé du Scale, faces d'EXTRUDE…) comptent aussi comme un menu
+            if (!overMenu && ManipulationPanels.IsPointerOverAny(ray))
+            {
+                overMenu = true;
+            }
 
             // 2) Raycast physique vers les objets 3D (le cube)
             if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, raycastMask, QueryTriggerInteraction.Ignore)
@@ -57,6 +64,13 @@ namespace Bauprobe.Manipulation
             {
                 endDistance = hit.distance;
                 hovered = hit.collider.GetComponentInParent<InteractableObject>();
+            }
+
+            // 2 bis) À l'intérieur d'un objet : le laser ne touche pas ses parois (vues de l'intérieur).
+            //        S'il ne vise aucun autre objet, on vise l'objet dans lequel se trouve la manette.
+            if (hovered == null && !overMenu)
+            {
+                hovered = InteractableObject.FindEnclosing(transform.position);
             }
 
             // 3) Clic gâchette sur un objet interactif => menu
@@ -162,9 +176,10 @@ namespace Bauprobe.Manipulation
                 return;
             }
 
-            // Pas de laser pendant Scale (on garde la vue dégagée),
-            // mais oui en Rotation (pour viser le bouton « Align with floor ») et en EXTRUDE (pour viser une face).
+            // Laser visible aussi pendant Scale (pavé numérique), Rotation (bouton « Align with floor »)
+            // et EXTRUDE (viser une face, ou les boutons des faces).
             laser.enabled = active == null
+                            || active.CurrentMode == InteractableObject.Mode.Scale   // pavé numérique du Scale
                             || active.CurrentMode == InteractableObject.Mode.Rotate
                             || active.CurrentMode == InteractableObject.Mode.Extrude;
             if (!laser.enabled) return;

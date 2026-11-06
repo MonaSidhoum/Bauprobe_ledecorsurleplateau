@@ -346,6 +346,31 @@ namespace Bauprobe.Decor
             }
         }
 
+        /// <summary>
+        /// La face de l'objet tournée vers une direction (monde) : celle dont la normale en est la plus proche.
+        /// Ex. FaceTowards(Vector3.up) = la face du haut, même si l'objet est tourné ou penché.
+        /// </summary>
+        public DecorFace FaceTowards(Vector3 worldDirection)
+        {
+            var best = new DecorFace(1, 1);
+            var bestDot = float.MinValue;
+            for (var axis = 0; axis < 3; axis++)
+            {
+                for (var sign = -1; sign <= 1; sign += 2)
+                {
+                    var face = new DecorFace(axis, sign);
+                    GetFaceGeometry(face, out _, out var normal, out _, out _);
+                    var dot = Vector3.Dot(normal, worldDirection);
+                    if (dot > bestDot)
+                    {
+                        bestDot = dot;
+                        best = face;
+                    }
+                }
+            }
+            return best;
+        }
+
         private void OnDestroy()
         {
             Destroyed?.Invoke(this);
