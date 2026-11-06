@@ -65,7 +65,7 @@ Un utilisateur unique (le technicien) travaille ainsi :
 ### Contraintes
 
 * Aucun élément de plus de **18 m** (appliqué : le *Scale* s'arrête à 18 m sur la plus grande dimension).
-* **Exécutable déployable partout**, sous forme de **kit transportable** jusqu'à la scène musicale.
+* **Exécutable déployable partout**, sous forme de **kit transportable** jusqu'à la Seine Musicale.
 * **Formats de décor et de tableau communs** avec le volet « Voir la même chose ».
 
 ### Comment ajouter un élément de décor dans le projet (première version)
@@ -126,9 +126,13 @@ Documentation :
 
 ##  Installation et Prérequis
 
-1. Installer **Unity 6000.3.26f1** (via Unity Hub) avec le module **Android Build Support**.
-2. Installer **Git LFS** (une seule fois par ordinateur) : `git lfs install`
-3. Cloner le projet :
+Avant tout, il faut avoir un compte GitHub et utiliser un ordinateur bien configuré (avec git bash sur Windows). 
+Si besoin, voilà un tutoriel pas à pas pour installer GitHub et configurer l'ordinateur (section "git (et bash sur Windows)" : [Installation de Git](https://intro.info-mines.paris/1-1-installations/)
+
+1. Installer Unity Hub via ce tutoriel : [Tuto installation](https://docs.unity.com/en-us/hub/install-hub)
+2. Installer **Unity 6000.3.26f1** (via Unity Hub) avec le module **Android Build Support** (Sur Unity Hub : **Installations > Installer l'éditeur > Archive > Unity version 6000.3.26f1 + cocher Android Build Support** pour installer le module)
+4. Installer **Git LFS** (une seule fois par ordinateur) : dans le terminal, taper `git lfs install`
+5. Toujours depuis le terminal, cloner le projet :
 
 ```bash
 git clone https://github.com/MonaSidhoum/Bauprobe_ledecorsurleplateau
@@ -136,7 +140,7 @@ cd Bauprobe_ledecorsurleplateau
 git lfs pull
 ```
 
-4. Dans Unity Hub : **Add > Add project from disk** et choisir le dossier cloné (la racine du dépôt).
+6. Dans Unity Hub : **Add > Add project from disk** et choisir le dossier cloné (la racine du dépôt).
 
 ## Utilisation
 
