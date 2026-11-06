@@ -30,6 +30,10 @@ Si vous ne le faites pas, Git fait une fusion classique (ça marche, c'est juste
 
 ## Le cycle de travail (à chaque nouvelle tâche)
 
+Toutes les commandes se tapent dans un **terminal** (Git Bash sur Windows, Terminal sur macOS / Linux), **dans le
+dossier du projet** (par exemple `cd ~/Documents/Bauprobe_ledecorsurleplateau`). Fermer Unity n'est pas obligatoire,
+mais **enregistrer** d'abord la scène et les prefabs (*File > Save*, *Ctrl + S*).
+
 ```bash
 # 1. Partir de la dernière version de main
 git checkout main
@@ -39,14 +43,16 @@ git pull
 git checkout -b feature/decor-catalogue
 
 # 3. Travailler, puis enregistrer régulièrement
-git add Assets/_Bauprobe/Decor
+git status                          # liste les fichiers modifiés (en rouge = pas encore ajoutés)
+git add Assets/_Bauprobe/Decor      # ajoute un fichier ou un dossier (avec ses .meta)
 git commit -m "Ajout du catalogue de décors"
 
 # 4. Envoyer sa branche
 git push -u origin feature/decor-catalogue
 ```
 
-5. Sur GitLab, ouvrir une **Merge Request** vers `main`, et demander à une autre personne de relire.
+5. Sur GitHub, ouvrir une **Pull Request** vers `main` (GitHub propose un bouton *Compare & pull request* juste
+   après le push), et demander à une autre personne de relire.
 6. Une fois validée, on fusionne. On supprime la branche.
 
 Noms de branche : `feature/<module>-<sujet>` (nouveauté), `fix/<sujet>` (correction).

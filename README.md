@@ -74,9 +74,11 @@ Un utilisateur unique (le technicien) travaille ainsi :
 
 ### Comment ajouter un élément de décor dans le projet (première version)
 
-* Glisser un modèle dans la fenêtre Project (par exemple dans Assets/_Bauprobe/Prefabs/), puis faites-en un prefab.
-* Retrouvez le catalogue : cliquer sur Managers dans la Hierarchy, puis sur le champ Catalog de Decor Spawner. Il se met en surbrillance dans Project.
-* Dans l’Inspector du catalogue, ajoutez une entrée avec un nom, un identifiant et le prefab. Le bouton apparaît dans le menu Objects.
+* Glisser le modèle 3D (OBJ du bureau d'études) dans `Assets/_Bauprobe/Decor/Models/<nom du décor>/`.
+* Clic droit sur le modèle dans la fenêtre Project > **Bauprobe > Ajouter au catalogue** : l'outil crée le prefab
+  (avec son collider et les composants pour le manipuler), sa fiche, et l'ajoute au catalogue.
+  Le bouton apparaît dans le menu *Objects* du casque.
+* Pas à pas, et méthode à la main : [Docs/ARCHITECTURE.md](Docs/ARCHITECTURE.md#ajouter-un-nouveau-décor-sans-code).
 
 ### Livrables
 
@@ -100,7 +102,7 @@ Un utilisateur unique (le technicien) travaille ainsi :
 * **Moteur 3D / AR** : Unity 6.3 (version exacte : `6000.3.26f1`)
 * **SDK Réalité Augmentée** : Meta XR Core SDK / Meta MR Utility Kit (MRUK) / Interaction SDK (v207)
 * **Matériel Cible** : Casque Meta Quest 3 (application standalone)
-* **Gestion de version** : Git + Git LFS / GitLab
+* **Gestion de version** : Git + Git LFS / GitHub
 
 ##  Organisation du dépôt
 
@@ -130,21 +132,66 @@ Documentation :
 
 ##  Installation et Prérequis
 
-Avant tout, il faut avoir un compte GitHub et utiliser un ordinateur bien configuré (avec git bash sur Windows). 
-Si besoin, voilà un tutoriel pas à pas pour installer GitHub et configurer l'ordinateur (section "git (et bash sur Windows)" : [Installation de Git](https://intro.info-mines.paris/1-1-installations/)
+Cette partie s'adresse aussi à quelqu'un qui n'a **jamais utilisé Unity, Git ni un Meta Quest**.
 
-1. Installer Unity Hub via ce tutoriel : [Installation Unity Hub](https://docs.unity.com/en-us/hub/install-hub)
-2. Installer **Unity 6000.3.26f1** (via Unity Hub) avec le module **Android Build Support** (Sur Unity Hub : **Installations > Installer l'éditeur > Archive > Unity version 6000.3.26f1 + cocher Android Build Support** pour installer le module)
-4. Installer **Git LFS** (une seule fois par ordinateur) : dans le terminal, taper `git lfs install`
-5. Toujours depuis le terminal, cloner le projet :
+### Ce qu'il faut avant de commencer
+
+* Un **ordinateur Windows ou Mac** avec environ **30 Go libres** (Unity + le projet).
+* **Git** et un **terminal** :
+  * Windows : installer **Git Bash** (c'est dans lui qu'on tape toutes les commandes de ce document) ;
+  * macOS / Linux : l'application **Terminal** suffit, Git s'installe si besoin.
+
+  Tutoriel pas à pas (section « git (et bash sur Windows) ») : [Installations du cours d'informatique des Mines](https://intro.info-mines.paris/1-1-installations/).
+* Un **compte GitHub** (pour cloner le dépôt et, si vous voulez proposer des modifications, pousser des branches).
+* Pour installer l'appli sur le casque :
+  * un **Meta Quest 3** et un **câble USB-C qui transfère les données** (pas un simple câble de charge) ;
+  * un **compte Meta** qui est **propriétaire du casque** (il n'y a qu'un propriétaire par casque, et seul lui peut
+    activer le mode développeur) ;
+  * l'**application mobile Meta Horizon** sur un téléphone (iOS ou Android).
+
+  Détails : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#installer-sur-le-casque).
+
+### Étapes
+
+1. **Installer Unity Hub** : [documentation d'installation de Unity Hub](https://docs.unity.com/en-us/hub/install-hub).
+   Se connecter (ou créer) un compte Unity au premier lancement ; la licence *Personal* (gratuite) suffit.
+2. **Installer l'éditeur Unity 6000.3.26f1** depuis Unity Hub :
+   *Installations > Installer l'éditeur > Archive* (lien vers l'[archive des versions](https://unity.com/releases/editor/archive))
+   > version **6000.3.26f1**, et **cocher le module Android Build Support** (avec *OpenJDK* et *Android SDK & NDK Tools*).
+   Sans ce module, impossible d'installer l'appli sur le casque.
+3. **Ouvrir un terminal** (Git Bash sur Windows, Terminal sur macOS / Linux) et se placer dans le dossier où ranger le
+   projet, par exemple *Documents* :
+
+```bash
+cd ~/Documents
+```
+
+4. **Activer Git LFS** (une seule fois par ordinateur ; il sert aux gros fichiers, comme les modèles 3D) :
+
+```bash
+git lfs install
+```
+
+5. **Cloner le projet** (le télécharger), toujours dans le terminal :
 
 ```bash
 git clone https://github.com/MonaSidhoum/Bauprobe_ledecorsurleplateau
+```
+
+```bash
 cd Bauprobe_ledecorsurleplateau
+```
+
+```bash
 git lfs pull
 ```
 
-6. Dans Unity Hub : **Add > Add project from disk** et choisir le dossier cloné (la racine du dépôt).
+6. Dans **Unity Hub** : *Projects > Add > Add project from disk*, choisir le dossier `Bauprobe_ledecorsurleplateau`
+   (celui qui contient `Assets/`, `Packages/`, `ProjectSettings/`), puis l'ouvrir. La première ouverture prend
+   10 à 20 minutes.
+
+La suite (vérifications, installation sur le casque, **mise à jour d'un clone existant**) est dans
+[Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#1-ouvrir-le-projet-sur-un-nouvel-ordinateur).
 
 ## Utilisation
 
@@ -152,7 +199,7 @@ git lfs pull
 
 1. Ouvrez la scène `Assets/_Bauprobe/Scenes/MenuGeneral.unity`.
 2. Branchez le casque (mode développeur activé) et lancez **Build And Run** (`File > Build Profiles`, plateforme Meta Quest / Android).
-3. Au premier lancement, acceptez la permission **« données spatiales »**.
+3. Au premier lancement, acceptez la permission **« données spatiales »** (sinon : bouton **Enable Access** du menu général).
 
 Le détail (premier lancement sur un nouvel ordinateur, installation sur le casque) est dans
 [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md).
