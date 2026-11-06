@@ -65,7 +65,7 @@ Un utilisateur unique (le technicien) travaille ainsi :
 
 ### Contraintes
 
-* Aucun élément de plus de **18 m** (appliqué : le *Scale* s'arrête à 18 m sur la plus grande dimension).
+* Aucun élément de plus de **18 m** (plus appliqué dans l'application : le *Scale* n'a plus de limite de taille).
 * **Exécutable déployable partout**, sous forme de **kit transportable** jusqu'à la Seine Musicale.
 * **Formats de décor et de tableau communs** avec le volet « Voir la même chose ».
 

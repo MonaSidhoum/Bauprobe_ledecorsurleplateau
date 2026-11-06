@@ -114,8 +114,7 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    pousser / rentrer. `DecorInstance.ExtrudeFace` change l'échelle de l'objet sur un seul axe et le recale pour
    que la face opposée ne bouge pas. `FaceHighlight` (créé par le code) colore la face et affiche sa longueur.
    Le bouton EXTRUDE est ajouté par `ObjectMenu` en copiant le bouton Scale : le prefab du menu n'est pas modifié.
-   Comme un objet peut maintenant avoir une échelle différente sur chaque axe, `DecorConstraints` garde ses
-   **proportions** (au lieu d'imposer x = y = z) quand il limite sa taille.
+   La taille n'est pas limitée (pas de minimum ni de maximum au Scale) ; l'étirement ne descend pas sous 5 cm.
 6. **`LayoutManager.Save()`** écrit la liste des objets et leurs positions sur le plateau dans un fichier JSON
    sur le casque, **et le même contenu en tableau CSV** pour le bureau d'études (`LayoutCsv`, même nom, `.csv`).
    **`LayoutManager.Load()`** recharge le JSON (le CSV sert seulement à l'export).
@@ -161,8 +160,6 @@ La scène de la branche de test (`menu général.unity`) est devenue `Scenes/Men
 3. Clic droit dans `Assets/_Bauprobe/Decor/Catalog/` > *Create > Bauprobe > Élément de décor*.
    Remplir le nom, glisser le prefab et choisir **Sol** ou **Cintre** (pour le cintre, régler aussi la
    hauteur d'accroche à l'import).
-   Régler si besoin les **Limites de taille** (échelle min / max de ce décor) : ce sont les seules limites du
-   Scale, avec en plus la limite de 18 m du cahier des charges.
 4. Ajouter cette fiche dans la liste du **`DecorCatalog`**.
 
 ## Le dossier ThirdParty

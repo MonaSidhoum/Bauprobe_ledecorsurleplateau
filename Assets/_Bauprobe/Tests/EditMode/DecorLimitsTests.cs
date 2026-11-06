@@ -12,73 +12,30 @@ namespace Bauprobe.Tests
         }
 
         [Test]
-        public void SousLaLimite_EchelleInchangee()
-        {
-            // Cube de 1 m agrandi 10 fois : 10 m, c'est autorisé.
-            AssertClose(DecorLimits.ClampScaleToMaxSize(Vector3.one, new Vector3(10f, 10f, 10f)), new Vector3(10f, 10f, 10f));
-        }
-
-        [Test]
-        public void AuDessusDeLaLimite_RameneA18m()
-        {
-            // Cube de 1 m agrandi 30 fois : ramené à 18 m.
-            AssertClose(DecorLimits.ClampScaleToMaxSize(Vector3.one, new Vector3(30f, 30f, 30f)), new Vector3(18f, 18f, 18f));
-        }
-
-        [Test]
-        public void PlusGrandeDimension_DecideEtProportionsGardees()
-        {
-            // Mur de 6 m x 3 m x 0,2 m agrandi 4 fois : 24 m de long, ramené à 18 m (échelle 3), proportions gardées.
-            var scale = DecorLimits.ClampScaleToMaxSize(new Vector3(6f, 3f, 0.2f), new Vector3(4f, 4f, 4f));
-
-            AssertClose(scale, new Vector3(3f, 3f, 3f));
-        }
-
-        [Test]
-        public void ModeleImporteTropGrand_ReduitAEchelle1()
-        {
-            // Modèle du bureau d'études de 36 m à l'échelle 1 : ramené à 18 m.
-            AssertClose(DecorLimits.ClampScaleToMaxSize(new Vector3(36f, 5f, 2f), Vector3.one), new Vector3(0.5f, 0.5f, 0.5f));
-        }
-
-        [Test]
         public void DecorInstance_UtiliseLaTailleDeSesModeles()
         {
             var cube = GameObject.CreatePrimitive(PrimitiveType.Cube); // 1 m
             var instance = cube.AddComponent<DecorInstance>();
 
             AssertClose(instance.LocalSize, Vector3.one);
-            AssertClose(instance.ClampScaleToMaxSize(new Vector3(25f, 25f, 25f)), new Vector3(18f, 18f, 18f));
 
             Object.DestroyImmediate(cube);
         }
 
         [Test]
-        public void LimitesDeTaille_VenantDeLaFiche()
+        public void Scale_SansLimiteDeTaille()
         {
-            var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var cube = GameObject.CreatePrimitive(PrimitiveType.Cube); // 1 m
             var instance = cube.AddComponent<DecorInstance>();
 
-            // Sans fiche : limites par défaut, très larges
-            Assert.That(instance.MinScale, Is.EqualTo(DecorLimits.DefaultMinScale));
-            Assert.That(instance.MaxScale, Is.EqualTo(DecorLimits.DefaultMaxScale));
+            // Plus de limite à 18 m, ni de limites dans la fiche du catalogue : l'échelle demandée est gardée.
+            instance.SetScaleAroundOrigin(new Vector3(25f, 25f, 25f));
+            AssertClose(instance.StageSize, new Vector3(25f, 25f, 25f));
 
-            // Avec une fiche : ses limites (0,1 à 10 par défaut)
-            var definition = ScriptableObject.CreateInstance<DecorItemDefinition>();
-            instance.Initialize(definition);
-            Assert.That(instance.MinScale, Is.EqualTo(definition.MinScale));
-            Assert.That(instance.MaxScale, Is.EqualTo(definition.MaxScale));
+            instance.SetScaleAroundOrigin(new Vector3(0.001f, 0.001f, 0.001f));
+            AssertClose(cube.transform.localScale, new Vector3(0.001f, 0.001f, 0.001f));
 
             Object.DestroyImmediate(cube);
-            Object.DestroyImmediate(definition);
-        }
-
-        [Test]
-        public void ClampScaleToRange_GardeLesProportions()
-        {
-            AssertClose(DecorLimits.ClampScaleToRange(new Vector3(2f, 2f, 2f), 0.1f, 10f), new Vector3(2f, 2f, 2f));
-            AssertClose(DecorLimits.ClampScaleToRange(new Vector3(20f, 5f, 5f), 0.1f, 10f), new Vector3(10f, 2.5f, 2.5f));
-            AssertClose(DecorLimits.ClampScaleToRange(new Vector3(0.05f, 1f, 1f), 0.1f, 10f), new Vector3(0.1f, 2f, 2f));
         }
     }
 }

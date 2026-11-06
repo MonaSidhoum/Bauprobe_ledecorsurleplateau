@@ -150,11 +150,11 @@ namespace Bauprobe.Tests
         }
 
         [Test]
-        public void Allonger_PasPlusDe18m()
+        public void Allonger_SansLimiteDeTaille()
         {
             var length = _instance.ExtrudeFace(new DecorFace(0, 1), 30f);
 
-            Assert.That(length, Is.EqualTo(DecorLimits.MaxSizeMeters).Within(1e-3f));
+            Assert.That(length, Is.EqualTo(31f).Within(1e-3f), "plus de limite à 18 m");
         }
 
         [Test]
@@ -173,7 +173,8 @@ namespace Bauprobe.Tests
         {
             _instance.ExtrudeFace(new DecorFace(0, 1), 1f); // 2 m x 1 m x 1 m
 
-            var scale = DecorLimits.ClampScaleToRange(_cube.transform.localScale * 1.5f, 0.1f, 10f);
+            _instance.SetScaleAroundOrigin(_cube.transform.localScale * 1.5f);
+            var scale = _cube.transform.localScale;
 
             Assert.That(scale.x / scale.y, Is.EqualTo(2f).Within(1e-4f), "les proportions sont gardées");
         }

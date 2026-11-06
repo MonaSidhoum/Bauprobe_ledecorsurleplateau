@@ -123,7 +123,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Bauprobe.Manipulation::Bauprobe.Manipulation.DecorConstraints
   keepOnFloor: 0
   keepUpright: 1
-  uniformScale: 1
 --- !u!114 &7310452180036122002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,8 +148,6 @@ MonoBehaviour:
   pushPullSpeed: 1
   minGrabDistance: 0.1
   scaleSpeed: 1
-  minScale: 0.02
-  maxScale: 5
   rotationSpeed: 90
 --- !u!1 &4886472410427657554
 GameObject:
