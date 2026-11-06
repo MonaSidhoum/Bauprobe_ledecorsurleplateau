@@ -241,9 +241,8 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 
 ### 3.3 Contraintes
 
-- [x] **Aucun élément de plus de 18 m** : la taille réelle de l'objet (calculée à partir de ses modèles 3D) ne peut
-      pas dépasser 18 m sur sa plus grande dimension (`DecorLimits`). Le *Scale* s'arrête à 18 m, et un modèle
-      importé plus grand est réduit à 18 m (avec un avertissement dans la Console).
+- [ ] **Aucun élément de plus de 18 m** : plus appliqué. Le *Scale* n'a plus aucune limite de taille (ni 18 m, ni
+      limites dans les fiches du catalogue), et un modèle importé plus grand que 18 m garde sa taille.
 - [ ] **Formats communs** avec « Voir la même chose » (décor et tableau) : fixer les formats avec l'autre équipe
       **avant** de coder l'import et l'export.
 - [ ] **Exécutable déployable partout, en kit transportable** : documenter le kit (mètre ruban pour mesurer la hauteur
@@ -283,8 +282,8 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
       d'un cube un rectangle.
       **Fait (première version)** : bouton **EXTRUDE** du menu objet. On vise une face au laser (bleu), gâchette pour
       la choisir (orange), puis joystick haut / bas = pousser / rentrer la face ; la longueur s'affiche sur la face.
-      La face opposée ne bouge pas ; un objet au sol reste posé. Limites : au moins 5 cm, au plus 18 m, et les
-      *Limites de taille* de la fiche du catalogue. L'étirement est gardé dans la sauvegarde (échelle par axe).
+      La face opposée ne bouge pas ; un objet au sol reste posé. Seule limite : au moins 5 cm (pas de longueur
+      maximale). L'étirement est gardé dans la sauvegarde (échelle par axe).
       **Limite** : on étire la boîte englobante de l'objet, donc tout le modèle est étiré. C'est parfait pour les
       éléments simples (porte pleine, mur, praticable, pendrillon), mais un modèle détaillé (porte avec poignée,
       moulures) aura ses détails déformés.
@@ -341,10 +340,9 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 
 ### Nettoyage du code
 
-- [x] Deux limites de taille en double : `InteractableObject` (0,02 à 5) et le catalogue (0,1 à 10, via
-      `DecorConstraints`). Il ne reste que celles du catalogue, réglables par décor (*Limites de taille* dans chaque
-      fiche `Decor/Catalog/<décor>.asset`), utilisées par le Scale à la manette comme à la main. La limite de **18 m**
-      du cahier des charges s'applique en plus (section 3.3).
+- [x] Limites de taille du Scale supprimées partout : `InteractableObject`, fiches du catalogue (*Limites de taille*),
+      `DecorConstraints` et la limite de 18 m (`DecorLimits`). Le Scale, à la manette comme à la main, n'est plus
+      limité.
 - [ ] `ObjectMenu` plante si l'un de ses 6 boutons n'est pas renseigné : le rendre tolérant.
 - [ ] `BauprobeMenuLogic` et `StageCalibrator` écoutent tous les deux MRUK : le menu pourrait lire
       `StageCalibrator.IsQrLocated`.

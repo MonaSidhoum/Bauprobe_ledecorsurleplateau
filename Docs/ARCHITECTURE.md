@@ -41,7 +41,7 @@ Chaque dossier de `Assets/_Bauprobe` est un **module** : une partie de l'appli q
 | **Core** | Le repère du plateau, partagé par tous ; l'offset et la hauteur du QR code saisis dans le casque ; le passage au repère du bureau d'études | `StageSpace`, `QrOffset`, `QrOffsetStore`, `StagePlan` |
 | **Calibration** | Trouver le QR code et y caler le plateau | `StageCalibrator` |
 | **Decor** | La liste des décors disponibles et leur apparition | `DecorItemDefinition`, `DecorCatalog`, `DecorSpawner`, `DecorInstance` |
-| **Manipulation** | Déplacer / tourner / agrandir / étirer un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `RightControllerRaySelector`, `LevelButton`, `FaceHighlight` |
+| **Manipulation** | Déplacer / tourner / agrandir / étirer un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `RightControllerRaySelector`, `LevelButton`, `FaceHighlight`, `SelectionHighlight` |
 | **Persistence** | Sauvegarder / recharger une implantation (fichier JSON) ; tableau CSV pour le bureau d'études | `LayoutManager`, `LayoutSerializer`, `LayoutData`, `LayoutCsv` |
 | **UI** | Les menus dans le casque | `BauprobeMenuLogic` (menu général : Importer, Supprimer tout, suivi QR), `BauprobeMenuScreens` (écrans Décors, Sauvegarder, Charger, QR code offset) |
 | **Tests** | Tests automatiques (Window > General > Test Runner) | `StageSpaceTests`, `LayoutSerializerTests` |
@@ -88,6 +88,10 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    « Supprimer tout » passe aussi par `DecorSpawner`.
 5. **Le metteur en scène manipule l'objet à la manette droite** :
    * il vise l'objet avec le laser (`RightControllerRaySelector`) et appuie sur la gâchette ;
+   * l'objet sélectionné est en **surbrillance** (voile bleu qui pulse, `SelectionHighlight`, créé par le code) tant
+     que son menu est ouvert et pendant Déplacer / Scale / Rotation. Les matériaux de l'objet ne sont pas touchés :
+     ses modèles 3D sont redessinés par-dessus avec `Manipulation/Resources/SelectionHighlight.mat` (sa couleur
+     *Base Map* règle celle du voile) ;
    * le menu de l'objet s'ouvre (`ObjectMenu`) : Supprimer, Couleur, Déplacer, Scale, Rotation, Extrude.
      Il se place **à la main gauche, collé au menu général** : à sa droite quand il est ouvert, au-dessus du
      bouton « + » quand il est replié. Le menu général est trouvé tout seul sous la main gauche (objet
@@ -114,8 +118,7 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    pousser / rentrer. `DecorInstance.ExtrudeFace` change l'échelle de l'objet sur un seul axe et le recale pour
    que la face opposée ne bouge pas. `FaceHighlight` (créé par le code) colore la face et affiche sa longueur.
    Le bouton EXTRUDE est ajouté par `ObjectMenu` en copiant le bouton Scale : le prefab du menu n'est pas modifié.
-   Comme un objet peut maintenant avoir une échelle différente sur chaque axe, `DecorConstraints` garde ses
-   **proportions** (au lieu d'imposer x = y = z) quand il limite sa taille.
+   La taille n'est pas limitée (pas de minimum ni de maximum au Scale) ; l'étirement ne descend pas sous 5 cm.
 6. **`LayoutManager.Save()`** écrit la liste des objets et leurs positions sur le plateau dans un fichier JSON
    sur le casque, **et le même contenu en tableau CSV** pour le bureau d'études (`LayoutCsv`, même nom, `.csv`).
    **`LayoutManager.Load()`** recharge le JSON (le CSV sert seulement à l'export).
@@ -147,6 +150,7 @@ Les scripts écrits sur la branche de test ont été intégrés :
 | `InteractableObject` | `Manipulation/` | Les 5 actions sur un objet : supprimer, couleur, déplacer, scale, rotation (manette droite) |
 | `ObjectMenu` | `Manipulation/` | Le menu de l'objet sélectionné, collé au menu général de la main gauche |
 | `RightControllerRaySelector` | `Manipulation/` | Le laser de la manette droite qui sélectionne un objet |
+| `SelectionHighlight` | `Manipulation/` | La surbrillance de l'objet sélectionné (créée par le code) |
 
 `ObjectMenu` est dans `Manipulation` (et pas dans `UI`) parce qu'il appelle `InteractableObject` et
 inversement : deux scripts qui s'appellent l'un l'autre doivent être dans le même module.
@@ -175,8 +179,6 @@ La scène de la branche de test (`menu général.unity`) est devenue `Scenes/Men
 3. Clic droit dans `Assets/_Bauprobe/Decor/Catalog/` > *Create > Bauprobe > Élément de décor*.
    Remplir le nom, glisser le prefab et choisir **Sol** ou **Cintre** (pour le cintre, régler aussi la
    hauteur d'accroche à l'import).
-   Régler si besoin les **Limites de taille** (échelle min / max de ce décor) : ce sont les seules limites du
-   Scale, avec en plus la limite de 18 m du cahier des charges.
 4. Ajouter cette fiche dans la liste du **`DecorCatalog`**.
 
 ## Le dossier ThirdParty

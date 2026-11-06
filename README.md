@@ -34,7 +34,7 @@ Testé sur Meta Quest 3 :
 
 * ✅ Calage du décor sur un **QR code** posé sur le plateau (au sol, ou en hauteur avec sa distance au sol réglable)
 * ✅ **Importer** un décor depuis le menu (catalogue ; pour l'instant un cube de test)
-* ✅ Sélection au **laser** de la manette droite, puis **Déplacer / Scale / Rotation / Couleur / Supprimer**
+* ✅ Sélection au **laser** de la manette droite (l'objet sélectionné est en surbrillance), puis **Déplacer / Scale / Rotation / Couleur / Supprimer**
 * ✅ Les objets se déplacent dans toutes les directions, se tournent et se **basculent** sans s'enfoncer dans le sol
 * ✅ **Étirer une face** (EXTRUDE) : prolonger ou raccourcir un objet par une de ses faces (ex. une porte plus haute)
 * ✅ **Supprimer tout**, **Sauvegarder** / **Charger** une implantation
@@ -68,7 +68,7 @@ Un utilisateur unique (le technicien) travaille ainsi :
 
 ### Contraintes
 
-* Aucun élément de plus de **18 m** (appliqué : le *Scale* s'arrête à 18 m sur la plus grande dimension).
+* Aucun élément de plus de **18 m** (plus appliqué dans l'application : le *Scale* n'a plus de limite de taille).
 * **Exécutable déployable partout**, sous forme de **kit transportable** jusqu'à la Seine Musicale.
 * **Formats de décor et de tableau communs** avec le volet « Voir la même chose ».
 

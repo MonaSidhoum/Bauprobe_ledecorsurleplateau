@@ -67,8 +67,7 @@ namespace Bauprobe.Manipulation
 
         [Header("Scale")]
         [SerializeField] float scaleSpeed = 1f;      // facteur par seconde, joystick à fond
-        // Les tailles min / max ne sont plus réglées ici : ce sont celles de la fiche du catalogue
-        // (Decor/Catalog/<décor>.asset > Limites de taille), plus la limite de 18 m du cahier des charges.
+        // Pas de taille minimale ni maximale : le Scale n'a plus de limite.
 
         [Header("Rotation")]
         [SerializeField] float rotationSpeed = 90f;  // degrés par seconde
@@ -359,18 +358,15 @@ namespace Bauprobe.Manipulation
                     // sur le plateau, un élément au cintre reste accroché par le haut.
                     if (stick.y != 0f)
                     {
-                        // Limites de la fiche du catalogue (réglables par décor)
-                        float minScale = _decor ? _decor.MinScale : DecorLimits.DefaultMinScale;
-                        float maxScale = _decor ? _decor.MaxScale : DecorLimits.DefaultMaxScale;
-
                         // Agrandit tous les axes du même facteur : un objet étiré par une face garde sa forme.
-                        Vector3 newScale = DecorLimits.ClampScaleToRange(
-                            transform.localScale * (1f + stick.y * scaleSpeed * dt), minScale, maxScale);
+                        // Pas de limite de taille ; le facteur reste juste positif (sinon l'objet se retournerait
+                        // si une image dure très longtemps).
+                        float factor = Mathf.Max(0.01f, 1f + stick.y * scaleSpeed * dt);
+                        Vector3 newScale = transform.localScale * factor;
 
                         if (_decor)
                         {
-                            // Cahier des charges : l'objet ne dépasse jamais 18 m sur sa plus grande dimension.
-                            _decor.SetScaleAroundOrigin(_decor.ClampScaleToMaxSize(newScale));
+                            _decor.SetScaleAroundOrigin(newScale);
                         }
                         else
                         {

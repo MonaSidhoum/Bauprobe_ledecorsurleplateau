@@ -74,20 +74,8 @@ namespace Bauprobe.Decor
             }
         }
 
-        /// <summary>Échelle minimale, réglée dans la fiche du catalogue (Limites de taille).</summary>
-        public float MinScale => Definition != null ? Definition.MinScale : DecorLimits.DefaultMinScale;
-
-        /// <summary>Échelle maximale, réglée dans la fiche du catalogue (Limites de taille).</summary>
-        public float MaxScale => Definition != null ? Definition.MaxScale : DecorLimits.DefaultMaxScale;
-
         /// <summary>Taille réelle de l'objet sur le plateau, en mètres.</summary>
         public Vector3 StageSize => Vector3.Scale(LocalSize, transform.localScale);
-
-        /// <summary>
-        /// Réduit l'échelle demandée si l'objet dépasserait 18 m sur sa plus grande dimension
-        /// (cahier des charges). Les proportions sont gardées.
-        /// </summary>
-        public Vector3 ClampScaleToMaxSize(Vector3 localScale) => DecorLimits.ClampScaleToMaxSize(LocalSize, localScale);
 
         /// <summary>À rappeler si les modèles 3D de l'objet changent.</summary>
         public void RecomputeOrigin()
@@ -272,7 +260,7 @@ namespace Bauprobe.Decor
         /// Étire (ou raccourcit) l'objet en poussant une de ses faces : la face opposée ne bouge pas.
         /// Un cube devient ainsi un pavé (par ex. pour prolonger une porte).
         /// <paramref name="deltaMeters"/> &gt; 0 allonge, &lt; 0 raccourcit.
-        /// La longueur reste entre les limites de la fiche du catalogue, au moins 5 cm, et au plus 18 m.
+        /// La longueur ne descend pas sous 5 cm ; pas de longueur maximale.
         /// Un objet au sol reste posé (un objet au cintre reste accroché), même si on tire sa face du bas (du haut).
         /// Renvoie la nouvelle longueur, en mètres.
         /// </summary>
@@ -288,9 +276,7 @@ namespace Bauprobe.Decor
 
             var scale = transform.localScale;
             var length = size * Mathf.Abs(scale[i]);
-            var minLength = Mathf.Max(DecorLimits.MinFaceLength, size * MinScale);
-            var maxLength = Mathf.Max(minLength, Mathf.Min(DecorLimits.MaxSizeMeters, size * MaxScale));
-            var newLength = Mathf.Clamp(length + deltaMeters, minLength, maxLength);
+            var newLength = Mathf.Max(DecorLimits.MinFaceLength, length + deltaMeters);
             if (Mathf.Approximately(newLength, length))
             {
                 return length;

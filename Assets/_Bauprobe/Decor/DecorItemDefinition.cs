@@ -33,34 +33,18 @@ namespace Bauprobe.Decor
                  "quand on l'importe depuis le menu.")]
         [SerializeField, Min(0f)] private float hangHeight = 3f;
 
-        [Header("Limites de taille")]
-        [Tooltip("Échelle minimale de ce décor (1 = taille réelle du modèle). Seule limite utilisée par le Scale, " +
-                 "à la manette comme à la main.")]
-        [SerializeField, Min(0.01f)] private float minScale = 0.1f;
-
-        [Tooltip("Échelle maximale de ce décor (1 = taille réelle du modèle). En plus, aucun décor ne dépasse jamais 18 m " +
-                 "(cahier des charges).")]
-        [SerializeField, Min(0.01f)] private float maxScale = 10f;
-
         public string Id => id;
         public string DisplayName => string.IsNullOrEmpty(displayName) ? name : displayName;
         public Sprite Thumbnail => thumbnail;
         public GameObject Prefab => prefab;
         public DecorAttachment Attachment => attachment;
         public float HangHeight => hangHeight;
-        public float MinScale => minScale;
-        public float MaxScale => maxScale;
 
         private void OnValidate()
         {
             if (string.IsNullOrEmpty(id))
             {
                 id = name;
-            }
-
-            if (maxScale < minScale)
-            {
-                maxScale = minScale;
             }
         }
     }

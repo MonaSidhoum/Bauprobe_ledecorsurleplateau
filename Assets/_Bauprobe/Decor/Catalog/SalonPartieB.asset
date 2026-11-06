@@ -16,5 +16,3 @@ MonoBehaviour:
   displayName: SalonPartieB
   thumbnail: {fileID: 0}
   prefab: {fileID: 4100876796635234277, guid: 52e1a2b4f7b599240a05ae24554960a8, type: 3}
-  minScale: 0.5
-  maxScale: 2

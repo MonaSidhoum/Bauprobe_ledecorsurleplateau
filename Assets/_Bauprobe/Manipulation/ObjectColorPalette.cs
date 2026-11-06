@@ -44,7 +44,9 @@ namespace Bauprobe.Manipulation
             // Neutres clairs
             new Color32(0xF2, 0xEE, 0xE6, 255), // blanc cassé
             new Color32(0xE3, 0xD5, 0xB8, 255), // lin
-            new Color32(0x8C, 0x8C, 0x8C, 255), // gris
+            // Gris des décors du bureau d'études : exactement la couleur de leur matériau « 191,191,191 »
+            // (le 191 du fichier .mtl, converti par Unity à l'import : 0,88 dans le matériau, soit 224 / 255 affiché).
+            new Color(0.88031524f, 0.88031524f, 0.88031524f, 1f), // gris décor
 
             // Terres
             new Color32(0xD4, 0xA2, 0x4C, 255), // ocre
