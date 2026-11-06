@@ -113,20 +113,30 @@ adb pull /sdcard/Android/data/fr.minesparis.bauprobe/files/Layouts
 ```
 
 **Format** : une ligne par élément, colonnes séparées par des **points-virgules**, nombres avec une **virgule**
-(réglages d'Excel en français ; décocher *Csv Decimal Comma* sur `LayoutManager` pour avoir des points).
+(réglages d'Excel en français ; décocher *Csv Decimal Comma* sur `LayoutManager` pour avoir des points, par exemple
+pour un Excel en anglais).
 Positions et angles dans le **repère du bureau d'études** : l'origine est le **point zéro de la scène, au sol**
-(et pas le QR code, sauf si son offset X / Y vaut 0 ; voir ci-dessus) :
+(et pas le QR code, sauf si son offset X / Y vaut 0 ; voir ci-dessus). Les titres de colonnes sont **en anglais**
+et rappellent le sens des valeurs (vu depuis la salle) :
 
 | Colonne | Contenu |
 |---|---|
-| Scène | Nom de la sauvegarde (en attendant la gestion de plusieurs scènes) |
-| Identifiant / Nom | Identifiant et nom de l'élément dans le catalogue |
-| Accroche | `Sol` ou `Cintre` |
-| X / Y / Z (m) | Position du **point d'origine** de l'élément (bas au centre au sol, haut au centre au cintre). X+ vers cour, Y+ vers le lointain, **Z = hauteur au-dessus du sol du plateau** |
-| Angle (°) | Rotation autour de la verticale, sens inverse des aiguilles d'une montre vu de dessus (comme AutoCAD) |
-| Bascule X / Bascule Y (°) | 0 si l'objet n'est pas penché. Ordre : bascule Y, puis bascule X, puis angle |
-| Largeur / Profondeur / Hauteur (m) | Taille réelle de l'objet, le long de ses propres axes (avant rotation) |
-| Échelle X / Y / Z | Facteur appliqué au modèle 3D (largeur / profondeur / hauteur) |
+| Scene | Nom de la sauvegarde (en attendant la gestion de plusieurs scènes) |
+| Item ID / Item name | Identifiant et nom de l'élément dans le catalogue |
+| Mounting | `Floor` (au sol) ou `Flown` (au cintre) |
+| Reference point | Le point dont on donne la position : `Bottom centre` (bas au centre, au sol) ou `Top centre` (haut au centre, au cintre) |
+| X from zero (m) [+ right / - left, seen from audience] | Depuis le point zéro : positif vers **cour**, négatif vers jardin |
+| Y from zero (m) [+ far / - near] | Depuis le point zéro : positif vers le **lointain**, négatif vers la salle |
+| Z above floor (m) | Hauteur du point de référence au-dessus du **sol du plateau** |
+| Rotation (deg) [+ counterclockwise seen from above, 0 = item front faces far] | Rotation autour de la verticale, comme dans AutoCAD. 0 = l'avant du modèle regarde vers le lointain ; +90 = vers jardin ; -90 = vers cour ; 180 = vers la salle |
+| Tilt X (deg) [+ top leans near] | Objet penché vers l'avant / l'arrière : positif = le haut penche vers la salle. 0 si l'objet est droit |
+| Tilt Y (deg) [+ top leans right] | Objet penché sur le côté : positif = le haut penche vers cour. 0 si l'objet est droit |
+| Width / Depth / Height (m) | Taille réelle de l'objet, le long de ses propres axes (avant rotation) |
+| Scale width / depth / height | Facteur appliqué au modèle 3D (1 = taille d'origine) |
+
+Pour un objet à la fois penché et tourné : on le penche (Tilt Y, puis Tilt X), puis on le tourne de *Rotation*
+autour de la verticale. À l'import, un objet est tourné vers la personne qui l'importe : sa *Rotation* dépend donc de
+l'endroit où elle regardait (environ 180 si elle regardait vers le lointain).
 
 Attention : le JSON garde le repère de Unity (**Y = hauteur**) ; seul le CSV utilise **Z = hauteur**.
 Modifier le CSV ne change rien dans le casque (pas encore d'import du tableau).

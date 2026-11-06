@@ -34,15 +34,35 @@ namespace Bauprobe.Tests
         public void Ligne_EnRepereDuPlan_AvecVirgule()
         {
             var lines = LayoutCsv.ToCsv(Sample()).Split(new[] { "\r\n" }, System.StringSplitOptions.RemoveEmptyEntries);
-            // X ; Y (profondeur) ; Z (hauteur) ; Angle ; Bascule X ; Bascule Y ; Largeur ; Profondeur ; Hauteur ; Échelles X Y Z
-            Assert.That(lines[1], Is.EqualTo("Scène 1;cube;Cube;Sol;1;2;0,5;90;0;0;2;1;3;1;2;1,5"));
+            // X ; Y (profondeur) ; Z (hauteur) ; Rotation ; Tilt X ; Tilt Y ; Width ; Depth ; Height ; Scale width / depth / height
+            Assert.That(lines[1], Is.EqualTo("Scène 1;cube;Cube;Floor;Bottom centre;1;2;0,5;90;0;0;2;1;3;1;2;1,5"));
         }
 
         [Test]
         public void Ligne_AvecPoint()
         {
             var row = LayoutCsv.Row("S", Sample().items[0], decimalComma: false);
-            Assert.That(row[6], Is.EqualTo("0.5"));
+            Assert.That(row[7], Is.EqualTo("0.5"));
+        }
+
+        [Test]
+        public void ElementAuCintre_PointDeReferenceEnHaut()
+        {
+            var entry = Sample().items[0];
+            entry.attachment = "Cintre";
+            var row = LayoutCsv.Row("S", entry);
+            Assert.That(row[3], Is.EqualTo("Flown"));
+            Assert.That(row[4], Is.EqualTo("Top centre"));
+        }
+
+        [Test]
+        public void Titres_EnAnglais_SansPointVirgule()
+        {
+            Assert.That(LayoutCsv.Header[0], Is.EqualTo("Scene"));
+            foreach (var title in LayoutCsv.Header)
+            {
+                Assert.That(title, Does.Not.Contain(";"));
+            }
         }
 
         [Test]

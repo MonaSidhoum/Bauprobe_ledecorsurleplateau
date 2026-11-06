@@ -29,6 +29,20 @@ namespace Bauprobe.Tests
         }
 
         [Test]
+        public void Bascules_SensDesTitresDuCsv()
+        {
+            var top = StagePlan.FromPlan(new Vector3(0f, 0f, 1f));   // le haut de l'objet
+
+            // Tilt X positif : le haut penche vers la salle (Y négatif).
+            var tiltX = StagePlan.ToPlan(StagePlan.FromPlanAngles(new Vector3(20f, 0f, 0f)) * top);
+            Assert.That(tiltX.y, Is.LessThan(-0.3f));
+
+            // Tilt Y positif : le haut penche vers la droite (X positif).
+            var tiltY = StagePlan.ToPlan(StagePlan.FromPlanAngles(new Vector3(0f, 20f, 0f)) * top);
+            Assert.That(tiltY.x, Is.GreaterThan(0.3f));
+        }
+
+        [Test]
         public void Angles_AllerRetour()
         {
             var planAngles = new Vector3(10f, -20f, 135f);
