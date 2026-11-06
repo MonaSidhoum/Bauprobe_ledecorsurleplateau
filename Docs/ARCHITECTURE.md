@@ -41,7 +41,7 @@ Chaque dossier de `Assets/_Bauprobe` est un **module** : une partie de l'appli q
 | **Core** | Le repère du plateau, partagé par tous ; l'offset et la hauteur du QR code saisis dans le casque ; le passage au repère du bureau d'études | `StageSpace`, `QrOffset`, `QrOffsetStore`, `StagePlan` |
 | **Calibration** | Trouver le QR code et y caler le plateau | `StageCalibrator` |
 | **Decor** | La liste des décors disponibles et leur apparition | `DecorItemDefinition`, `DecorCatalog`, `DecorSpawner`, `DecorInstance` |
-| **Manipulation** | Déplacer / tourner / agrandir / étirer un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `RightControllerRaySelector`, `LevelButton`, `FaceHighlight` |
+| **Manipulation** | Déplacer / tourner / agrandir / étirer un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `RightControllerRaySelector`, `LevelButton`, `FaceHighlight`, `SelectionHighlight` |
 | **Persistence** | Sauvegarder / recharger une implantation (fichier JSON) ; tableau CSV pour le bureau d'études | `LayoutManager`, `LayoutSerializer`, `LayoutData`, `LayoutCsv` |
 | **UI** | Les menus dans le casque | `BauprobeMenuLogic` (menu général : Importer, Supprimer tout, suivi QR), `BauprobeMenuScreens` (écrans Décors, Sauvegarder, Charger, QR code offset) |
 | **Tests** | Tests automatiques (Window > General > Test Runner) | `StageSpaceTests`, `LayoutSerializerTests` |
@@ -88,6 +88,10 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    « Supprimer tout » passe aussi par `DecorSpawner`.
 5. **Le metteur en scène manipule l'objet à la manette droite** :
    * il vise l'objet avec le laser (`RightControllerRaySelector`) et appuie sur la gâchette ;
+   * l'objet sélectionné est en **surbrillance** (voile bleu qui pulse, `SelectionHighlight`, créé par le code) tant
+     que son menu est ouvert et pendant Déplacer / Scale / Rotation. Les matériaux de l'objet ne sont pas touchés :
+     ses modèles 3D sont redessinés par-dessus avec `Manipulation/Resources/SelectionHighlight.mat` (sa couleur
+     *Base Map* règle celle du voile) ;
    * le menu de l'objet s'ouvre (`ObjectMenu`) : Supprimer, Couleur, Déplacer, Scale, Rotation, Extrude.
      Il se place **à la main gauche, collé au menu général** : à sa droite quand il est ouvert, au-dessus du
      bouton « + » quand il est replié. Le menu général est trouvé tout seul sous la main gauche (objet
@@ -133,6 +137,7 @@ Les scripts écrits sur la branche de test ont été intégrés :
 | `InteractableObject` | `Manipulation/` | Les 5 actions sur un objet : supprimer, couleur, déplacer, scale, rotation (manette droite) |
 | `ObjectMenu` | `Manipulation/` | Le menu de l'objet sélectionné, collé au menu général de la main gauche |
 | `RightControllerRaySelector` | `Manipulation/` | Le laser de la manette droite qui sélectionne un objet |
+| `SelectionHighlight` | `Manipulation/` | La surbrillance de l'objet sélectionné (créée par le code) |
 
 `ObjectMenu` est dans `Manipulation` (et pas dans `UI`) parce qu'il appelle `InteractableObject` et
 inversement : deux scripts qui s'appellent l'un l'autre doivent être dans le même module.
