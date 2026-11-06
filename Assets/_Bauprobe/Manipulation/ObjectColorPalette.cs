@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Bauprobe.Decor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -161,6 +162,14 @@ namespace Bauprobe.Manipulation
             _chosen[target] = index;
             Color c = Colors[index];
 
+            // Décor du catalogue : la couleur est retenue par DecorInstance, donc sauvegardée avec l'implantation.
+            var decor = target.GetComponent<DecorInstance>();
+            if (decor != null)
+            {
+                decor.SetColor(c);
+                return;
+            }
+
             foreach (var r in target.GetComponentsInChildren<Renderer>())
             {
                 // .materials crée une copie propre à cet objet : les autres objets ne changent pas.
@@ -172,6 +181,30 @@ namespace Bauprobe.Manipulation
             }
         }
 
+        /// <summary>
+        /// Pastille de la couleur actuelle de l'objet : celle retenue par son DecorInstance (y compris après
+        /// le chargement d'une sauvegarde), sinon la dernière choisie dans cette palette.
+        /// </summary>
+        bool TryGetCurrentIndex(InteractableObject target, out int index)
+        {
+            var decor = target.GetComponent<DecorInstance>();
+            if (decor != null && decor.CustomColor.HasValue)
+            {
+                Color c = decor.CustomColor.Value;
+                for (int i = 0; i < Colors.Length; i++)
+                {
+                    Color s = Colors[i];
+                    if (Mathf.Abs(s.r - c.r) < 0.002f && Mathf.Abs(s.g - c.g) < 0.002f && Mathf.Abs(s.b - c.b) < 0.002f)
+                    {
+                        index = i;
+                        return true;
+                    }
+                }
+            }
+
+            return _chosen.TryGetValue(target, out index);
+        }
+
         // ------------------------------------------------------------------ pastilles
 
         void BuildSwatches(InteractableObject target)
@@ -180,8 +213,7 @@ namespace Bauprobe.Manipulation
             _swatches.Clear();
 
             FitGrid(Colors.Length);
-            _chosen.TryGetValue(target, out int current);
-            bool hasChosen = _chosen.ContainsKey(target);
+            bool hasChosen = TryGetCurrentIndex(target, out int current);
 
             for (int i = 0; i < Colors.Length; i++)
             {

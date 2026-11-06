@@ -351,7 +351,9 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 
 ### Petites fonctionnalités
 
-- [ ] **Couleur** non sauvegardée : la sauvegarde garde la position, la rotation et la taille, pas la couleur.
+- [x] **Couleur sauvegardée** : la couleur choisie avec le bouton Color est gardée dans la sauvegarde (format version 4)
+      et remise quand on recharge l'implantation. Les anciennes sauvegardes se rechargent avec la couleur d'origine.
+      Le tableau CSV ne change pas.
 - [x] **QR code pas au sol** : la distance entre le bas du QR code et le sol se saisit dans le casque (écran
       « QR code offset », avec la position du QR code par rapport au point zéro). Le repère du plateau est posé
       au vrai sol, à la verticale du QR code.

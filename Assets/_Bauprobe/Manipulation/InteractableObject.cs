@@ -183,6 +183,13 @@ namespace Bauprobe.Manipulation
             _colorIndex = (_colorIndex + 1) % palette.Length;
             Color c = palette[_colorIndex];
 
+            if (!_decor) _decor = GetComponent<DecorInstance>(); // ajouté après Awake par le spawner
+            if (_decor)
+            {
+                _decor.SetColor(c); // retenue pour la sauvegarde
+                return;
+            }
+
             foreach (var r in _renderers)
             {
                 foreach (var mat in r.materials) // .materials crée une instance propre à cet objet

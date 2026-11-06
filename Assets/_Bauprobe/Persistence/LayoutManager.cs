@@ -89,6 +89,12 @@ namespace Bauprobe.Persistence
                 {
                     instance.transform.localPosition = entry.position;
                 }
+
+                // Couleur choisie avec le bouton Color (sauvegardes version 4 et plus).
+                if (instance != null && entry.hasColor)
+                {
+                    instance.SetColor(entry.color);
+                }
             }
 
             Debug.Log($"Implantation '{layoutName}' chargée ({data.items.Count} objets).");

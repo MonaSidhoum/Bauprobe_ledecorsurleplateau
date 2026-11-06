@@ -15,12 +15,13 @@ namespace Bauprobe.Persistence
     ///       comme dans le tableau de positionnement du cahier des charges ;
     ///   3 : + "scene", "qrOffset" (offset du QR code utilisé), et pour chaque objet "name", "attachment", "size".
     ///       Les positions sont mesurées depuis le point zéro du bureau d'études (= le QR code si l'offset est nul).
+    ///   4 : + pour chaque objet "hasColor" et "color" (couleur choisie avec le bouton Color, remise au chargement).
     /// </summary>
     [Serializable]
     public class LayoutData
     {
         /// <summary>Version écrite par cette version de l'appli.</summary>
-        public const int CurrentVersion = 3;
+        public const int CurrentVersion = 4;
 
         public int version = CurrentVersion;
         public string savedAt;
@@ -61,5 +62,11 @@ namespace Bauprobe.Persistence
         /// x = largeur, y = hauteur, z = profondeur. Pour information (recalculée à partir du modèle au chargement).
         /// </summary>
         public Vector3 size;
+
+        /// <summary>Vrai si une couleur a été choisie avec le bouton Color (faux = couleur d'origine du modèle).</summary>
+        public bool hasColor;
+
+        /// <summary>Couleur choisie (utilisée seulement si <see cref="hasColor"/> est vrai). Depuis la version 4.</summary>
+        public Color color = Color.white;
     }
 }

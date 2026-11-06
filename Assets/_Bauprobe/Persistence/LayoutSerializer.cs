@@ -38,6 +38,8 @@ namespace Bauprobe.Persistence
                     rotation = t.localRotation,
                     scale = t.localScale,
                     size = instance.StageSize,
+                    hasColor = instance.CustomColor.HasValue,
+                    color = instance.CustomColor ?? Color.white,
                 });
             }
 
