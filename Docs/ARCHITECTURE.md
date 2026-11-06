@@ -2,24 +2,29 @@
 
 Ce document explique **comment le code est rangé et pourquoi**. Il est écrit pour des débutant·e·s en Unity.
 
-## L'idée centrale : le QR code est le « point zéro » du plateau
+## L'idée centrale : un point zéro sur le plateau, retrouvé grâce au QR code
 
 On pose un QR code sur le plateau (par exemple au centre, au bord de la scène) : à plat au sol, ou collé sur un
 support. Quand le casque le voit, il sait où est la scène.
 
-Si le QR code n'est pas au sol, on indique la distance entre **le bas du QR code et le sol** dans
-`Core/Resources/StageSettings.asset`. `StageCalibrator` place alors le repère du plateau **au sol, à la verticale
-du centre du QR code** : la hauteur 0 du décor est le vrai sol. Détails : [A_FAIRE_DANS_UNITY.md](A_FAIRE_DANS_UNITY.md#régler-la-hauteur-du-qr-code-à-refaire-à-chaque-nouveau-lieu).
+Toutes les positions sont mesurées depuis le **point zéro de la scène** choisi avec le bureau d'études (par ex. le
+centre du nez de scène), **au sol**, et pas forcément depuis le QR code. Au lancement, l'écran **« QR code offset »**
+du menu général demande où est le QR code par rapport à ce point zéro (X, Y en mètres) et la hauteur de son bord
+du bas au-dessus du sol. Ces valeurs sont gardées sur le casque (`QrOffsetStore`) : pas besoin de *Build*.
+`StageCalibrator` place alors le repère du plateau **au sol, à la verticale du centre du QR code**, puis décale
+`StageRoot` sur le point zéro. X = Y = 0 : le QR code **est** le point zéro.
+Détails : [A_FAIRE_DANS_UNITY.md](A_FAIRE_DANS_UNITY.md#offset-et-hauteur-du-qr-code-dans-le-casque).
 
-Ensuite, **chaque objet de décor est placé par rapport à ce QR code**, et pas par rapport au casque.
-Si le metteur en scène pose une table « 2 m à gauche du QR code », elle sera encore au même
-endroit le lendemain, même si le casque a été éteint entre-temps.
+Ensuite, **chaque objet de décor est placé par rapport à ce point zéro**, et pas par rapport au casque.
+Si le metteur en scène pose une table « 2 m à gauche du point zéro », elle sera encore au même
+endroit le lendemain, même si le casque a été éteint entre-temps ou si le QR code a été recollé ailleurs
+(il suffit de saisir son nouvel offset).
 
 Dans la scène Unity, ça donne cette hiérarchie :
 
 ```
 QRAnchor          ← déplacé sur le QR code par StageCalibrator
-└── StageRoot     ← porte le composant StageSpace : c'est « le plateau »
+└── StageRoot     ← porte le composant StageSpace : c'est « le plateau » (décalé au point zéro si offset)
     ├── Table     ← les objets de décor sont TOUJOURS enfants de StageRoot
     ├── Escalier
     └── ...
@@ -33,12 +38,12 @@ Chaque dossier de `Assets/_Bauprobe` est un **module** : une partie de l'appli q
 
 | Module | Rôle | Scripts principaux |
 |---|---|---|
-| **Core** | Le repère du plateau, partagé par tous ; ses réglages (hauteur du QR code) | `StageSpace`, `StageSettings` |
+| **Core** | Le repère du plateau, partagé par tous ; l'offset et la hauteur du QR code saisis dans le casque ; le passage au repère du bureau d'études | `StageSpace`, `QrOffset`, `QrOffsetStore`, `StagePlan` |
 | **Calibration** | Trouver le QR code et y caler le plateau | `StageCalibrator` |
 | **Decor** | La liste des décors disponibles et leur apparition | `DecorItemDefinition`, `DecorCatalog`, `DecorSpawner`, `DecorInstance` |
 | **Manipulation** | Déplacer / tourner / agrandir / étirer un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `RightControllerRaySelector`, `LevelButton`, `FaceHighlight` |
-| **Persistence** | Sauvegarder / recharger une implantation (fichier JSON) | `LayoutManager`, `LayoutSerializer`, `LayoutData` |
-| **UI** | Les menus dans le casque | `BauprobeMenuLogic` (menu général : Importer, Supprimer tout, suivi QR) |
+| **Persistence** | Sauvegarder / recharger une implantation (fichier JSON) ; tableau CSV pour le bureau d'études | `LayoutManager`, `LayoutSerializer`, `LayoutData`, `LayoutCsv` |
+| **UI** | Les menus dans le casque | `BauprobeMenuLogic` (menu général : Importer, Supprimer tout, suivi QR), `BauprobeMenuScreens` (écrans Décors, Sauvegarder, Charger, QR code offset) |
 | **Tests** | Tests automatiques (Window > General > Test Runner) | `StageSpaceTests`, `LayoutSerializerTests` |
 
 ### Qui a le droit d'utiliser qui ?
@@ -112,7 +117,11 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    Comme un objet peut maintenant avoir une échelle différente sur chaque axe, `DecorConstraints` garde ses
    **proportions** (au lieu d'imposer x = y = z) quand il limite sa taille.
 6. **`LayoutManager.Save()`** écrit la liste des objets et leurs positions sur le plateau dans un fichier JSON
-   sur le casque. **`LayoutManager.Load()`** la recharge.
+   sur le casque, **et le même contenu en tableau CSV** pour le bureau d'études (`LayoutCsv`, même nom, `.csv`).
+   **`LayoutManager.Load()`** recharge le JSON (le CSV sert seulement à l'export).
+   Le CSV est dans le **repère du bureau d'études** (`StagePlan`) : X à droite, Y vers l'avant, **Z = hauteur**,
+   angle en degrés dans le sens inverse des aiguilles d'une montre vu de dessus. Le JSON garde le repère de Unity
+   (Y = hauteur). Format détaillé : [A_FAIRE_DANS_UNITY.md](A_FAIRE_DANS_UNITY.md#exporter-le-tableau-csv-pour-le-bureau-détudes).
 
 ## Code venu de la branche `test/mr-quest3`
 

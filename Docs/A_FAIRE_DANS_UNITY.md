@@ -33,37 +33,113 @@ re-clonez, ou supprimez au moins son dossier `Library/`.
 3. *File > Build Profiles* > *Run Device* = le Quest 3 > **Build And Run**.
 4. Au premier lancement, accepter la permission **« données spatiales »** (sinon : bouton *Permission* du menu).
 
-### Régler la hauteur du QR code (à refaire à chaque nouveau lieu)
+### Offset et hauteur du QR code (dans le casque)
 
-Le décor est calé sur le QR code. Si le QR code **n'est pas posé à plat au sol** (collé sur un mur, un pied,
-une table…), il faut dire à l'appli à quelle hauteur il se trouve, sinon tout le décor est décalé en hauteur.
+Le décor est calé sur un QR code posé sur le plateau. Toutes les positions (sauvegardes et tableau CSV) sont
+mesurées depuis le **point zéro de la scène**, choisi avec le bureau d'études (par ex. le **centre du nez de scène**),
+**au sol**. Le QR code n'a pas besoin d'être sur ce point : on dit à l'appli **où il est**. Tout se saisit **dans le
+casque, au lancement** : pas de *Build*.
 
-1. **Mesurer** au mètre la distance **verticale** entre **le bord du bas du QR code** et **le sol du plateau**.
-   * On mesure le **bord du bas** du carré imprimé, pas son centre ni le bord de la feuille.
-   * Exemple : bord du bas du QR code à 1,20 m du sol → `1.2`. QR code posé à plat au sol → `0`.
-2. **Indiquer la valeur** (en mètres, avec un point) dans `Assets/_Bauprobe/Core/Resources/StageSettings.asset`,
-   champ **Qr Bottom Height Above Floor** :
-   * dans Unity : cliquer sur le fichier dans la fenêtre *Project*, modifier la valeur dans l'*Inspector*, puis *Ctrl+S* ;
-   * ou dans un éditeur de texte : dernière ligne du fichier, `qrBottomHeightAboveFloor: 1.2`.
-3. **Refaire un *Build And Run*** : la valeur est intégrée à l'appli, elle ne change pas toute seule sur le casque.
-4. **Committer** `StageSettings.asset` (sur une branche, comme d'habitude) pour que toute l'équipe ait la même valeur.
-5. **Vérifier dans le casque** : après le calage, importer le cube. Il doit être posé **exactement sur le sol**.
-   La Console (en Play avec Link) affiche aussi « Plateau calé : sol à 1,20 m sous le bas du QR code ».
+**Au lancement**, le menu général ouvre l'écran **« QR code offset »** (en anglais), pré-rempli avec les dernières
+valeurs validées (gardées sur le casque d'un lancement à l'autre ; désinstaller l'appli les efface). Si le QR code n'a
+pas bougé : **Confirm** directement. Sinon, cliquer sur un champ, taper la valeur au pavé (la première touche remplace
+l'ancienne valeur ; `+/-` change le signe ; **point** décimal : `1.2`), puis **Confirm**. *Back* annule.
+L'écran est aussi accessible à tout moment par la **première ligne de l'écran Charger** (« QR offset: … »).
 
-**Comment ça marche.** Quand le casque détecte le QR code, `StageCalibrator` :
-1. calcule la hauteur du **coin le plus bas** du QR code (ça marche qu'il soit à plat, droit sur un mur ou penché) ;
-2. retire la distance réglée dans `StageSettings` : c'est la hauteur du **vrai sol** ;
-3. pose le repère du plateau (`QRAnchor` > `StageRoot`) **à cette hauteur, à la verticale du centre du QR code**,
-   tourné comme le QR code mais toujours à l'horizontale.
+Chaque champ rappelle le sens des valeurs, **vu par quelqu'un qui fait face au QR code** (depuis la salle) :
 
-Tout le décor est enfant de `StageRoot` : la hauteur 0 du décor est donc le vrai sol. C'est ce sol qu'utilisent
-l'apparition des objets, *Keep On Floor*, la hauteur d'accroche au cintre et le blocage « pas sous le sol ».
+| Champ (dans le casque) | Ce qu'on mesure au mètre |
+|---|---|
+| **X (m)   + right / - left** | Position du **centre du QR code** depuis le point zéro : positif s'il est à **droite** du point zéro (cour), négatif à gauche (jardin) |
+| **Y (m)   + far / - near** | Position du **centre du QR code** depuis le point zéro : positif s'il est plus **loin** (lointain), négatif plus près (salle) |
+| **QR height (m)** | Distance **verticale** entre le **bord du bas** du carré imprimé (pas le centre, pas le bord de la feuille) et le **sol du plateau**. 0 = QR code posé au sol |
+
+Exemple : QR code sur un pied, au milieu du plateau, 2 m derrière le nez de scène, bas du QR code à 1,20 m du sol
+→ X = `0`, Y = `2`, QR height = `1.2`. Tout à 0 : le QR code (posé au sol) **est** le point zéro.
+
+**Orientation : coller le QR code à la verticale, face à la salle**, bien parallèle au nez de scène (il n'y a pas
+d'angle à saisir). L'appli prend comme « avant » (Y+) la direction dans laquelle on regarde quand on lit le QR code,
+et comme X+ la droite de celui qui le lit : QR code lu depuis la salle → Y+ = lointain, X+ = cour.
+Le côté est trouvé grâce à la position du casque au moment de la détection (on voit forcément le côté imprimé).
+Un QR code de travers de 5° fait tourner tout le décor de 5° : soigner l'alignement.
+(Un QR code posé à plat au sol marche aussi : l'avant est alors la direction de son bord du haut.)
+
+**Vérifier une fois dans le casque** : importer le cube, le poser sur le point zéro, sauvegarder : dans le CSV, X et Y
+doivent valoir environ 0, et Z environ 0 (cube posé au sol). Le déplacer de 1 m vers le lointain et resauvegarder :
+Y doit augmenter de 1.
+
+**Comment ça marche.** `StageCalibrator` cale `QRAnchor` **au sol** (bas du QR code moins sa hauteur), à la verticale
+du centre du QR code et tourné comme lui (toujours à l'horizontale). Il décale ensuite `StageRoot` (son enfant) de
+(-X, -Y) : `StageRoot` est le point zéro. Tout le décor étant enfant de `StageRoot`, ses positions sont mesurées depuis
+le point zéro. À chaque *Confirm*, le sol et le point zéro sont replacés (`QrOffsetStore.Changed`).
+Ce sol est celui qu'utilisent l'apparition des objets, *Keep On Floor*, la hauteur d'accroche au cintre et le
+blocage « pas sous le sol ».
 
 **À savoir.**
-* Si on **déplace le QR code** ou qu'on change de lieu, il faut **remesurer** et refaire un *Build*.
-* Une erreur de mesure de 5 cm décale tout le décor de 5 cm en hauteur.
-* Les positions sauvegardées sont relatives au point du sol sous le QR code : remettre le QR code **au même endroit**
-  pour retrouver une implantation.
+* Une erreur de mesure de 5 cm décale tout le décor de 5 cm.
+* Si on change l'offset alors que du décor est déjà posé, **ce décor bouge avec le point zéro**. Saisir l'offset
+  **avant** de poser ou de charger le décor.
+* Les sauvegardes faites avant cette version étaient mesurées depuis le QR code : elles restent justes avec un
+  offset X = Y = 0. Avec un QR code vertical, elles peuvent être tournées d'un demi-tour (le sens « avant » d'un QR
+  code vertical est maintenant choisi d'après la position du casque).
+
+**Recharger une scène le lendemain.** Les positions du JSON sont mesurées depuis le point zéro, pas depuis le QR
+code. Si le QR code a été recollé ailleurs, il suffit de **saisir son nouvel offset au lancement**, puis *Charger* :
+le décor revient au même endroit du plateau. L'offset utilisé au moment de la sauvegarde est recopié dans le JSON
+(`qrOffset`, pour information) ; s'il est différent de l'offset actuel, la Console le signale au chargement.
+
+Exemple de journée :
+1. Jour 1 : lancer l'appli, saisir l'offset (QR code à X = 0, Y = 2, QR height 1.2), *Confirm*.
+2. Placer le décor de la scène 1, *Sauvegarder* > *+ Nouvelle sauvegarde* > « Scene 1 ».
+3. *Supprimer tout* (sinon le décor de la scène 1 reste et sera aussi dans la scène 2), placer la scène 2,
+   *Sauvegarder* « Scene 2 ». Chaque sauvegarde est écrite sur le casque **au moment du clic** : rien d'autre à
+   enregistrer à la fin.
+4. Jour 2 : le QR code a été recollé ailleurs (X = 1,5, Y = 3, hauteur 1). Lancer l'appli, saisir ce nouvel offset,
+   *Confirm*, puis *Charger* « Scene 1 » : le décor est au même endroit que la veille.
+
+### Exporter le tableau CSV pour le bureau d'études
+
+À chaque **Sauvegarder**, l'appli écrit deux fichiers dans le dossier des sauvegardes du casque :
+`<nom>.json` (relu par *Charger*) et `<nom>.csv` (le tableau pour le bureau d'études, qui s'ouvre dans Excel).
+*Supprimer* une sauvegarde supprime les deux.
+
+**Récupérer les fichiers sur un ordinateur** : brancher le casque en USB-C, accepter l'accès aux fichiers dans le
+casque, puis ouvrir *Quest 3 > Stockage partagé interne > Android > data > fr.minesparis.bauprobe > files > Layouts*
+(explorateur Windows, ou *Android File Transfer* sur Mac, ou le gestionnaire de fichiers de Meta Quest Developer Hub).
+En ligne de commande :
+
+```bash
+adb pull /sdcard/Android/data/fr.minesparis.bauprobe/files/Layouts
+```
+
+**Format** : une ligne par élément, colonnes séparées par des **points-virgules**, nombres avec une **virgule**
+(réglages d'Excel en français ; décocher *Csv Decimal Comma* sur `LayoutManager` pour avoir des points, par exemple
+pour un Excel en anglais).
+Positions et angles dans le **repère du bureau d'études** : l'origine est le **point zéro de la scène, au sol**
+(et pas le QR code, sauf si son offset X / Y vaut 0 ; voir ci-dessus). Les titres de colonnes sont **en anglais**
+et rappellent le sens des valeurs (vu depuis la salle) :
+
+| Colonne | Contenu |
+|---|---|
+| Scene | Nom de la sauvegarde (en attendant la gestion de plusieurs scènes) |
+| Item ID / Item name | Identifiant et nom de l'élément dans le catalogue |
+| Mounting | `Floor` (au sol) ou `Flown` (au cintre) |
+| Reference point | Le point dont on donne la position : `Bottom centre` (bas au centre, au sol) ou `Top centre` (haut au centre, au cintre) |
+| X from zero (m) [+ right / - left, seen from audience] | Depuis le point zéro : positif vers **cour**, négatif vers jardin |
+| Y from zero (m) [+ far / - near] | Depuis le point zéro : positif vers le **lointain**, négatif vers la salle |
+| Z above floor (m) | Hauteur du point de référence au-dessus du **sol du plateau** |
+| Rotation (deg) [+ counterclockwise seen from above, 0 = item front faces far] | Rotation autour de la verticale, comme dans AutoCAD. 0 = l'avant du modèle regarde vers le lointain ; +90 = vers jardin ; -90 = vers cour ; 180 = vers la salle |
+| Tilt X (deg) [+ top leans near] | Objet penché vers l'avant / l'arrière : positif = le haut penche vers la salle. 0 si l'objet est droit |
+| Tilt Y (deg) [+ top leans right] | Objet penché sur le côté : positif = le haut penche vers cour. 0 si l'objet est droit |
+| Width / Depth / Height (m) | Taille réelle de l'objet, le long de ses propres axes (avant rotation) |
+| Scale width / depth / height | Facteur appliqué au modèle 3D (1 = taille d'origine) |
+
+Pour un objet à la fois penché et tourné : on le penche (Tilt Y, puis Tilt X), puis on le tourne de *Rotation*
+autour de la verticale. À l'import, un objet est tourné vers la personne qui l'importe : sa *Rotation* dépend donc de
+l'endroit où elle regardait (environ 180 si elle regardait vers le lointain).
+
+Attention : le JSON garde le repère de Unity (**Y = hauteur**) ; seul le CSV utilise **Z = hauteur**.
+Modifier le CSV ne change rien dans le casque (pas encore d'import du tableau).
 
 ---
 
@@ -93,7 +169,7 @@ MenuGeneral
 | Laser | `Laser` (main droite) | Vise un objet ; gâchette = ouvre son menu |
 | Menu objet | `ObjectMenu` (racine) | Supprimer, Couleur, Déplacer, Scale, Rotation, Extrude (ajouté par le code sous Scale). S'affiche à la main gauche, à droite du menu général (au-dessus du « + » s'il est replié). Taille : *Size Multiplier* |
 | Décors | prefabs `Decor/Prefabs/` (`Cube` + les 7 décors) | *Interactable Object* (manette) + *Decor Constraints* (taille, sol). Modèles OBJ dans `Decor/Models/<décor>/`, importés en mm → m (*Scale Factor* 0,001) |
-| Réglages du plateau | `Core/Resources/StageSettings.asset` | Distance entre le bas du QR code et le sol ([voir plus haut](#régler-la-hauteur-du-qr-code-à-refaire-à-chaque-nouveau-lieu)) |
+| Offset et hauteur du QR code | saisis dans le casque (écran « QR code offset ») | Gardés sur le casque, pas dans le projet ([voir plus haut](#offset-et-hauteur-du-qr-code-dans-le-casque)) |
 
 Pour ajouter un nouveau décor au catalogue : voir [ARCHITECTURE.md](ARCHITECTURE.md#ajouter-un-nouveau-décor-sans-code).
 Deux raccourcis aident à préparer un prefab de décor (`Decor/Editor/DecorPrefabTools.cs`), par clic droit sur le
@@ -120,7 +196,7 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 | 1 | Importer le décor du bureau d'études et le tableau de positionnement | 🟡 | *Importer* propose les **7 premiers décors du bureau d'études** (OBJ, en mm convertis en m) en plus du cube de test. Pas encore de lecture du tableau. |
 | 2 | Afficher en AR la scène 1, puis les suivantes | ⬜ | Le calage sur le QR code marche, mais il n'y a qu'**une seule implantation** à la fois : pas de notion de « scène 1, 2, 3… ». |
 | 3 | Modifier placement et transformation, puis enregistrer dans la scène | 🟡 | Déplacer / Scale / Rotation et *Sauvegarder* marchent, mais toujours dans le même fichier (`implantation`). |
-| 4 | Exporter le tableau modifié et les nouveaux modèles | ⬜ | La sauvegarde est un fichier JSON sur le casque, qu'on ne peut pas ouvrir dans Excel. |
+| 4 | Exporter le tableau modifié et les nouveaux modèles | 🟡 | Chaque sauvegarde écrit aussi un **tableau CSV** (Excel) dans le repère du bureau d'études, avec un offset du QR code réglable ([détails](#exporter-le-tableau-csv-pour-le-bureau-détudes)). Pas d'export des modèles. |
 
 **Tâches :**
 
@@ -138,8 +214,11 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 - [ ] **Gérer plusieurs scènes** : ajouter au menu général un choix « Scène précédente / Scène suivante » qui
       affiche l'implantation de la scène choisie (remplace l'actuel nom unique `implantation`).
 - [ ] **Enregistrer dans la scène** : *Sauvegarder* écrit dans la scène affichée.
-- [ ] **Exporter** le tableau modifié dans le même format que l'import, et le récupérer sur un ordinateur
-      (câble USB / MQDH, ou partage réseau à étudier).
+- [x] **Exporter** le tableau modifié : un `.csv` à côté de chaque sauvegarde (`LayoutCsv`), récupérable par câble USB
+      ou MQDH ([détails](#exporter-le-tableau-csv-pour-le-bureau-détudes)). Repère : point zéro du bureau d'études
+      (= QR code, ou offset du QR code saisi dans le casque).
+      Reste à : faire valider les colonnes par le bureau d'études **et** le volet « Voir la même chose » ; lire ce
+      même format à l'import ; éventuellement un seul fichier pour toutes les scènes ; partage réseau à étudier.
 - [ ] **Exporter les nouveaux modèles** : préciser avec les commanditaires ce qu'on appelle un « nouveau modèle »
       (un modèle redimensionné ? un modèle créé dans l'appli ?).
 
@@ -178,7 +257,7 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 | Livrable | État |
 |---|---|
 | Tableau de positionnement par scène (Excel en première approche) | ⬜ format à définir (section 3.1) |
-| Tableau modifié et nouveaux modèles 3D | ⬜ dépend de l'export (section 3.1) |
+| Tableau modifié et nouveaux modèles 3D | 🟡 tableau : CSV écrit à chaque sauvegarde ; modèles : à préciser (section 3.1) |
 | Code source | 🟡 ce dépôt ; à finaliser |
 | Documentation utilisateur | 🟡 le README explique l'utilisation dans le casque ; à compléter par un **mode d'emploi pour le technicien** (sans Unity) |
 
@@ -226,7 +305,7 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
       = monter / descendre ; la vitesse augmente avec la distance (plus d'amplitude au loin). Avant, le déplacement
       au joystick ne suivait plus la manette et restait lent au loin.
       L'objet ne descend pas sous le sol du plateau (option *Prevent Below Stage* de `InteractableObject`, cochée
-      par défaut ; le sol vient de la hauteur du QR code réglée dans `StageSettings`). Pour un décor qui doit
+      par défaut ; le sol vient de la hauteur du QR code saisie dans le casque). Pour un décor qui doit
       glisser au sol uniquement, cocher *Keep On Floor* sur son `DecorConstraints`.
 - [x] **Rotation** : joystick gauche / droite = tourner sur lui-même ; haut / bas = basculer vers l'avant / l'arrière
       (avant, seule la rotation autour de la verticale était possible). L'objet tourne autour de son centre sans
@@ -256,8 +335,8 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 ### Petites fonctionnalités
 
 - [ ] **Couleur** non sauvegardée : la sauvegarde garde la position, la rotation et la taille, pas la couleur.
-- [x] **QR code pas au sol** : la distance entre le bas du QR code et le sol se règle dans
-      `Core/Resources/StageSettings.asset` (*Qr Bottom Height Above Floor*, en mètres). Le repère du plateau est posé
+- [x] **QR code pas au sol** : la distance entre le bas du QR code et le sol se saisit dans le casque (écran
+      « QR code offset », avec la position du QR code par rapport au point zéro). Le repère du plateau est posé
       au vrai sol, à la verticale du QR code.
 - [ ] **QR code du plateau** : choisir le texte du QR code officiel et le mettre dans *Expected Payload*
       (Stage Calibrator), pour ignorer les autres QR codes présents dans la salle.

@@ -38,6 +38,7 @@ Testé sur Meta Quest 3 :
 * ✅ Les objets se déplacent dans toutes les directions, se tournent et se **basculent** sans s'enfoncer dans le sol
 * ✅ **Étirer une face** (EXTRUDE) : prolonger ou raccourcir un objet par une de ses faces (ex. une porte plus haute)
 * ✅ **Supprimer tout**, **Sauvegarder** / **Charger** une implantation
+* ✅ **Tableau CSV** pour le bureau d'études (Excel), écrit à chaque sauvegarde : position X / Y / Z, angle, dimensions, scène ; origine = le point zéro de la scène, au sol (offset du QR code saisi dans le casque). Voir [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#exporter-le-tableau-csv-pour-le-bureau-détudes)
 
 Ce qui reste à faire : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#3-cahier-des-charges--suivi) (suivi du cahier des charges, puis corrections techniques).
 
@@ -105,7 +106,7 @@ Un utilisateur unique (le technicien) travaille ainsi :
 ├── Assets/
 │   ├── _Bauprobe/        ← TOUT NOTRE TRAVAIL EST ICI
 │   │   ├── Scenes/       MenuGeneral.unity (la scène du casque) + Sandbox/ (une scène de test par personne)
-│   │   ├── Core/         le repère du plateau (StageSpace) + ses réglages (Resources/StageSettings.asset)
+│   │   ├── Core/         le repère du plateau (StageSpace), l'offset du QR code (saisi dans le casque)
 │   │   ├── Calibration/  QR code → position du plateau (StageCalibrator)
 │   │   ├── Decor/        catalogue des décors (Catalog/), prefabs, apparition des objets
 │   │   ├── Manipulation/ laser, menu de l'objet, déplacer / agrandir / tourner (à la manette)
@@ -155,16 +156,16 @@ Le détail (premier lancement sur un nouvel ordinateur, installation sur le casq
 
 ### Dans le casque
 
-1. **Calage** : posez le QR code sur le plateau (au moins 15 cm de côté), à plat au sol ou collé sur un support,
-   et regardez-le. Le menu affiche « QR détectés : 1 » ; le décor est alors calé sur le plateau.
-   **Si le QR code n'est pas au sol**, mesurez la distance entre **le bas du QR code et le sol**, et indiquez-la
-   (en mètres) dans `Assets/_Bauprobe/Core/Resources/StageSettings.asset`, champ *Qr Bottom Height Above Floor*
-   (dans l'Inspector de Unity, ou directement dans le fichier), puis refaites un *Build And Run*.
-   Exemple : bas du QR code à 1,20 m du sol → `1.2`. Ce fichier est suivi par Git.
-   Marche à suivre détaillée et fonctionnement : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#régler-la-hauteur-du-qr-code-à-refaire-à-chaque-nouveau-lieu).
+1. **Calage** : collez le QR code (au moins 15 cm de côté) à la verticale, **face à la salle**, sur un pied ou un
+   support (ou posez-le à plat au sol), et regardez-le. Le menu affiche « QR détectés : 1 » ; le décor est alors calé.
+   **Au lancement**, l'écran **QR code offset** (en anglais) demande où est le QR code par rapport au **point zéro** de la scène
+   (X vers cour, Y vers le lointain, en mètres) et la **hauteur de son bord du bas** au-dessus du sol. Il est
+   pré-rempli avec les dernières valeurs : *Confirm* si le QR code n'a pas bougé. Pas besoin de *Build*.
+   Marche à suivre détaillée : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#offset-et-hauteur-du-qr-code-dans-le-casque).
 2. **Menu général** : il est attaché à la **main gauche**.
    * *Importer* > choisir un décor : il apparaît posé au sol, 1,5 m devant vous.
    * *Supprimer tout*, *Sauvegarder*, *Charger*.
+   * L'écran **QR code offset** est aussi accessible par la première ligne de *Charger*.
 3. **Manipuler un objet** (manette droite) :
 
 | Action | Commande |
