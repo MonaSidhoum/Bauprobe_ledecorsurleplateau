@@ -168,18 +168,64 @@ La scène de la branche de test (`menu général.unity`) est devenue `Scenes/Men
 
 ## Ajouter un nouveau décor (sans code)
 
-1. Mettre le modèle 3D (`.fbx`, `.glb`...) dans `Assets/_Bauprobe/Decor/Models/`.
-   Le modèle doit être **en mètres, à l'échelle 1:1**. Son pivot peut être n'importe où : le **point d'origine**
-   (bas au centre pour le sol, haut au centre pour le cintre) est calculé automatiquement à partir du modèle.
-2. En faire un prefab dans `Assets/_Bauprobe/Decor/Prefabs/` et y ajouter :
-   * un **Collider** (par ex. Box Collider) ;
-   * les composants de saisie de l'Interaction SDK : clic droit sur l'objet >
-     *Interaction SDK > Add Grab Interaction* (vérifier que la mise à l'échelle à deux mains est activée) ;
-   * le composant **`DecorConstraints`**.
-3. Clic droit dans `Assets/_Bauprobe/Decor/Catalog/` > *Create > Bauprobe > Élément de décor*.
-   Remplir le nom, glisser le prefab et choisir **Sol** ou **Cintre** (pour le cintre, régler aussi la
-   hauteur d'accroche à l'import).
-4. Ajouter cette fiche dans la liste du **`DecorCatalog`**.
+Un décor, dans Unity, c'est trois choses :
+* le **modèle 3D** (fichier `.obj`, `.fbx`…) : la forme ;
+* un **prefab** : un « objet modèle » prêt à être posé dans la scène, qui contient le modèle 3D, un **collider**
+  (la boîte invisible que touche le laser : sans lui, on ne peut pas sélectionner l'objet) et les composants qui
+  permettent de le manipuler ;
+* une **fiche** (`DecorItemDefinition`) dans le **catalogue** : c'est elle qui fait apparaître le bouton dans le menu
+  *Objects* du casque.
+
+### Étape 1 : importer le modèle 3D
+
+1. Dans la fenêtre **Project** (en bas de Unity), aller dans `Assets/_Bauprobe/Decor/Models/` et créer un dossier
+   au nom du décor (clic droit > *Create > Folder*).
+2. **Glisser le fichier** du modèle (avec son `.mtl` pour un OBJ) depuis l'explorateur de fichiers de l'ordinateur
+   dans ce dossier.
+3. Cliquer sur le modèle dans *Project* : dans l'**Inspector** (à droite), onglet *Model*, régler le
+   **Scale Factor** pour que le modèle soit **en mètres** : `0.001` pour les OBJ du bureau d'études (en mm), `1` si
+   le modèle est déjà en mètres. Cliquer **Apply**.
+   Le pivot du modèle peut être n'importe où : le **point d'origine** (bas au centre pour le sol, haut au centre pour
+   le cintre) est calculé automatiquement.
+
+### Étape 2 (méthode rapide) : l'outil « Ajouter au catalogue »
+
+Clic droit sur le modèle dans *Project* > **Bauprobe > Ajouter au catalogue**. L'outil :
+* crée le **prefab** à côté du modèle (`<nom>_Decor.prefab`), avec un **Box Collider** ajusté au modèle ;
+* y recopie les composants de manipulation d'un décor déjà au catalogue (*Rigidbody*, *Grabbable*,
+  *Decor Constraints*, *Interactable Object*…) ;
+* crée la **fiche** dans `Decor/Catalog/` et l'**ajoute au catalogue**.
+
+La Console (*Window > General > Console*) affiche ce qui a été fait. Il reste à ouvrir la fiche créée
+(`Decor/Catalog/<nom>.asset`) pour vérifier le **nom affiché** et choisir **Sol** ou **Cintre** (pour le cintre,
+régler aussi la hauteur d'accroche à l'import). C'est fini : le décor est dans le menu *Objects* au prochain
+*Build And Run*.
+
+### Étape 2 (méthode à la main), si on préfère tout faire soi-même
+
+1. **Faire un prefab** : glisser le modèle depuis *Project* dans la fenêtre **Hierarchy** (à gauche) : il apparaît
+   dans la scène. Le renommer si besoin (clic droit > *Rename*). Puis **le glisser depuis la Hierarchy vers le
+   dossier** `Assets/_Bauprobe/Decor/Prefabs/` dans *Project* ; choisir **Original Prefab** si Unity le demande.
+   Le prefab est créé (icône de cube bleu). Supprimer ensuite l'objet de la Hierarchy (clic droit > *Delete*) : on
+   ne garde que le prefab.
+2. **Ouvrir le prefab** : double-clic dessus dans *Project* (la scène est remplacée par le prefab seul ; flèche
+   **<** en haut de la Hierarchy pour revenir à la scène).
+3. **Ajouter un collider** : cliquer sur l'objet racine du prefab (tout en haut de la Hierarchy), puis dans
+   l'Inspector **Add Component** > taper `Box Collider` > Entrée. Pour l'ajuster au modèle : clic droit sur le titre
+   du composant *Box Collider* (ou ses **⋮**) > **Bauprobe : ajuster aux modèles 3D enfants**. Les dimensions en
+   mètres s'affichent dans la Console (pratique pour vérifier l'échelle par rapport aux plans).
+4. **Composants de manipulation** : le plus simple est de faire un clic droit sur le prefab dans *Project* >
+   **Bauprobe > Ajouter au catalogue** (l'outil ajoute les composants qui manquent et crée la fiche). Sinon, à la
+   main, sur l'objet racine :
+   * *Interaction SDK > Add Grab Interaction* (clic droit sur l'objet dans la Hierarchy) pour la saisie à la main ;
+   * **Add Component** > `Decor Constraints` et `Interactable Object`.
+5. **Fiche** (si elle n'a pas été créée par l'outil) : clic droit dans `Assets/_Bauprobe/Decor/Catalog/` >
+   *Create > Bauprobe > Élément de décor*. Remplir le nom, glisser le prefab dans le champ *Prefab* et choisir
+   **Sol** ou **Cintre**.
+6. **Ajouter la fiche au catalogue** : cliquer sur `Decor/Catalog/DecorCatalog.asset`, puis dans l'Inspector,
+   **+** sous la liste *Items* et glisser la fiche dans la nouvelle ligne.
+
+Penser à **committer le modèle, le prefab et la fiche avec leurs fichiers `.meta`** (voir [CONTRIBUER.md](CONTRIBUER.md)).
 
 ## Le dossier ThirdParty
 

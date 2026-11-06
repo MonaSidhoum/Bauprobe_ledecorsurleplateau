@@ -13,25 +13,123 @@ Ce document contient :
 
 ## 1. Ouvrir le projet sur un nouvel ordinateur
 
-1. Installer **Unity 6000.3.26f1** (Unity Hub) avec **Android Build Support** (+ OpenJDK, Android SDK & NDK).
-2. Une seule fois par ordinateur : `git lfs install`
-3. Cloner le dépôt (voir le [README](../README.md)), puis dans Unity Hub : *Add > Add project from disk* >
-   choisir **la racine du dépôt** (le dossier qui contient `Assets/`, `Packages/`, `ProjectSettings/`).
-4. Attendre l'import (10 à 20 min la première fois).
-5. Ouvrir la **Console** (*Window > General > Console*) : il ne doit pas y avoir d'erreur rouge.
-6. *File > Build Profiles* : vérifier que la plateforme active est **Meta Quest / Android** (sinon *Switch Platform*).
-7. Ouvrir la scène `Assets/_Bauprobe/Scenes/MenuGeneral.unity`.
-8. (Optionnel) *Window > General > Test Runner* > **EditMode** > *Run All* : les 2 tests doivent être verts.
+Les prérequis (Git, Git Bash sur Windows, compte GitHub, Unity Hub) et le clonage sont expliqués pas à pas dans le
+[README](../README.md#installation-et-prérequis). Ensuite :
 
-Si vous aviez un ancien clone (avec le dossier `Unity-MRUtilityKitSample/`), ne le réutilisez pas :
-re-clonez, ou supprimez au moins son dossier `Library/`.
+1. Vérifier que **Unity 6000.3.26f1** est installé avec **Android Build Support** (+ *OpenJDK*, *Android SDK & NDK
+   Tools*). Pour ajouter le module après coup : Unity Hub > *Installations* > ⚙ de la version > *Add modules*.
+2. Dans Unity Hub : *Add > Add project from disk* > choisir **la racine du dépôt** (le dossier qui contient
+   `Assets/`, `Packages/`, `ProjectSettings/`).
+3. Attendre l'import (10 à 20 min la première fois).
+4. Ouvrir la **Console** (*Window > General > Console*) : il ne doit pas y avoir d'erreur rouge.
+5. *File > Build Profiles* : vérifier que la plateforme active est **Meta Quest / Android** (sinon *Switch Platform*).
+6. Ouvrir la scène `Assets/_Bauprobe/Scenes/MenuGeneral.unity` (double-clic dans la fenêtre *Project*).
+7. (Optionnel) *Window > General > Test Runner* > **EditMode** > *Run All* : tous les tests doivent être verts.
+
+### Mettre à jour un clone existant
+
+**Cas normal : `git pull` suffit.** Fermer Unity, puis dans un terminal (Git Bash sur Windows, Terminal sur
+macOS / Linux), dans le dossier du projet :
+
+```bash
+cd ~/Documents/Bauprobe_ledecorsurleplateau
+```
+
+```bash
+git checkout main
+```
+
+```bash
+git pull
+```
+
+```bash
+git lfs pull
+```
+
+Rouvrir le projet dans Unity Hub. (Adapter le chemin de la première commande à l'endroit où vous avez cloné.)
+
+Si `git pull` refuse (« Your local changes would be overwritten… »), c'est que des fichiers du projet ont été
+modifiés sur votre ordinateur. Voir lesquels avec `git status`. S'ils ne servent à rien, les annuler avec
+`git restore .` puis relancer `git pull` ; sinon, les mettre de côté avant (voir l'encadré ci-dessous).
+
+**Très ancien clone** (le projet était alors dans un sous-dossier `Unity-MRUtilityKitSample/`) : le plus simple est
+de **re-cloner**. Ne supprimez pas l'ancien dossier tout de suite : renommez-le, il sert de sauvegarde.
+
+```bash
+cd ~/Documents
+```
+
+```bash
+mv Bauprobe_ledecorsurleplateau Bauprobe_ancien
+```
+
+```bash
+git clone https://github.com/MonaSidhoum/Bauprobe_ledecorsurleplateau
+```
+
+```bash
+cd Bauprobe_ledecorsurleplateau
+```
+
+```bash
+git lfs pull
+```
+
+Puis, dans Unity Hub, retirer l'ancien projet de la liste (*⋮ > Remove project from list*) et ajouter le nouveau
+(*Add > Add project from disk*). Quand tout marche, supprimer `Bauprobe_ancien` à la main.
+
+> **Attention aux fichiers ajoutés seulement sur votre ordinateur** (par exemple des modèles OBJ importés par le
+> Châtelet pour les voir en AR, mais jamais envoyés sur GitHub) : ils **ne sont pas** dans un nouveau clone, et un
+> *Build And Run* fait après re-clonage ne les contiendra plus. Avant de re-cloner, ou si `git pull` refuse :
+> * les retrouver avec `git status` (rubrique *Untracked files*, en rouge) ;
+> * les recopier depuis l'ancien dossier vers le nouveau, **avec leur fichier `.meta`** (par exemple tout le dossier
+>   `Assets/_Bauprobe/Decor/Models/<décor>/`, et les prefabs et fiches du catalogue qui vont avec) ;
+> * ou mieux : les envoyer sur GitHub dans une branche (voir [CONTRIBUER.md](CONTRIBUER.md)) pour que tout le monde
+>   les ait.
+
+Les sauvegardes faites **dans le casque** (implantations, offset du QR code) ne sont pas dans le projet : elles ne
+risquent rien, ni avec `git pull` ni avec un re-clonage. Seule la **désinstallation** de l'appli du casque les efface.
 
 ### Installer sur le casque
 
-1. Casque en **mode développeur** (appli Meta Horizon > Appareils > Paramètres du casque > Mode développeur).
-2. Brancher le casque en USB-C et accepter « Autoriser le débogage USB » dans le casque.
-3. *File > Build Profiles* > *Run Device* = le Quest 3 > **Build And Run**.
-4. Au premier lancement, accepter la permission **« données spatiales »** (sinon : bouton *Permission* du menu).
+**Prérequis** : un compte **Meta** qui est **propriétaire du casque** (un seul propriétaire par casque ; un autre
+compte ne peut pas activer le mode développeur), et un câble **USB-C qui transfère les données**.
+
+1. **Appairer le casque avec l'application mobile Meta Horizon** (appli pour téléphone, iOS ou Android), connectée
+   avec le compte propriétaire du casque.
+2. **Activer le mode développeur** dans l'appli mobile : *Appareils* > le casque > *Paramètres du casque* >
+   *Mode développeur*. Si l'appli le demande, créer une « organisation » développeur (gratuite) sur
+   [developer.meta.com](https://developer.meta.com/) avec le même compte. Redémarrer le casque.
+3. **Faire reconnaître le casque par l'ordinateur.** La première fois, le casque branché en USB-C n'est souvent
+   **pas reconnu** par Unity, et la fenêtre « Autoriser le débogage USB » n'apparaît pas forcément dans le casque.
+   * **Windows** : ouvrir **Meta Horizon Link** (aussi appelé *Meta Quest Link* : c'est le même logiciel ; il est
+     parfois installé en même temps que les outils Meta de Unity), et **appairer le casque** (*Appareils > Ajouter
+     un casque*, en USB). Une fois appairé, il est reconnu par Unity.
+   * **macOS** : Meta Horizon Link n'existe pas ; installer **Meta Quest Developer Hub** (MQDH) et y connecter le
+     casque.
+   * Dans le casque, accepter **« Autoriser le débogage USB »** (cocher *Toujours autoriser depuis cet ordinateur*).
+4. Dans Unity : *File > Build Profiles* > *Run Device* > **Refresh** : le Quest 3 apparaît dans la liste.
+   Le choisir, puis **Build And Run**. L'appli se lance toute seule dans le casque à la fin.
+5. Au premier lancement, accepter la permission **« données spatiales »** (sinon : bouton **Enable Access** du menu
+   général).
+
+Ensuite, l'appli reste installée : on peut la relancer sans ordinateur, depuis la bibliothèque d'applications du
+casque (*Bibliothèque* > *Sources inconnues*).
+
+#### Si ça ne marche pas
+
+* **Le casque n'apparaît pas dans *Run Device*** : vérifier que le câble transfère les données (en essayer un autre),
+  remettre le casque, accepter le débogage USB, puis *Refresh*. Le mode développeur doit être activé (étape 2).
+* **Erreurs d'autorisation avec Meta Horizon Link** (par exemple au moment de choisir le dossier où il installe les
+  applications), tests USB en erreur, petites choses qui ne marchent pas : la version de Meta Horizon Link installée
+  par les outils de Unity peut être défectueuse. Le plus simple est de la **réinstaller à la main** :
+  1. ouvrir la page d'aide de Meta [Installer l'application Meta Quest Link](https://www.meta.com/fr-ca/help/quest/1517439565442928/)
+     et cliquer sur **Télécharger l'application** (étape 1) ;
+  2. lancer le fichier `Setup.exe` téléchargé : il détecte la version déjà installée et propose de la
+     **désinstaller** ;
+  3. une fois la désinstallation terminée, **relancer le même `Setup.exe`** pour réinstaller Meta Horizon Link ;
+  4. appairer de nouveau le casque (étape 3).
 
 ### Offset et hauteur du QR code (dans le casque)
 
@@ -164,7 +262,7 @@ MenuGeneral
 
 | Élément | Où | Rôle |
 |---|---|---|
-| Menu général | `BauprobeMenu` (main gauche) | Permission, suivi QR, **Importer**, **Supprimer tout**, **Sauvegarder**, **Charger** |
+| Menu général | `BauprobeMenu` (main gauche) | Enable Access (permission), suivi QR, **Importer**, **Supprimer tout**, **Sauvegarder**, **Charger** |
 | Catalogue | `Decor/Catalog/DecorCatalog.asset` | Liste des décors importables : `Cube` (test) et 7 éléments du bureau d'études pour *La Cage aux Folles* (`CafePlagePartieA/B`, `LogesPartieA/B`, `SalonPartieA/B`, `Volumecentral`) |
 | Laser | `Laser` (main droite) | Vise un objet ; gâchette = ouvre son menu |
 | Menu objet | `ObjectMenu` (racine) | Supprimer, Couleur, Déplacer, Scale, Rotation, Extrude (ajouté par le code sous Scale). S'affiche à la main gauche, à droite du menu général (au-dessus du « + » s'il est replié). Taille : *Size Multiplier* |
