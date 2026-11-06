@@ -29,6 +29,9 @@ namespace Bauprobe.Manipulation
         [Tooltip("Bouton EXTRUDE (étirer une face). Laissé vide = créé automatiquement en copiant le bouton Scale, " +
                  "juste en dessous de lui : pas besoin de modifier le prefab.")]
         [SerializeField] Button extrudeButton;
+        [Tooltip("Bouton INFO (position, dimensions, volume de l'objet). Laissé vide = créé automatiquement en " +
+                 "copiant le bouton Scale, sous le bouton EXTRUDE : pas besoin de modifier le prefab.")]
+        [SerializeField] Button infoButton;
 
         [Header("Taille")]
         [Tooltip("Agrandit le menu (1 = taille du prefab). 2 = deux fois plus grand.")]
@@ -85,6 +88,11 @@ namespace Bauprobe.Manipulation
             if (!extrudeButton) extrudeButton = CopyButton(scaleButton, "Btn_Extrude", "EXTRUDE");
             if (extrudeButton)
                 extrudeButton.onClick.AddListener(() => { if (Target) Target.BeginManipulation(InteractableObject.Mode.Extrude); });
+
+            // INFO : position, dimensions, hauteur et volume de l'objet, dans un panneau à droite du menu
+            if (!infoButton) infoButton = CopyButton(extrudeButton ? extrudeButton : scaleButton, "Btn_Info", "INFO");
+            if (infoButton)
+                infoButton.onClick.AddListener(() => { if (Target) ObjectInfoPanel.Toggle(Target); });
 
             gameObject.SetActive(false);
         }

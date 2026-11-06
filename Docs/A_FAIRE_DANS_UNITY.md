@@ -292,6 +292,25 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
       du modèle sans déformer ses détails. Pistes : découper le modèle en morceaux (partie fixe + partie extensible),
       ou modifier le maillage (ProBuilder, Read/Write activé sur les modèles importés).
 
+### 3.8 Retours de fin de projet (novembre 2026)
+
+- [x] **Grab à deux mains** (fonction jugée essentielle par Thomas, à garder) : quand on prenait un objet à deux mains,
+      toutes ses modifications (Scale, EXTRUDE…) étaient perdues. Le comportement de saisie de l'Interaction SDK est
+      remplacé par `DecorGrabTransformer` (ajouté par le code, rien dans les prefabs) : on part toujours de la taille
+      et de la position **actuelles** de l'objet ; écarter les mains l'agrandit en gardant ses proportions.
+- [x] **Grab parallèle au sol** : l'objet ne tourne plus à 360° pendant le grab, seulement autour de la verticale
+      (s'il a été penché avec le mode Rotation, il le reste). Réglage *Keep Level* sur `DecorGrabTransformer`.
+- [x] **Sélectionner un objet quand on est dedans** (ex. le module central) : le laser ne touche pas les parois vues de
+      l'intérieur. Si le laser ne vise aucun autre objet, la gâchette sélectionne l'objet dans lequel est la manette
+      (le plus petit, s'il y en a plusieurs).
+- [x] **INFO** (menu objet, en anglais) : position du point d'origine depuis le point zéro (X, Y, Z, même repère que le
+      CSV), angle, dimensions, hauteur (et hauteur du haut de l'objet), volume de la boîte englobante.
+- [x] **Scale en valeur** : pavé numérique à la main gauche pendant le Scale ; on tape un pourcentage de la taille
+      actuelle (ex. `150` = ×1,5) puis APPLY. Le Scale au joystick marche toujours.
+- [x] **EXTRUDE sur un grand objet** (face du haut impossible à viser) : boutons TOP / BOTTOM / LEFT / RIGHT / FRONT /
+      BACK à la main gauche, vus depuis la personne. Marche aussi depuis l'intérieur de l'objet.
+- [ ] **Retirer le cylindre de la bibliothèque** : fait dans la PR #15 (`feature/suppression-cylindre`), à fusionner.
+
 ---
 
 ## 4. Reste à faire (technique)

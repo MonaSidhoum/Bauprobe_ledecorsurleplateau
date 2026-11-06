@@ -5,6 +5,7 @@
         "Bauprobe.Core",
         "Bauprobe.Decor",
         "Oculus.VR",
+        "Oculus.Interaction",
         "UnityEngine.UI",
         "Unity.TextMeshPro"
     ],

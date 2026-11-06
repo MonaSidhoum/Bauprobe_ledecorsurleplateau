@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Bauprobe.Decor;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -38,6 +39,10 @@ namespace Bauprobe.Manipulation
         [Tooltip("Ancre de la manette droite. Laissé vide = RightHandAnchor de l'OVRCameraRig, trouvé automatiquement.")]
         [SerializeField] Transform controllerAnchor;
         [SerializeField, Range(0f, 0.5f)] float stickDeadZone = 0.15f;
+
+        [Tooltip("Remplace la saisie à la main (grab, Interaction SDK) par DecorGrabTransformer : l'objet garde ses " +
+                 "modifications (taille, étirement…) quand on le prend à deux mains, et reste parallèle au sol.")]
+        [SerializeField] bool useDecorGrab = true;
 
         [Header("Couleur")]
         [SerializeField] Color[] palette =
@@ -107,6 +112,60 @@ namespace Bauprobe.Manipulation
                 var rig = FindAnyObjectByType<OVRCameraRig>();
                 if (rig) controllerAnchor = rig.rightHandAnchor;
             }
+
+            // Saisie à la main (grab) : notre comportement à la place de celui du SDK (voir DecorGrabTransformer).
+            // Doit être fait dans Awake, avant le Start du Grabbable.
+            if (useDecorGrab)
+            {
+                DecorGrabTransformer.Install(GetComponent<Oculus.Interaction.Grabbable>());
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // Liste des objets de la scène, et « suis-je à l'intérieur ? »
+        // ------------------------------------------------------------------
+
+        static readonly List<InteractableObject> s_all = new List<InteractableObject>();
+
+        /// <summary>Tous les objets interactifs actifs de la scène.</summary>
+        public static IReadOnlyList<InteractableObject> All => s_all;
+
+        void OnEnable()
+        {
+            if (!s_all.Contains(this)) s_all.Add(this);
+        }
+
+        /// <summary>
+        /// Le point est-il à l'intérieur de l'objet (de sa boîte englobante, qui suit sa rotation) ?
+        /// Sert à sélectionner un objet quand on est dedans (ex. le module central), où le laser ne le touche pas.
+        /// </summary>
+        public bool Encloses(Vector3 worldPoint)
+        {
+            if (!_decor) _decor = GetComponent<DecorInstance>();
+            if (_decor)
+            {
+                var b = _decor.LocalBounds;
+                return b.size != Vector3.zero && b.Contains(transform.InverseTransformPoint(worldPoint));
+            }
+            return GetWorldBounds().Contains(worldPoint);
+        }
+
+        /// <summary>
+        /// L'objet le plus petit qui contient ce point (null s'il n'y en a pas) : quand on est dans un objet
+        /// lui-même posé dans un autre, c'est le plus proche de soi qui est choisi.
+        /// </summary>
+        public static InteractableObject FindEnclosing(Vector3 worldPoint)
+        {
+            InteractableObject best = null;
+            float bestVolume = float.MaxValue;
+            foreach (var o in s_all)
+            {
+                if (o == null || !o.Encloses(worldPoint)) continue;
+                var size = o.GetWorldBounds().size;
+                float volume = size.x * size.y * size.z;
+                if (volume < bestVolume) { best = o; bestVolume = volume; }
+            }
+            return best;
         }
 
         // ------------------------------------------------------------------
@@ -169,12 +228,42 @@ namespace Bauprobe.Manipulation
 
             // En Rotation : bouton « Align with floor » au-dessus de l'objet
             if (mode == Mode.Rotate && allowTilt) LevelButton.Show(this, LevelWithFloor);
+
+            // En Scale : pavé numérique (taper un pourcentage) ; en EXTRUDE : boutons des faces. À la main gauche.
+            if (mode == Mode.Scale) ScaleKeypad.Show(this);
+            if (mode == Mode.Extrude) FacePicker.Show(this);
         }
 
         /// <summary>
         /// Pose l'objet parallèle au sol, sur la face la plus proche de sa position actuelle
         /// (voir DecorInstance.LevelWithStage). Appelé par le bouton « Align with floor ».
         /// </summary>
+        /// <summary>
+        /// Multiplie la taille de l'objet (ex. 1,5 = 150 %), en gardant ses proportions et son point d'origine
+        /// (un objet au sol reste posé). Appelé par le pavé numérique du Scale.
+        /// </summary>
+        public void ApplyScaleFactor(float factor)
+        {
+            if (factor <= 0f || float.IsNaN(factor) || float.IsInfinity(factor)) return;
+            if (!_decor) _decor = GetComponent<DecorInstance>();
+
+            Vector3 newScale = transform.localScale * factor;
+            if (_decor) _decor.SetScaleAroundOrigin(newScale);
+            else transform.localScale = newScale;
+        }
+
+        /// <summary>
+        /// Choisit la face à étirer en mode EXTRUDE (boutons TOP, FRONT… de la main gauche), sans la viser au laser.
+        /// On peut en changer à tout moment.
+        /// </summary>
+        public void SelectExtrudeFace(DecorFace face)
+        {
+            if (CurrentMode != Mode.Extrude || !_decor) return;
+            _extrudeFace = face;
+            _faceSelected = true;
+            FaceHighlight.Show(_decor, face, true);
+        }
+
         public void LevelWithFloor()
         {
             if (!_decor) _decor = GetComponent<DecorInstance>();
@@ -203,10 +292,11 @@ namespace Bauprobe.Manipulation
             if (Time.frameCount != _startFrame)
             {
                 // La gâchette valide, sauf :
-                //  - si le laser vise le bouton « Align with floor » (c'est alors un clic sur le bouton) ;
+                //  - si le laser vise un panneau de la main gauche (Align with floor, pavé du Scale, faces
+                //    d'EXTRUDE, INFO) : c'est alors un clic sur ce panneau ;
                 //  - en EXTRUDE tant qu'aucune face n'est choisie (la gâchette sert alors à choisir la face).
                 bool onLevelButton = controllerAnchor &&
-                                     LevelButton.IsPointerOver(new Ray(controllerAnchor.position, controllerAnchor.forward));
+                                     ManipulationPanels.IsPointerOverAny(new Ray(controllerAnchor.position, controllerAnchor.forward));
                 bool choosingFace = CurrentMode == Mode.Extrude && !_faceSelected;
                 if (!onLevelButton && !choosingFace && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controller)) { EndManipulation(true); return; }
                 if (OVRInput.GetDown(OVRInput.Button.Two, controller)) { EndManipulation(false); return; } // B
@@ -327,8 +417,10 @@ namespace Bauprobe.Manipulation
             if (!_faceSelected)
             {
                 // 1) La face visée par le laser s'éclaire ; gâchette = la choisir.
+                //    (Sauf si le laser vise les boutons des faces de la main gauche : c'est eux qui choisissent.)
                 var ray = new Ray(controllerAnchor.position, controllerAnchor.forward);
-                if (Physics.Raycast(ray, out var hit, 30f, ~0, QueryTriggerInteraction.Ignore)
+                if (!ManipulationPanels.IsPointerOverAny(ray)
+                    && Physics.Raycast(ray, out var hit, 30f, ~0, QueryTriggerInteraction.Ignore)
                     && hit.collider.GetComponentInParent<InteractableObject>() == this
                     && _decor.TryGetFace(hit.point, out var face))
                 {
@@ -368,6 +460,8 @@ namespace Bauprobe.Manipulation
             s_lastEndFrame = Time.frameCount;
             LevelButton.Hide();
             FaceHighlight.Hide();
+            ScaleKeypad.Hide();
+            FacePicker.Hide();
             _faceSelected = false;
 
             // On réaffiche le menu au-dessus de l'objet
@@ -389,7 +483,16 @@ namespace Bauprobe.Manipulation
 
         void OnDisable()
         {
-            if (Active == this) { Active = null; s_lastEndFrame = Time.frameCount; LevelButton.Hide(); FaceHighlight.Hide(); }
+            s_all.Remove(this);
+            if (Active == this)
+            {
+                Active = null;
+                s_lastEndFrame = Time.frameCount;
+                LevelButton.Hide();
+                FaceHighlight.Hide();
+                ScaleKeypad.Hide();
+                FacePicker.Hide();
+            }
             CurrentMode = Mode.None;
         }
     }

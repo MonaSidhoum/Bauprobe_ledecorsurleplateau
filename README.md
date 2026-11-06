@@ -38,6 +38,9 @@ Testé sur Meta Quest 3 :
 * ✅ Les objets se déplacent dans toutes les directions, se tournent et se **basculent** sans s'enfoncer dans le sol
 * ✅ **Étirer une face** (EXTRUDE) : prolonger ou raccourcir un objet par une de ses faces (ex. une porte plus haute)
 * ✅ **Supprimer tout**, **Sauvegarder** / **Charger** une implantation
+* ✅ **Saisie à deux mains** (grab) : l'objet garde ses modifications et reste parallèle au sol ; bouton **INFO** (position,
+  dimensions, hauteur, volume) ; **Scale en %** au pavé numérique ; choix de la face à étirer par boutons ; sélection d'un
+  objet quand on est à l'intérieur
 * ✅ **Tableau CSV** pour le bureau d'études (Excel), écrit à chaque sauvegarde : position X / Y / Z, angle, dimensions, scène ; origine = le point zéro de la scène, au sol (offset du QR code saisi dans le casque). Voir [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#exporter-le-tableau-csv-pour-le-bureau-détudes)
 
 Ce qui reste à faire : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#3-cahier-des-charges--suivi) (suivi du cahier des charges, puis corrections techniques).
@@ -172,10 +175,13 @@ Le détail (premier lancement sur un nouvel ordinateur, installation sur le casq
 |---|---|
 | Sélectionner un objet | viser avec le laser + **gâchette** → le menu de l'objet s'ouvre **à la main gauche**, à droite du menu général (au-dessus du bouton « + » si le menu général est replié) |
 | Déplacer | bouton *Déplacer* : l'objet est accroché à la manette et un seul laser le relie à la manette (celui de Meta est caché pendant le déplacement) ; tourner la manette le déplace (loin si l'objet est loin) ; **joystick haut / bas** = l'éloigner / le rapprocher le long du laser, **gauche / droite** = le décaler sur le côté ; **grip maintenu + joystick haut / bas** = monter / descendre. Plus l'objet est loin, plus il va vite |
-| Agrandir / rétrécir | bouton *Scale*, puis joystick haut / bas (l'objet reste posé au sol, ou accroché par le haut s'il est au cintre) |
+| Agrandir / rétrécir | bouton *Scale*, puis joystick haut / bas (l'objet reste posé au sol, ou accroché par le haut s'il est au cintre) ; ou taper un **pourcentage de la taille actuelle** sur le pavé de la main gauche (ex. `150` = 1,5 fois plus grand) puis **APPLY** |
 | Tourner | bouton *Rotation*, puis joystick gauche / droite = tourner sur lui-même ; joystick haut / bas = basculer vers l'avant / l'arrière ; laser + gâchette sur le bouton **Align with floor** (à la main gauche, à la place du menu objet) = le poser parallèle au sol, sur la face la plus proche (un objet un peu penché se redresse, un objet très penché se couche sur le côté) |
 | Valider / Annuler | **gâchette** / bouton **B** |
-| Étirer une face | bouton *EXTRUDE*, viser une face au laser (bleu) + **gâchette** pour la choisir (orange) ; puis joystick haut / bas = pousser / rentrer la face (grip maintenu = plus lent) ; la longueur s'affiche sur la face, la face opposée ne bouge pas |
+| Étirer une face | bouton *EXTRUDE*, viser une face au laser (bleu) + **gâchette** pour la choisir (orange), **ou** cliquer **TOP / BOTTOM / LEFT / RIGHT / FRONT / BACK** à la main gauche (vus depuis vous ; utile pour la face du haut d'un grand décor) ; puis joystick haut / bas = pousser / rentrer la face (grip maintenu = plus lent) ; la longueur s'affiche sur la face, la face opposée ne bouge pas |
+| Infos de l'objet | bouton *INFO* du menu objet : panneau (en anglais) avec la position depuis le point zéro (X, Y, Z, comme le CSV), l'angle, les dimensions, la hauteur et le volume (boîte englobante) ; *INFO* à nouveau pour le fermer |
+| Prendre à la main (grab) | à une ou deux mains (Interaction SDK) : l'objet **garde sa taille et ses étirements**, et **reste parallèle au sol** (seule la rotation autour de la verticale suit les mains) ; écarter / rapprocher les deux mains = agrandir / rétrécir |
+| Objet dans lequel on se trouve | quand on est **à l'intérieur** d'un objet (ex. le module central), viser « le vide » (aucun autre objet) + **gâchette** sélectionne cet objet |
 | Couleur, Supprimer | boutons du menu de l'objet ; ✕ pour fermer le menu |
 
 ## L'équipe

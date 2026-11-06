@@ -123,6 +123,20 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
    angle en degrés dans le sens inverse des aiguilles d'une montre vu de dessus. Le JSON garde le repère de Unity
    (Y = hauteur). Format détaillé : [A_FAIRE_DANS_UNITY.md](A_FAIRE_DANS_UNITY.md#exporter-le-tableau-csv-pour-le-bureau-détudes).
 
+## Saisie à la main et panneaux de la main gauche (fin de projet)
+
+* **Grab (Interaction SDK)** : chaque décor a un `Grabbable` de Meta. Son comportement par défaut perdait les
+  modifications de l'objet à deux mains et le faisait tourner dans tous les sens. `InteractableObject` le remplace au
+  démarrage (`Awake`) par **`DecorGrabTransformer`** (option *Use Decor Grab*), grâce à
+  `Grabbable.InjectOptionalOneGrabTransformer` / `InjectOptionalTwoGrabTransformer` : rien à changer dans les prefabs.
+  Les calculs (une main, deux mains, rotation autour de la verticale seulement) sont dans **`GrabMath`**, testé.
+* **Sélection depuis l'intérieur** : `InteractableObject` tient la liste des objets de la scène (`All`) et sait si un point
+  est dans sa boîte englobante (`Encloses`). `RightControllerRaySelector` s'en sert quand le laser ne vise rien.
+* **Panneaux de la main gauche** (créés par le code, base commune **`HandPanel`**) : `ScaleKeypad` (Scale en %),
+  `FacePicker` (faces d'EXTRUDE), `ObjectInfoPanel` (INFO, à droite du menu objet). Ils se placent comme le menu objet
+  (`GeneralMenuDock`). Quand le laser les vise, la gâchette clique dessus sans valider la manipulation
+  (`ManipulationPanels.IsPointerOverAny`). Le bouton INFO est ajouté par `ObjectMenu` en copiant le bouton Scale.
+
 ## Code venu de la branche `test/mr-quest3`
 
 Les scripts écrits sur la branche de test ont été intégrés :
