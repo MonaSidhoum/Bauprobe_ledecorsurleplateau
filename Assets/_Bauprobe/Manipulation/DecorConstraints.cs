@@ -8,8 +8,7 @@ namespace Bauprobe.Manipulation
     ///
     /// La saisie (attraper, déplacer, tourner, agrandir à deux mains) est faite par
     /// l'Interaction SDK de Meta (composant Grabbable). Ce script passe juste après
-    /// pour garder l'objet posé au sol, droit, et dans des tailles raisonnables
-    /// (jamais plus de 18 m sur sa plus grande dimension, comme le demande le cahier des charges).
+    /// pour garder l'objet posé au sol et droit. La taille n'est pas limitée.
     ///
     /// "Posé au sol" utilise le point d'origine de l'objet (le bas de ses modèles 3D) :
     /// le pivot du modèle peut donc être n'importe où.
@@ -23,10 +22,6 @@ namespace Bauprobe.Manipulation
         [Tooltip("Empêche de pencher l'objet : il ne peut tourner que sur lui-même. " +
                  "Décoché, on peut aussi le basculer avec le joystick haut / bas en mode Rotation.")]
         [SerializeField] private bool keepUpright = true;
-
-        [Tooltip("Garde les proportions de l'objet quand on l'agrandit ou le rétrécit (un objet étiré par une face " +
-                 "reste étiré). Décoché : chaque axe est limité séparément.")]
-        [SerializeField] private bool uniformScale = true;
 
         private DecorInstance _instance;
 
@@ -51,10 +46,6 @@ namespace Bauprobe.Manipulation
                 t.localRotation = Quaternion.Euler(0f, t.localEulerAngles.y, 0f);
             }
 
-            // La taille est corrigée avant de reposer l'objet au sol, sinon il s'enfoncerait
-            // (ou flotterait) d'une frame à chaque correction.
-            ClampScale(t);
-
             if (keepOnFloor)
             {
                 KeepOnFloor(t);
@@ -78,50 +69,6 @@ namespace Bauprobe.Manipulation
 
             // Le point le plus bas de l'objet (même s'il est penché) touche le plateau.
             _instance.RestOnStage();
-        }
-
-        private void ClampScale(Transform t)
-        {
-            // Limites de la fiche du catalogue (réglables par décor) ; la limite de 18 m passe en plus, plus bas.
-            var min = _instance != null ? _instance.MinScale : DecorLimits.DefaultMinScale;
-            var max = _instance != null ? _instance.MaxScale : DecorLimits.DefaultMaxScale;
-
-            var s = t.localScale;
-            Vector3 clamped;
-            if (uniformScale)
-            {
-                // On garde les proportions actuelles (au lieu de forcer x = y = z), sinon l'étirement
-                // d'une face (bouton EXTRUDE) serait annulé à chaque image.
-                clamped = DecorLimits.ClampScaleToRange(s, min, max);
-            }
-            else
-            {
-                clamped = new Vector3(
-                    Mathf.Clamp(s.x, min, max),
-                    Mathf.Clamp(s.y, min, max),
-                    Mathf.Clamp(s.z, min, max));
-            }
-
-            // La limite de 18 m passe avant les limites de la fiche.
-            if (_instance != null)
-            {
-                clamped = _instance.ClampScaleToMaxSize(clamped);
-            }
-
-            if (clamped == s)
-            {
-                return;
-            }
-
-            // Corriger la taille sans déplacer le point d'origine (le bas reste au sol, le haut reste au cintre).
-            if (_instance != null)
-            {
-                _instance.SetScaleAroundOrigin(clamped);
-            }
-            else
-            {
-                t.localScale = clamped;
-            }
         }
     }
 }

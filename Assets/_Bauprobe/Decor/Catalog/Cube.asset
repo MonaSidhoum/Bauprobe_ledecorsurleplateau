@@ -16,5 +16,3 @@ MonoBehaviour:
   displayName: Cube
   thumbnail: {fileID: 0}
   prefab: {fileID: 4100876796635234277, guid: 067abb7e1361e004ab32f52cfe353223, type: 3}
-  minScale: 0.1
-  maxScale: 10

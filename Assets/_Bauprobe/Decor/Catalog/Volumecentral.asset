@@ -16,5 +16,3 @@ MonoBehaviour:
   displayName: VolumeCentral
   thumbnail: {fileID: 0}
   prefab: {fileID: 4100876796635234277, guid: 89d0bb5ccf2d5bf438b326323ce27faf, type: 3}
-  minScale: 0.5
-  maxScale: 2
