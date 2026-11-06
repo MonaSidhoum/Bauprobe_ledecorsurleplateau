@@ -404,7 +404,8 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 - [x] **INFO** (menu objet, en anglais) : position du point d'origine depuis le point zéro (X, Y, Z, même repère que le
       CSV), angle, dimensions, hauteur (et hauteur du haut de l'objet), volume de la boîte englobante.
 - [x] **Scale en valeur** : pavé numérique à la main gauche pendant le Scale ; on tape un pourcentage de la taille
-      actuelle (ex. `150` = ×1,5) puis APPLY. Le Scale au joystick marche toujours.
+      **d'origine** du décor (celle de son prefab) puis APPLY : `100` = retour à la taille d'origine (annule aussi les
+      étirements), `150` = 1,5 fois la taille d'origine. Le Scale au joystick marche toujours.
 - [x] **EXTRUDE sur un grand objet** (face du haut impossible à viser) : boutons TOP / BOTTOM / LEFT / RIGHT / FRONT /
       BACK à la main gauche, vus depuis la personne. Marche aussi depuis l'intérieur de l'objet.
 - [x] **Retirer le cylindre de la bibliothèque** : fait (PR #15, `feature/suppression-cylindre`).

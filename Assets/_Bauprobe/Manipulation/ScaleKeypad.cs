@@ -6,7 +6,8 @@ namespace Bauprobe.Manipulation
 {
     /// <summary>
     /// Pavé numérique affiché à la main gauche pendant le mode Scale (en anglais) :
-    /// on tape un pourcentage de la taille ACTUELLE puis APPLY. Ex. 150 = 1,5 fois plus grand, 50 = deux fois plus petit.
+    /// on tape un pourcentage de la taille D'ORIGINE du décor (celle de son prefab) puis APPLY.
+    /// Ex. 100 = retour à la taille d'origine, 150 = 1,5 fois la taille d'origine, 50 = moitié.
     /// Le Scale au joystick marche toujours en même temps. Gâchette ailleurs = valider, B = annuler (y compris
     /// ce qui a été appliqué avec le pavé).
     /// </summary>
@@ -76,8 +77,8 @@ namespace Bauprobe.Manipulation
                 return;
             }
 
-            _target.ApplyScaleFactor(percent / 100f);
-            _status.text = "Applied: x" + (percent / 100f).ToString("0.###", CultureInfo.InvariantCulture);
+            _target.ApplyScalePercentOfOriginal(percent);
+            _status.text = "Applied: " + percent.ToString("0.##", CultureInfo.InvariantCulture) + " % of original";
             _input = "";
         }
 
@@ -97,29 +98,31 @@ namespace Bauprobe.Manipulation
 
         static ScaleKeypad Build()
         {
-            // 36 x 56 cm (1 unité = 1 mm)
-            var panel = Create<ScaleKeypad>("ScaleKeypad", new Vector2(360f, 560f), 0.001f, clickable: true);
+            // 36 x 52 cm (1 unité = 1 mm). Les textes sont en haut : le bas du panneau peut passer
+            // près du menu général sans rien cacher d'important.
+            var panel = Create<ScaleKeypad>("ScaleKeypad", new Vector2(360f, 520f), 0.001f, clickable: true);
 
-            panel.AddText("<b>SCALE</b>\n% of current size (150 = x1.5)", 20f, 12f, 320f, 70f, 22f);
-            panel._display = panel.AddText("", 20f, 86f, 320f, 56f, 40f, TextAlignmentOptions.Right);
+            panel.AddText("<b>SCALE</b>  % of original size (100 = original)
+" +
+                          "<size=15>Joystick still scales.  Trigger elsewhere = done,  B = cancel</size>",
+                          20f, 10f, 320f, 70f, 20f);
+            panel._display = panel.AddText("", 20f, 80f, 320f, 50f, 38f, TextAlignmentOptions.Right);
+            panel._status = panel.AddText("", 20f, 132f, 320f, 32f, 18f, TextAlignmentOptions.Center);
 
             // Touches : 7 8 9 / 4 5 6 / 1 2 3 / . 0 ⌫
             string[] keys = { "7", "8", "9", "4", "5", "6", "1", "2", "3", ".", "0", "<" };
-            const float size = 96f, gap = 12f, left = 24f, top = 150f;
+            const float size = 96f, height = 60f, gap = 10f, left = 27f, top = 168f;
             for (int i = 0; i < keys.Length; i++)
             {
                 string key = keys[i];
                 float x = left + (i % 3) * (size + gap);
-                float y = top + (i / 3) * (70f + gap);
-                if (key == "<") panel.AddButton("DEL", x, y, size, 70f, panel.Backspace, fontSize: 26f);
-                else panel.AddButton(key, x, y, size, 70f, () => panel.Type(key), fontSize: 34f);
+                float y = top + (i / 3) * (height + gap);
+                if (key == "<") panel.AddButton("DEL", x, y, size, height, panel.Backspace, fontSize: 24f);
+                else panel.AddButton(key, x, y, size, height, () => panel.Type(key), fontSize: 32f);
             }
 
-            float bottom = top + 4 * (70f + gap);
-            panel.AddButton("APPLY", left, bottom, 3 * size + 2 * gap, 64f, panel.Apply, accent: true);
-            panel._status = panel.AddText("", 20f, bottom + 70f, 320f, 40f, 20f, TextAlignmentOptions.Center);
-            panel.AddText("Joystick still scales.  Trigger elsewhere = done,  B = cancel",
-                          20f, bottom + 104f, 320f, 50f, 16f, TextAlignmentOptions.Center);
+            float bottom = top + 4 * (height + gap);
+            panel.AddButton("APPLY", left, bottom, 3 * size + 2 * gap, 60f, panel.Apply, accent: true);
             return panel;
         }
     }

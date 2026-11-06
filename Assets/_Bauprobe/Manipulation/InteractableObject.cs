@@ -84,6 +84,7 @@ namespace Bauprobe.Manipulation
 
         Renderer[] _renderers;
         DecorInstance _decor;
+        Vector3 _originalScale = Vector3.one;
         int _colorIndex;
         int _startFrame;
 
@@ -103,6 +104,7 @@ namespace Bauprobe.Manipulation
         void Awake()
         {
             _renderers = GetComponentsInChildren<Renderer>();
+            _originalScale = transform.localScale; // taille d'origine si l'objet n'a pas de fiche de catalogue
             _decor = GetComponent<DecorInstance>();
             if (Camera.main) _head = Camera.main.transform;
 
@@ -244,6 +246,25 @@ namespace Bauprobe.Manipulation
         /// Pose l'objet parallèle au sol, sur la face la plus proche de sa position actuelle
         /// (voir DecorInstance.LevelWithStage). Appelé par le bouton « Align with floor ».
         /// </summary>
+        /// <summary>
+        /// Donne à l'objet un pourcentage de sa taille D'ORIGINE (celle de son prefab dans le catalogue) :
+        /// 100 = taille d'origine (annule aussi les étirements d'EXTRUDE), 150 = 1,5 fois, 50 = moitié.
+        /// Le point d'origine ne bouge pas (un objet au sol reste posé). Appelé par le pavé numérique du Scale.
+        /// </summary>
+        public void ApplyScalePercentOfOriginal(float percent)
+        {
+            if (percent <= 0f || float.IsNaN(percent) || float.IsInfinity(percent)) return;
+            if (!_decor) _decor = GetComponent<DecorInstance>();
+
+            Vector3 original = _decor != null && _decor.Definition != null && _decor.Definition.Prefab != null
+                ? _decor.Definition.Prefab.transform.localScale
+                : _originalScale;
+            Vector3 newScale = original * (percent / 100f);
+
+            if (_decor) _decor.SetScaleAroundOrigin(newScale);
+            else transform.localScale = newScale;
+        }
+
         /// <summary>
         /// Multiplie la taille de l'objet (ex. 1,5 = 150 %), en gardant ses proportions et son point d'origine
         /// (un objet au sol reste posé). Appelé par le pavé numérique du Scale.

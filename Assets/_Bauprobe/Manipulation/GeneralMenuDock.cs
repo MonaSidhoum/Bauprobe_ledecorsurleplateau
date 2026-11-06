@@ -80,6 +80,8 @@ namespace Bauprobe.Manipulation
             Vector2 pivotOffset = (panel.pivot - new Vector2(0.5f, 0.5f)) * panelSize;
             panel.position = menu.TransformPoint(new Vector3(center.x + pivotOffset.x, center.y + pivotOffset.y, 0f));
             panel.rotation = menu.rotation;
+            // 1 cm devant le menu général (vers la personne), pour qu'il ne cache jamais une partie du panneau
+            panel.position -= menu.forward * 0.01f;
             return true;
         }
 
