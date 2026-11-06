@@ -34,8 +34,22 @@ namespace Bauprobe.Tests
         public void Ligne_EnRepereDuPlan_AvecVirgule()
         {
             var lines = LayoutCsv.ToCsv(Sample()).Split(new[] { "\r\n" }, System.StringSplitOptions.RemoveEmptyEntries);
-            // X ; Y (profondeur) ; Z (hauteur) ; Rotation ; Tilt X ; Tilt Y ; Width ; Depth ; Height ; Scale width / depth / height
-            Assert.That(lines[1], Is.EqualTo("Scène 1;cube;Cube;Floor;Bottom centre;1;2;0,5;90;0;0;2;1;3;1;2;1,5"));
+            // X ; Y (profondeur) ; Z (hauteur) ; Rotation ; Tilt X ; Tilt Y ; Width ; Depth ; Height ; Scale width / depth / height ;
+            // Color (vide : couleur du modèle)
+            Assert.That(lines[1], Is.EqualTo("Scène 1;cube;Cube;Floor;Bottom centre;1;2;0,5;90;0;0;2;1;3;1;2;1,5;"));
+        }
+
+        [Test]
+        public void Couleur_EnHexadecimal()
+        {
+            var entry = Sample().items[0];
+            Assert.That(LayoutCsv.ColorCell(entry), Is.EqualTo(""), "couleur du modèle : case vide");
+
+            entry.hasColor = true;
+            entry.color = new Color32(0xB2, 0x3A, 0x3A, 255); // rouge théâtre de la palette
+            var row = LayoutCsv.Row("S", entry);
+            Assert.That(row, Has.Length.EqualTo(LayoutCsv.Header.Length));
+            Assert.That(row[row.Length - 1], Is.EqualTo("#B23A3A"));
         }
 
         [Test]
