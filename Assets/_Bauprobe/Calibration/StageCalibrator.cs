@@ -21,9 +21,6 @@ namespace Bauprobe.Calibration
         [SerializeField] private Transform stageRoot;
 
         [Header("Réglages")]
-        [Tooltip("Texte contenu dans le QR code du plateau. Vide = accepte n'importe quel QR code.")]
-        [SerializeField] private string expectedPayload = "";
-
         [Tooltip("Si coché, le décor ne bouge plus après la première détection (évite les petits sauts). " +
                  "Appeler Unlock() pour recaler.")]
         [SerializeField] private bool lockAfterFirstDetection = true;
@@ -96,7 +93,8 @@ namespace Bauprobe.Calibration
 
         private void OnTrackableAdded(MRUKTrackable trackable)
         {
-            if (trackable.TrackableType != OVRAnchor.TrackableType.QRCode || !MatchesPayload(trackable))
+            // N'importe quel QR code est accepté : le texte qu'il contient n'est pas vérifié.
+            if (trackable.TrackableType != OVRAnchor.TrackableType.QRCode)
             {
                 return;
             }
@@ -118,11 +116,6 @@ namespace Bauprobe.Calibration
             // On ne détruit pas le décor : il reste là où il était.
             _trackedQr = null;
             Debug.Log("QR perdu : décor conservé.");
-        }
-
-        private bool MatchesPayload(MRUKTrackable trackable)
-        {
-            return string.IsNullOrEmpty(expectedPayload) || trackable.MarkerPayloadString == expectedPayload;
         }
 
         /// <summary>
