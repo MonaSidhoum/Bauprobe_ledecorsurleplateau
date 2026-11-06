@@ -19,7 +19,8 @@ namespace Bauprobe.Persistence
     ///   Tilt X (°) + = le haut de l'objet penche vers la salle ; Tilt Y (°) + = le haut penche vers la droite
     ///   (0 tant que l'objet n'est pas penché) ;
     ///   Width / Depth / Height (m) = taille réelle de l'objet le long de ses propres axes (avant rotation) ;
-    ///   Scale = facteur appliqué au modèle 3D le long de ces mêmes axes.
+    ///   Scale = facteur appliqué au modèle 3D le long de ces mêmes axes ;
+    ///   Color = couleur choisie avec le bouton Color, en code hexadécimal RVB (#E0E0E0) ; vide = couleur du modèle.
     /// </summary>
     public static class LayoutCsv
     {
@@ -38,6 +39,7 @@ namespace Bauprobe.Persistence
             "Tilt Y (deg) [+ top leans right]",
             "Width (m)", "Depth (m)", "Height (m)",
             "Scale width", "Scale depth", "Scale height",
+            "Color (hex RGB) [empty = original model colour]",
         };
 
         /// <summary>
@@ -80,8 +82,13 @@ namespace Bauprobe.Persistence
                 Number(angles.z, 2, decimalComma), Number(angles.x, 2, decimalComma), Number(angles.y, 2, decimalComma),
                 Number(Mathf.Abs(size.x), 3, decimalComma), Number(Mathf.Abs(size.z), 3, decimalComma), Number(Mathf.Abs(size.y), 3, decimalComma),
                 Number(scale.x, 4, decimalComma), Number(scale.z, 4, decimalComma), Number(scale.y, 4, decimalComma),
+                ColorCell(entry),
             };
         }
+
+        /// <summary>Couleur choisie en code hexadécimal RVB (« #B23A3A »), ou case vide si l'objet a la couleur de son modèle.</summary>
+        public static string ColorCell(LayoutEntry entry) =>
+            entry.hasColor ? "#" + ColorUtility.ToHtmlStringRGB(entry.color) : "";
 
         /// <summary>Vrai pour un élément accroché au cintre (« Cintre » dans la sauvegarde).</summary>
         private static bool IsFlown(string attachment) =>

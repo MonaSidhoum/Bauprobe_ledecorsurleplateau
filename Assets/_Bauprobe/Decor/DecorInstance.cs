@@ -77,6 +77,33 @@ namespace Bauprobe.Decor
         /// <summary>Taille réelle de l'objet sur le plateau, en mètres.</summary>
         public Vector3 StageSize => Vector3.Scale(LocalSize, transform.localScale);
 
+        // URP utilise _BaseColor, le pipeline intégré (Standard) utilise _Color.
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        private static readonly int ColorId = Shader.PropertyToID("_Color");
+
+        /// <summary>
+        /// Couleur choisie avec le bouton Color du menu objet ; null = couleur d'origine du modèle.
+        /// Elle est sauvegardée avec l'implantation et remise au chargement.
+        /// </summary>
+        public Color? CustomColor { get; private set; }
+
+        /// <summary>
+        /// Colore tout l'objet (tous ses modèles 3D) et retient la couleur pour la sauvegarde.
+        /// Seul cet objet change : ses matériaux sont copiés (Renderer.materials), les autres objets gardent leur couleur.
+        /// </summary>
+        public void SetColor(Color color)
+        {
+            CustomColor = color;
+            foreach (var r in GetComponentsInChildren<Renderer>())
+            {
+                foreach (var mat in r.materials)
+                {
+                    if (mat.HasProperty(BaseColorId)) mat.SetColor(BaseColorId, color);
+                    if (mat.HasProperty(ColorId)) mat.SetColor(ColorId, color);
+                }
+            }
+        }
+
         /// <summary>À rappeler si les modèles 3D de l'objet changent.</summary>
         public void RecomputeOrigin()
         {

@@ -48,6 +48,32 @@ namespace Bauprobe.Tests
         }
 
         [Test]
+        public void Couleur_EstGardee()
+        {
+            var data = new LayoutData();
+            data.items.Add(new LayoutEntry { itemId = "cube", hasColor = true, color = new Color(0.7f, 0.2f, 0.2f, 1f) });
+            data.items.Add(new LayoutEntry { itemId = "table" }); // couleur d'origine
+
+            var back = LayoutSerializer.FromJson(LayoutSerializer.ToJson(data));
+
+            Assert.That(back.items[0].hasColor, Is.True);
+            Assert.That(back.items[0].color, Is.EqualTo(new Color(0.7f, 0.2f, 0.2f, 1f)));
+            Assert.That(back.items[1].hasColor, Is.False);
+        }
+
+        [Test]
+        public void AncienneSauvegarde_SansCouleur_GardeLaCouleurDuModele()
+        {
+            const string json = "{\"version\":3,\"items\":[{\"itemId\":\"cube\"," +
+                                "\"position\":{\"x\":0,\"y\":0,\"z\":0},\"rotation\":{\"x\":0,\"y\":0,\"z\":0,\"w\":1}," +
+                                "\"scale\":{\"x\":1,\"y\":1,\"z\":1}}]}";
+
+            var back = LayoutSerializer.FromJson(json);
+
+            Assert.That(back.items[0].hasColor, Is.False);
+        }
+
+        [Test]
         public void AncienneSauvegarde_SansOffset_SeRelit()
         {
             const string json = "{\"version\":2,\"savedAt\":\"2026-10-01T10:00:00\",\"items\":[{\"itemId\":\"cube\"," +

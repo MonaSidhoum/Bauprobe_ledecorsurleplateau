@@ -231,6 +231,7 @@ et rappellent le sens des valeurs (vu depuis la salle) :
 | Tilt Y (deg) [+ top leans right] | Objet penché sur le côté : positif = le haut penche vers cour. 0 si l'objet est droit |
 | Width / Depth / Height (m) | Taille réelle de l'objet, le long de ses propres axes (avant rotation) |
 | Scale width / depth / height | Facteur appliqué au modèle 3D (1 = taille d'origine) |
+| Color (hex RGB) [empty = original model colour] | Couleur choisie avec le bouton Color, en code hexadécimal RVB (ex. `#B23A3A` = rouge théâtre, `#E0E0E0` = gris des décors) ; case vide = couleur d'origine du modèle |
 
 Pour un objet à la fois penché et tourné : on le penche (Tilt Y, puis Tilt X), puis on le tourne de *Rotation*
 autour de la verticale. À l'import, un objet est tourné vers la personne qui l'importe : sa *Rotation* dépend donc de
@@ -449,7 +450,10 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 
 ### Petites fonctionnalités
 
-- [ ] **Couleur** non sauvegardée : la sauvegarde garde la position, la rotation et la taille, pas la couleur.
+- [x] **Couleur sauvegardée** : la couleur choisie avec le bouton Color est gardée dans la sauvegarde (format version 4)
+      et remise quand on recharge l'implantation. Les anciennes sauvegardes se rechargent avec la couleur d'origine.
+      Elle est aussi écrite dans le tableau CSV (dernière colonne, *Color*, en code hexadécimal ; vide = couleur
+      d'origine du modèle).
 - [x] **QR code pas au sol** : la distance entre le bas du QR code et le sol se saisit dans le casque (écran
       « QR code offset », avec la position du QR code par rapport au point zéro). Le repère du plateau est posé
       au vrai sol, à la verticale du QR code.
