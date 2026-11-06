@@ -129,7 +129,7 @@ Documentation :
 Avant tout, il faut avoir un compte GitHub et utiliser un ordinateur bien configuré (avec git bash sur Windows). 
 Si besoin, voilà un tutoriel pas à pas pour installer GitHub et configurer l'ordinateur (section "git (et bash sur Windows)" : [Installation de Git](https://intro.info-mines.paris/1-1-installations/)
 
-1. Installer Unity Hub via ce tutoriel : [Tuto installation](https://docs.unity.com/en-us/hub/install-hub)
+1. Installer Unity Hub via ce tutoriel : [Installation Unity Hub](https://docs.unity.com/en-us/hub/install-hub)
 2. Installer **Unity 6000.3.26f1** (via Unity Hub) avec le module **Android Build Support** (Sur Unity Hub : **Installations > Installer l'éditeur > Archive > Unity version 6000.3.26f1 + cocher Android Build Support** pour installer le module)
 4. Installer **Git LFS** (une seule fois par ordinateur) : dans le terminal, taper `git lfs install`
 5. Toujours depuis le terminal, cloner le projet :
