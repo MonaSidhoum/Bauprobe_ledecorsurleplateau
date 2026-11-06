@@ -77,8 +77,8 @@ C'est voulu : ça évite que tout le code finisse par dépendre de tout.
 ## Comment ça marche, étape par étape
 
 1. **Au démarrage**, MRUK (le kit de Meta) cherche les QR codes.
-2. **`StageCalibrator`** reçoit l'événement « QR code trouvé ». Si le texte du QR code correspond
-   à `expectedPayload` (laisser vide pour accepter n'importe lequel), il déplace `QRAnchor` dessus.
+2. **`StageCalibrator`** reçoit l'événement « QR code trouvé » et déplace `QRAnchor` dessus
+   (n'importe quel QR code est accepté, son texte n'est pas vérifié).
    Le repère est gardé **horizontal** (option `keepLevel`) : seul le « cap » du QR code compte.
    Par défaut, il **fige** ensuite la position (`lockAfterFirstDetection`) pour éviter que le décor tremble.
    Les méthodes `Lock()` / `Unlock()` peuvent être branchées sur des boutons.

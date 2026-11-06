@@ -355,5 +355,5 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 - [x] **QR code pas au sol** : la distance entre le bas du QR code et le sol se saisit dans le casque (écran
       « QR code offset », avec la position du QR code par rapport au point zéro). Le repère du plateau est posé
       au vrai sol, à la verticale du QR code.
-- [ ] **QR code du plateau** : choisir le texte du QR code officiel et le mettre dans *Expected Payload*
-      (Stage Calibrator), pour ignorer les autres QR codes présents dans la salle.
+- [x] **QR code du plateau** : pas de texte imposé (réglage *Expected Payload* supprimé) : n'importe quel QR code
+      sert de repère. Ne poser qu'un seul QR code visible sur le plateau.

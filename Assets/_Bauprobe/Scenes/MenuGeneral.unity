@@ -2021,7 +2021,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Bauprobe.Calibration::Bauprobe.Calibration.StageCalibrator
   qrAnchor: {fileID: 507513381}
   stageRoot: {fileID: 1291867138}
-  expectedPayload: 
   lockAfterFirstDetection: 1
   keepLevel: 1
 --- !u!1 &508190898
