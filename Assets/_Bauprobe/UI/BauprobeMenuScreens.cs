@@ -17,8 +17,8 @@ namespace Bauprobe.UI
     ///   2. un écran "Décors" (liste d'objets paginée) à la place du menu principal quand on clique sur Importer ;
     ///   3. un écran "Sauvegarder" : « + Nouvelle sauvegarde » (avec un nom) ou écraser une sauvegarde existante ;
     ///   4. un écran "Charger" : la liste de toutes les sauvegardes, un clic recharge l'implantation ;
-    ///   5. un écran "Offset du QR code" : où est le QR code par rapport au point zéro de la scène (X, Y) et
-    ///      la hauteur de son bord du bas au-dessus du sol, saisis au pavé numérique. Il s'ouvre au lancement (pré-rempli avec le dernier offset) et depuis la
+    ///   5. un écran "QR code offset" (en anglais) : où est le QR code par rapport au point zéro de la scène (X, Y)
+    ///      et la hauteur de son bord du bas au-dessus du sol, saisis au pavé numérique. Il s'ouvre au lancement (pré-rempli avec le dernier offset) et depuis la
     ///      première ligne de l'écran "Charger". L'offset est gardé sur le casque (QrOffsetStore) : pas de Build.
     ///
     /// A mettre sur la RACINE du prefab BauprobeMenu (l'objet qui contient tous les boutons).
@@ -84,16 +84,26 @@ namespace Bauprobe.UI
         [SerializeField] private string keyShiftLabel = "Shift";
         [SerializeField] private string keyOkLabel = "OK";
 
-        [Header("Offset du QR code")]
-        [Tooltip("Coché : l'écran « Offset du QR code » s'ouvre au lancement, pré-rempli avec le dernier offset " +
+        [Header("Écran « QR code offset » (en anglais)")]
+        [Tooltip("Coché : l'écran « QR code offset » s'ouvre au lancement, pré-rempli avec le dernier offset " +
                  "(il suffit de valider si le QR code n'a pas bougé).")]
         [SerializeField] private bool askQrOffsetAtStartup = true;
-        [SerializeField] private string offsetTitle = "Offset du QR code";
-        [Tooltip("Première ligne de l'écran Charger. {0} = offset actuel.")]
-        [SerializeField] private string offsetRowLabel = "Offset QR : {0}";
-        [SerializeField] private string offsetValidateLabel = "Valider";
-        [Tooltip("Noms des 3 champs : X (vers cour), Y (vers le lointain), hauteur du bas du QR code au-dessus du sol.")]
-        [SerializeField] private string[] offsetFieldNames = { "X (m)", "Y (m)", "Hauteur QR (m)" };
+        [SerializeField] private string qrOffsetTitle = "QR code offset";
+        [Tooltip("Ligne d'explication sous le titre.")]
+        [SerializeField] private string qrOffsetHint = "Where is the QR code from the stage zero? (as seen facing the QR code)";
+        [Tooltip("Première ligne de l'écran Charger. {0} = X, {1} = Y, {2} = hauteur.")]
+        [SerializeField] private string qrOffsetRowLabel = "QR offset: X {0} / Y {1} / H {2}";
+        [SerializeField] private string qrOffsetConfirmLabel = "Confirm";
+        [SerializeField] private string qrOffsetBackLabel = "Back";
+        [SerializeField] private string qrOffsetDeleteLabel = "Del";
+        [Tooltip("Les 3 champs, avec le sens des valeurs positives / négatives, vu par quelqu'un qui fait face au QR code : " +
+                 "X (+ droite = cour), Y (+ loin = lointain), hauteur du bas du QR code au-dessus du sol.")]
+        [SerializeField] private string[] qrOffsetFieldNames =
+        {
+            "X (m)   + right / - left",
+            "Y (m)   + far / - near",
+            "QR height (m)   bottom edge to floor",
+        };
 
         [Header("Sauvegardes")]
         [Tooltip("Nombre maximum de sauvegardes. Au-delà, il faut en supprimer une.")]
@@ -170,6 +180,7 @@ namespace Bauprobe.UI
         private string _emptyText;
         private System.Func<List<Row>> _provider;
         private System.Action _back;
+        private string _backText;   // texte du bouton Retour de cet écran (null = backLabel)
         private List<Row> _rows = new List<Row>();
         private int _page;
         private int _perPage = 1;
@@ -200,6 +211,7 @@ namespace Bauprobe.UI
         private const int OffsetFieldCount = 3;
         private const int MaxNumberLength = 8;
         private const string SignKey = "+/-";
+        private const string DecimalKey = ".";   // écran en anglais : point décimal (1.25)
         private readonly string[] _offsetTexts = new string[OffsetFieldCount];
         private readonly TMP_Text[] _offsetLabels = new TMP_Text[OffsetFieldCount];
         private int _offsetField;
@@ -275,7 +287,7 @@ namespace Bauprobe.UI
             OpenScreen(MenuScreen.Load, loadTitle, noSaveLabel, BuildLoadRows, CloseToMain);
         }
 
-        /// <summary>Ouvre l'écran « Offset du QR code » (à brancher sur un bouton si besoin).</summary>
+        /// <summary>Ouvre l'écran « QR code offset » (à brancher sur un bouton si besoin).</summary>
         public void OpenQrOffset() => OpenQrOffset(CloseToMain);
 
         /// <summary>Revient au menu principal.</summary>
@@ -418,8 +430,7 @@ namespace Bauprobe.UI
             var offset = QrOffsetStore.Current;
             rows.Add(new Row
             {
-                label = string.Format(offsetRowLabel,
-                    FormatNumber(offset.x) + " ; " + FormatNumber(offset.y) + " ; h " + FormatNumber(offset.height)),
+                label = string.Format(qrOffsetRowLabel, FormatNumber(offset.x), FormatNumber(offset.y), FormatNumber(offset.height)),
                 accent = true,
                 onClick = () => OpenQrOffset(OpenLoad)
             });
@@ -691,7 +702,7 @@ namespace Bauprobe.UI
             _offsetReplace = true;
             _offsetDone = done;
 
-            OpenScreen(MenuScreen.Offset, offsetTitle, "", () => new List<Row>(), done, BuildOffsetBody);
+            OpenScreen(MenuScreen.Offset, qrOffsetTitle, "", () => new List<Row>(), done, BuildOffsetBody, qrOffsetBackLabel);
         }
 
         private void BuildOffsetBody(RectTransform body)
@@ -700,9 +711,19 @@ namespace Bauprobe.UI
             float pad = Mathf.Min(W, _pickerRoot.sizeDelta.y) * 0.05f;
             float areaW = W - 2f * pad;
             float kgap = Mathf.Min(_itemH * 0.12f, areaW * 0.012f);
-            const int lines = OffsetFieldCount + 4 + 1;   // champs + 4 rangées du pavé + Valider
+            const int lines = 1 + OffsetFieldCount + 4 + 1;   // explication + champs + 4 rangées du pavé + Confirm
             float keyH = Mathf.Min(_itemH * 1.05f, (_listH - (lines - 1) * kgap) / lines);
             float y = _listTop;
+
+            // Explication sous le titre
+            if (!string.IsNullOrEmpty(qrOffsetHint))
+            {
+                var hint = NewRect("Explication", body);
+                SetTopCenter(hint, y, new Vector2(areaW, keyH));
+                var hintText = AddText(hint.gameObject, qrOffsetHint, accentColor, keyH * 0.5f, FontStyles.Italic);
+                hintText.textWrappingMode = TextWrappingModes.Normal;   // phrase longue : sur deux lignes si besoin
+            }
+            y += keyH + kgap;
 
             // Les 3 champs : celui en cours de saisie a un cadre, un clic sur un autre le sélectionne.
             float fieldW = Mathf.Min(W * itemWidthRatio, areaW);
@@ -724,7 +745,7 @@ namespace Bauprobe.UI
                 new[] { "7", "8", "9" },
                 new[] { "4", "5", "6" },
                 new[] { "1", "2", "3" },
-                new[] { SignKey, "0", ",", keyDeleteLabel },
+                new[] { SignKey, "0", DecimalKey, qrOffsetDeleteLabel },
             };
             foreach (var keys in pad4)
             {
@@ -739,15 +760,15 @@ namespace Bauprobe.UI
                 y += keyH + kgap;
             }
 
-            // Valider
+            // Confirm
             var ok = NewRect("Valider", body);
             SetTopCenter(ok, y, new Vector2(3f * keyW + 2f * kgap, keyH));
-            CreateOutlinedButton(ok, offsetValidateLabel, keyH, ValidateOffset);
+            CreateOutlinedButton(ok, qrOffsetConfirmLabel, keyH, ValidateOffset);
         }
 
         private string OffsetFieldText(int i)
         {
-            string label = offsetFieldNames != null && i < offsetFieldNames.Length ? offsetFieldNames[i] : "";
+            string label = qrOffsetFieldNames != null && i < qrOffsetFieldNames.Length ? qrOffsetFieldNames[i] : "";
             string value = _offsetTexts[i] ?? "";
             return label + " :  " + value + (i == _offsetField ? "|" : "");
         }
@@ -763,7 +784,7 @@ namespace Bauprobe.UI
         {
             string text = _offsetTexts[_offsetField] ?? "";
 
-            if (key == keyDeleteLabel)
+            if (key == qrOffsetDeleteLabel)
             {
                 text = text.Length > 0 ? text.Substring(0, text.Length - 1) : "";
             }
@@ -776,13 +797,13 @@ namespace Bauprobe.UI
                 // Première touche après la sélection du champ : on repart de zéro (comme « tout sélectionner »).
                 if (_offsetReplace) text = "";
 
-                if (key == ",")
+                if (key == DecimalKey)
                 {
-                    if (text.Contains(",")) return;
+                    if (text.Contains(DecimalKey)) return;
                     if (text.Length == 0 || text == "-") text += "0";
-                    text += ",";
+                    text += DecimalKey;
                 }
-                else if (text.Replace("-", "").Replace(",", "").Length < MaxNumberLength)
+                else if (text.Replace("-", "").Replace(DecimalKey, "").Length < MaxNumberLength)
                 {
                     text = text == "0" ? key : text == "-0" ? "-" + key : text + key;
                 }
@@ -807,12 +828,12 @@ namespace Bauprobe.UI
             return float.TryParse(text.Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out float v) ? v : 0f;
         }
 
-        /// <summary>Nombre affiché avec une virgule, au millimètre près (1,25 ; -0,5 ; 0).</summary>
+        /// <summary>Nombre affiché avec un point, au millimètre près (1.25 ; -0.5 ; 0).</summary>
         private static string FormatNumber(float value)
         {
             double rounded = System.Math.Round((double)value, 3);
             if (rounded == 0d) rounded = 0d;   // pas de « -0 »
-            return rounded.ToString("0.###", CultureInfo.InvariantCulture).Replace('.', ',');
+            return rounded.ToString("0.###", CultureInfo.InvariantCulture);   // point décimal : écran en anglais
         }
 
         // ------------------------------------------------------------------ messages et confirmations
@@ -895,10 +916,11 @@ namespace Bauprobe.UI
         // ================================================================== écran de liste (commun à tous les sous-menus)
         private void OpenScreen(MenuScreen screen, string title, string emptyText,
                                 System.Func<List<Row>> provider, System.Action back,
-                                System.Action<RectTransform> body = null)
+                                System.Action<RectTransform> body = null, string backText = null)
         {
             _screen = screen;
             _body = body;
+            _backText = backText;
             _title = title;
             _emptyText = emptyText;
             _provider = provider;
@@ -1001,7 +1023,7 @@ namespace Bauprobe.UI
             // Bouton Retour (fond sombre, cadre crème)
             var back = NewRect("Bouton_Retour", _pickerRoot);
             SetBottomCenter(back, pad, new Vector2(W * 0.5f, backH));
-            CreateOutlinedButton(back, backLabel, backH, () => _back?.Invoke());
+            CreateOutlinedButton(back, _backText ?? backLabel, backH, () => _back?.Invoke());
 
             ShowPage(page);
 

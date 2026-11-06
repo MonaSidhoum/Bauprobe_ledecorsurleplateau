@@ -8,7 +8,7 @@ On pose un QR code sur le plateau (par exemple au centre, au bord de la scène) 
 support. Quand le casque le voit, il sait où est la scène.
 
 Toutes les positions sont mesurées depuis le **point zéro de la scène** choisi avec le bureau d'études (par ex. le
-centre du nez de scène), **au sol**, et pas forcément depuis le QR code. Au lancement, l'écran **« Offset du QR code »**
+centre du nez de scène), **au sol**, et pas forcément depuis le QR code. Au lancement, l'écran **« QR code offset »**
 du menu général demande où est le QR code par rapport à ce point zéro (X, Y en mètres) et la hauteur de son bord
 du bas au-dessus du sol. Ces valeurs sont gardées sur le casque (`QrOffsetStore`) : pas besoin de *Build*.
 `StageCalibrator` place alors le repère du plateau **au sol, à la verticale du centre du QR code**, puis décale
@@ -43,7 +43,7 @@ Chaque dossier de `Assets/_Bauprobe` est un **module** : une partie de l'appli q
 | **Decor** | La liste des décors disponibles et leur apparition | `DecorItemDefinition`, `DecorCatalog`, `DecorSpawner`, `DecorInstance` |
 | **Manipulation** | Déplacer / tourner / agrandir / étirer un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `RightControllerRaySelector`, `LevelButton`, `FaceHighlight` |
 | **Persistence** | Sauvegarder / recharger une implantation (fichier JSON) ; tableau CSV pour le bureau d'études | `LayoutManager`, `LayoutSerializer`, `LayoutData`, `LayoutCsv` |
-| **UI** | Les menus dans le casque | `BauprobeMenuLogic` (menu général : Importer, Supprimer tout, suivi QR), `BauprobeMenuScreens` (écrans Décors, Sauvegarder, Charger, Offset du QR code) |
+| **UI** | Les menus dans le casque | `BauprobeMenuLogic` (menu général : Importer, Supprimer tout, suivi QR), `BauprobeMenuScreens` (écrans Décors, Sauvegarder, Charger, QR code offset) |
 | **Tests** | Tests automatiques (Window > General > Test Runner) | `StageSpaceTests`, `LayoutSerializerTests` |
 
 ### Qui a le droit d'utiliser qui ?

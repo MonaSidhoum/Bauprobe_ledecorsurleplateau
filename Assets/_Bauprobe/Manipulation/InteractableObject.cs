@@ -57,7 +57,7 @@ namespace Bauprobe.Manipulation
         [Tooltip("Distance maximale (m) entre la manette et l'objet.")]
         [SerializeField, Min(1f)] float maxMoveDistance = 40f;
         [Tooltip("Empêche de descendre l'objet sous le sol du plateau. La hauteur du sol vient de la hauteur " +
-                 "du QR code, saisie dans le casque (écran « Offset du QR code »).")]
+                 "du QR code, saisie dans le casque (écran « QR code offset »).")]
         [SerializeField] bool preventBelowStage = true;
 
         [Header("Scale")]

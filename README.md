@@ -154,14 +154,14 @@ Le détail (premier lancement sur un nouvel ordinateur, installation sur le casq
 
 1. **Calage** : collez le QR code (au moins 15 cm de côté) à la verticale, **face à la salle**, sur un pied ou un
    support (ou posez-le à plat au sol), et regardez-le. Le menu affiche « QR détectés : 1 » ; le décor est alors calé.
-   **Au lancement**, l'écran **Offset du QR code** demande où est le QR code par rapport au **point zéro** de la scène
+   **Au lancement**, l'écran **QR code offset** (en anglais) demande où est le QR code par rapport au **point zéro** de la scène
    (X vers cour, Y vers le lointain, en mètres) et la **hauteur de son bord du bas** au-dessus du sol. Il est
-   pré-rempli avec les dernières valeurs : *Valider* si le QR code n'a pas bougé. Pas besoin de *Build*.
+   pré-rempli avec les dernières valeurs : *Confirm* si le QR code n'a pas bougé. Pas besoin de *Build*.
    Marche à suivre détaillée : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#offset-et-hauteur-du-qr-code-dans-le-casque).
 2. **Menu général** : il est attaché à la **main gauche**.
    * *Importer* > choisir un décor : il apparaît posé au sol, 1,5 m devant vous.
    * *Supprimer tout*, *Sauvegarder*, *Charger*.
-   * L'écran **Offset du QR code** est aussi accessible par la première ligne de *Charger*.
+   * L'écran **QR code offset** est aussi accessible par la première ligne de *Charger*.
 3. **Manipuler un objet** (manette droite) :
 
 | Action | Commande |

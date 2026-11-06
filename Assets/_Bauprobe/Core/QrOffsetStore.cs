@@ -5,7 +5,7 @@ namespace Bauprobe.Core
 {
     /// <summary>
     /// L'offset du QR code en cours (position X / Y depuis le point zéro, hauteur au-dessus du sol), saisi dans
-    /// le casque (écran « Offset du QR code » du menu général) et gardé d'un lancement à l'autre sur le casque
+    /// le casque (écran « QR code offset » du menu général) et gardé d'un lancement à l'autre sur le casque
     /// (PlayerPrefs) : pas besoin de refaire un Build quand le QR code change de place.
     /// Au tout premier lancement, tout est à 0 (QR code au sol, sur le point zéro).
     ///

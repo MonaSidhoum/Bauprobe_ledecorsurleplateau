@@ -52,7 +52,7 @@ namespace Bauprobe.Calibration
                 _stageSpace = stageRoot.GetComponent<StageSpace>();
             }
 
-            // Offset du QR code saisi dans le casque (écran « Offset du QR code ») : appliqué tout de suite,
+            // Offset du QR code saisi dans le casque (écran « QR code offset ») : appliqué tout de suite,
             // puis à chaque changement.
             ApplyQrOffset(QrOffsetStore.Current);
             QrOffsetStore.Changed += ApplyQrOffset;
