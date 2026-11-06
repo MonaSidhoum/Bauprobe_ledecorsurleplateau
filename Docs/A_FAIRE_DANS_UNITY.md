@@ -308,7 +308,7 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
       actuelle (ex. `150` = ×1,5) puis APPLY. Le Scale au joystick marche toujours.
 - [x] **EXTRUDE sur un grand objet** (face du haut impossible à viser) : boutons TOP / BOTTOM / LEFT / RIGHT / FRONT /
       BACK à la main gauche, vus depuis la personne. Marche aussi depuis l'intérieur de l'objet.
-- [ ] **Retirer le cylindre de la bibliothèque** : fait dans la PR #15 (`feature/suppression-cylindre`), à fusionner.
+- [x] **Retirer le cylindre de la bibliothèque** : fait (PR #15, `feature/suppression-cylindre`).
 
 ---
 
