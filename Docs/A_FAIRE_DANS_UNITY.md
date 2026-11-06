@@ -121,7 +121,7 @@ et rappellent le sens des valeurs (vu depuis la salle) :
 
 | Colonne | Contenu |
 |---|---|
-| Scene | Nom de la sauvegarde (en attendant la gestion de plusieurs scènes) |
+| Scene | Nom de la sauvegarde, c'est-à-dire de la scène (une sauvegarde par scène) |
 | Item ID / Item name | Identifiant et nom de l'élément dans le catalogue |
 | Mounting | `Floor` (au sol) ou `Flown` (au cintre) |
 | Reference point | Le point dont on donne la position : `Bottom centre` (bas au centre, au sol) ou `Top centre` (haut au centre, au cintre) |
@@ -194,31 +194,31 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 | # | Étape du cahier des charges | État | Ce qui existe / ce qui manque |
 |---|---|---|---|
 | 1 | Importer le décor du bureau d'études et le tableau de positionnement | 🟡 | *Importer* propose les **7 premiers décors du bureau d'études** (OBJ, en mm convertis en m) en plus du cube de test. Pas encore de lecture du tableau. |
-| 2 | Afficher en AR la scène 1, puis les suivantes | ⬜ | Le calage sur le QR code marche, mais il n'y a qu'**une seule implantation** à la fois : pas de notion de « scène 1, 2, 3… ». |
-| 3 | Modifier placement et transformation, puis enregistrer dans la scène | 🟡 | Déplacer / Scale / Rotation et *Sauvegarder* marchent, mais toujours dans le même fichier (`implantation`). |
-| 4 | Exporter le tableau modifié et les nouveaux modèles | 🟡 | Chaque sauvegarde écrit aussi un **tableau CSV** (Excel) dans le repère du bureau d'études, avec un offset du QR code réglable ([détails](#exporter-le-tableau-csv-pour-le-bureau-détudes)). Pas d'export des modèles. |
+| 2 | Afficher en AR la scène 1, puis les suivantes | ✅ | **Une sauvegarde par scène** (« Scene 1 », « Scene 2 »…) : *Charger* la scène 1, puis *Supprimer tout* et *Charger* la scène suivante. Pas besoin d'un bouton « scène suivante » (choix de l'équipe, novembre 2026). |
+| 3 | Modifier placement et transformation, puis enregistrer dans la scène | ✅ | Déplacer / Scale / Rotation / EXTRUDE, puis *Sauvegarder* sous le nom de la scène (écrase la sauvegarde existante, ou *+ Nouvelle sauvegarde*). |
+| 4 | Exporter le tableau modifié et les nouveaux modèles | 🟡 | Tableau : ✅ chaque sauvegarde écrit un **tableau CSV** (Excel) dans le repère du bureau d'études ; **c'est le format retenu** ([détails](#exporter-le-tableau-csv-pour-le-bureau-détudes)). Pas d'export des modèles. |
 
 **Tâches :**
 
-- [ ] **Format du tableau de positionnement** : le définir **avec le volet « Voir la même chose »** (format commun
-      obligatoire). Une ligne par élément, par exemple : scène, identifiant du modèle, position X / Y / Z (en m,
-      dans le repère du QR code), rotation, échelle, au sol ou au cintre.
-      Piste : un **CSV**, qu'Excel ouvre et enregistre, est bien plus simple à lire dans Unity qu'un `.xlsx`.
-- [ ] **Importer le tableau** : lire le fichier et créer les éléments à leur place, scène par scène
-      (réutiliser `LayoutSerializer` / `LayoutData`, à compléter avec le numéro de scène).
+- [x] **Format du tableau de positionnement** : **fixé**, c'est le **CSV** écrit à chaque sauvegarde (`LayoutCsv`) :
+      une ligne par élément, colonnes décrites [plus haut](#exporter-le-tableau-csv-pour-le-bureau-détudes)
+      (scène, identifiant, sol / cintre, position X / Y / Z depuis le point zéro, angles, dimensions, échelle).
+      À transmettre tel quel au volet « Voir la même chose ».
+- [ ] **Importer le tableau** : lire ce même CSV et créer les éléments à leur place (une scène = un fichier).
+      En attendant, une scène se recharge depuis sa sauvegarde JSON (*Charger*).
 - [x] **Importer les modèles du bureau d'études** : format retenu **OBJ** (unités en mm, *Scale Factor* 0,001 à
       l'import). 7 éléments ajoutés dans `Decor/Models/`, avec prefab et fiche catalogue chacun ; ils apparaissent
       dans la liste « Importer ».
       Reste à vérifier dans le casque (taille réelle par rapport aux plans, pose au sol) et à confirmer le format
       avec le volet « Voir la même chose ».
-- [ ] **Gérer plusieurs scènes** : ajouter au menu général un choix « Scène précédente / Scène suivante » qui
-      affiche l'implantation de la scène choisie (remplace l'actuel nom unique `implantation`).
-- [ ] **Enregistrer dans la scène** : *Sauvegarder* écrit dans la scène affichée.
+- [x] **Gérer plusieurs scènes** : **une sauvegarde par scène** (« Scene 1 », « Scene 2 »…). Pour passer d'une scène
+      à l'autre : *Charger* la scène, puis *Supprimer tout* et *Charger* la suivante. Pas de bouton « scène
+      suivante » (choix de l'équipe, novembre 2026).
+- [x] **Enregistrer dans la scène** : *Sauvegarder* sous le nom de la scène (la sauvegarde existante est écrasée,
+      ou *+ Nouvelle sauvegarde*). Le nom de la sauvegarde est écrit dans la colonne *Scene* du CSV.
 - [x] **Exporter** le tableau modifié : un `.csv` à côté de chaque sauvegarde (`LayoutCsv`), récupérable par câble USB
       ou MQDH ([détails](#exporter-le-tableau-csv-pour-le-bureau-détudes)). Repère : point zéro du bureau d'études
-      (= QR code, ou offset du QR code saisi dans le casque).
-      Reste à : faire valider les colonnes par le bureau d'études **et** le volet « Voir la même chose » ; lire ce
-      même format à l'import ; éventuellement un seul fichier pour toutes les scènes ; partage réseau à étudier.
+      (= QR code, ou offset du QR code saisi dans le casque). Format validé (novembre 2026).
 - [ ] **Exporter les nouveaux modèles** : préciser avec les commanditaires ce qu'on appelle un « nouveau modèle »
       (un modèle redimensionné ? un modèle créé dans l'appli ?).
 
@@ -243,8 +243,8 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 
 - [ ] **Aucun élément de plus de 18 m** : plus appliqué. Le *Scale* n'a plus aucune limite de taille (ni 18 m, ni
       limites dans les fiches du catalogue), et un modèle importé plus grand que 18 m garde sa taille.
-- [ ] **Formats communs** avec « Voir la même chose » (décor et tableau) : fixer les formats avec l'autre équipe
-      **avant** de coder l'import et l'export.
+- [x] **Formats communs** avec « Voir la même chose » (décor et tableau) : nos formats sont fixés, **OBJ** pour les
+      modèles et le **CSV** de `LayoutCsv` pour le tableau. À transmettre à l'autre équipe.
 - [ ] **Exécutable déployable partout, en kit transportable** : documenter le kit (mètre ruban pour mesurer la hauteur
       du QR code, casque(s), câble, chargeur,
       QR code imprimé et sa taille, ordinateur pour l'import / export) et l'installation de l'`.apk` sans Unity.
@@ -255,8 +255,8 @@ Légende : ✅ fait · 🟡 en partie · ⬜ pas commencé
 
 | Livrable | État |
 |---|---|
-| Tableau de positionnement par scène (Excel en première approche) | ⬜ format à définir (section 3.1) |
-| Tableau modifié et nouveaux modèles 3D | 🟡 tableau : CSV écrit à chaque sauvegarde ; modèles : à préciser (section 3.1) |
+| Tableau de positionnement par scène (Excel en première approche) | ✅ format fixé : le CSV (section 3.1) ; 🟡 import du tableau pas encore fait |
+| Tableau modifié et nouveaux modèles 3D | 🟡 tableau : ✅ CSV écrit à chaque sauvegarde ; modèles : à préciser (section 3.1) |
 | Code source | 🟡 ce dépôt ; à finaliser |
 | Documentation utilisateur | 🟡 le README explique l'utilisation dans le casque ; à compléter par un **mode d'emploi pour le technicien** (sans Unity) |
 
