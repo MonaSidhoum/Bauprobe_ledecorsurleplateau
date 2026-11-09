@@ -2,7 +2,7 @@
 
 **Projet MOVIE 2025 - Mines Paris PSL x Théâtre du Châtelet**
 
-![Statut](https://img.shields.io/badge/Statut-Version_finale-orange)
+![Statut](https://img.shields.io/badge/Statut-Version_finale-blue)
 ![Platform](https://img.shields.io/badge/Platforme-XR-green)
 
 
