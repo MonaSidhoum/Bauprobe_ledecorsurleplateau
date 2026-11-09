@@ -264,8 +264,6 @@ La Console (*Window > General > Console*) affiche ce qui a été fait. Ensuite :
 * pour pouvoir **prendre le décor à la main** (grab) : l'outil ne l'ajoute pas. Double-cliquer sur le prefab créé,
   clic droit sur sa racine dans la *Hierarchy* > *Interaction SDK* > **Add Grab Interaction**, puis enregistrer
   (*Ctrl + S*). Sans cette étape, le décor se manipule quand même au laser et à la manette ;
-* comme le Cube, le nouveau décor peut être **basculé** en mode ROTATE. Pour qu'il reste toujours droit, cocher
-  *Keep Upright* sur son composant *Decor Constraints*.
 
 Le décor apparaît dans la liste *Import* au prochain *Build And Run*.
 

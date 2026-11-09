@@ -29,6 +29,34 @@ namespace Bauprobe.Decor
             RecomputeOrigin();
         }
 
+        private Vector3 _baseScale;
+        private bool _hasBaseScale;
+
+        /// <summary>
+        /// Taille de référence du Scale en % (100 %) : celle du prefab du catalogue, MODIFIÉE PAR LES ÉTIREMENTS
+        /// (EXTRUDE). Un cube étiré en pavé reste un pavé à 100 % ; seul le Scale (agrandir / rétrécir) est annulé.
+        /// Gardée dans la sauvegarde.
+        /// </summary>
+        public Vector3 BaseScale
+        {
+            get
+            {
+                if (!_hasBaseScale)
+                {
+                    _baseScale = Definition != null && Definition.Prefab != null
+                        ? Definition.Prefab.transform.localScale
+                        : transform.localScale;
+                    _hasBaseScale = true;
+                }
+                return _baseScale;
+            }
+            set
+            {
+                _baseScale = value;
+                _hasBaseScale = true;
+            }
+        }
+
         /// <summary>
         /// Point d'origine dans le repère local de l'objet (sans son échelle).
         /// Calculé une fois, à partir des modèles 3D de l'objet.
@@ -315,8 +343,17 @@ namespace Bauprobe.Decor
             var fixedWorld = transform.TransformPoint(fixedPoint);
             var height = AttachmentHeight();
 
+            var oldScale = scale[i];
             scale[i] = (scale[i] < 0f ? -1f : 1f) * newLength / size;
             transform.localScale = scale;
+
+            // La taille de référence du Scale en % suit l'étirement (100 % garde la nouvelle forme)
+            if (Mathf.Abs(oldScale) > 1e-6f)
+            {
+                var baseScale = BaseScale;
+                baseScale[i] *= scale[i] / oldScale;
+                BaseScale = baseScale;
+            }
             transform.position += fixedWorld - transform.TransformPoint(fixedPoint);
 
             RestoreAttachmentHeight(height);

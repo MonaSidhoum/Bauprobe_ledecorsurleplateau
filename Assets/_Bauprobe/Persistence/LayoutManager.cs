@@ -90,6 +90,12 @@ namespace Bauprobe.Persistence
                     instance.transform.localPosition = entry.position;
                 }
 
+                // Taille de référence du Scale en %, avec les étirements (sauvegardes version 5 et plus).
+                if (instance != null && entry.baseScale != Vector3.zero)
+                {
+                    instance.BaseScale = entry.baseScale;
+                }
+
                 // Couleur choisie avec le bouton Color (sauvegardes version 4 et plus).
                 if (instance != null && entry.hasColor)
                 {

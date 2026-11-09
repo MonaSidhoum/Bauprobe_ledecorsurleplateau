@@ -5,7 +5,7 @@ using UnityEngine.UI;
 namespace Bauprobe.Manipulation
 {
     /// <summary>
-    /// Place un panneau (menu objet, bouton « Align with floor »…) à la MAIN GAUCHE, collé au menu général :
+    /// Place un panneau (menu objet, pavé du Scale, faces d'EXTRUDE…) à la MAIN GAUCHE, collé au menu général :
     ///   - menu général ouvert : à sa droite, aligné en haut ;
     ///   - menu général replié (bouton − / +) : au-dessus du bouton « + ».
     ///
@@ -100,7 +100,7 @@ namespace Bauprobe.Manipulation
             {
                 s_warned = true;
                 Debug.LogWarning($"[GeneralMenuDock] Menu général « {MenuName} » introuvable sous la main gauche : " +
-                                 "le menu objet et le bouton « Align with floor » s'afficheront au-dessus de l'objet.");
+                                 "le menu objet et ses panneaux s'afficheront au-dessus de l'objet.");
             }
             return null;
         }

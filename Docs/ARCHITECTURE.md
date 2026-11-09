@@ -52,7 +52,7 @@ MenuGeneral
 └── ObjectMenu                            (prefab UI/Prefabs/ObjectMenu) : menu de l'objet sélectionné
 ```
 
-Les panneaux de la main gauche (pavé du Scale, faces d'EXTRUDE, INFO, *Align with floor*) et la surbrillance de
+Les panneaux de la main gauche (pavé du Scale, faces d'EXTRUDE, INFO) et la surbrillance de
 l'objet sélectionné sont **créés par le code** : ils ne sont ni dans la scène ni dans des prefabs.
 
 ## Les modules
@@ -64,7 +64,7 @@ Chaque dossier de `Assets/_Bauprobe` est un **module** : une partie de l'appli q
 | **Core** | Le repère du plateau, partagé par tous ; l'offset et la hauteur du QR code saisis dans le casque ; le passage au repère du bureau d'études | `StageSpace`, `QrOffset`, `QrOffsetStore`, `StagePlan` |
 | **Calibration** | Trouver le QR code et y caler le plateau | `StageCalibrator` |
 | **Decor** | La liste des décors disponibles, leur apparition, leur point d'origine et leurs faces | `DecorItemDefinition`, `DecorCatalog`, `DecorSpawner`, `DecorInstance`, `DecorOrigin`, `DecorFace` |
-| **Manipulation** | Sélectionner, déplacer, tourner, agrandir, étirer, colorer un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `ObjectColorPalette`, `RightControllerRaySelector`, `LevelButton`, `FaceHighlight`, `SelectionHighlight` ; grab à la main : `DecorGrabTransformer`, `GrabMath` ; panneaux de la main gauche : `HandPanel`, `ScaleKeypad`, `FacePicker`, `ObjectInfoPanel`, `GeneralMenuDock` |
+| **Manipulation** | Sélectionner, déplacer, tourner, agrandir, étirer, colorer un objet | `DecorConstraints` ; à la manette : `InteractableObject`, `ObjectMenu`, `ObjectColorPalette`, `RightControllerRaySelector`, `FaceHighlight`, `SelectionHighlight` ; grab à la main : `DecorGrabTransformer`, `GrabMath` ; panneaux de la main gauche : `HandPanel`, `ScaleKeypad`, `FacePicker`, `ObjectInfoPanel`, `GeneralMenuDock` |
 | **Persistence** | Sauvegarder / recharger une implantation (fichier JSON) ; tableau CSV pour le bureau d'études | `LayoutManager`, `LayoutSerializer`, `LayoutData`, `LayoutCsv` |
 | **UI** | Le menu général dans le casque | `BauprobeMenuLogic` (permission, suivi QR, Import, Erase all), `BauprobeMenuScreens` (écrans Objects, Save, Load, QR code offset, bouton − / +) |
 | **Editor** | Outils de l'éditeur Unity (pas dans l'appli) | `AddToDecorCatalog` (*Bauprobe > Ajouter au catalogue*), `Decor/Editor/DecorPrefabTools` |
@@ -139,12 +139,15 @@ inversement : deux scripts qui s'appellent l'un l'autre doivent être dans le m�
    (*Hide Meta Ray While Moving*). L'objet ne descend pas sous le sol (*Prevent Below Stage*).
 
    **SCALE** : uniforme, autour du point d'origine (`DecorInstance.SetScaleAroundOrigin`), sans limite de taille. Le
-   pavé `ScaleKeypad` applique un pourcentage de la taille du prefab (`ApplyScalePercentOfOriginal`).
+   pavé `ScaleKeypad` applique un pourcentage de la taille de référence `DecorInstance.BaseScale` : celle du prefab,
+   modifiée par les étirements d'EXTRUDE (100 % garde la forme étirée ; gardée dans la sauvegarde, format version 5).
 
-   **ROTATE** : autour du centre de l'objet ; son point le plus bas (sol) ou le plus haut (cintre) reste à la même
-   hauteur. Le bouton **Align with floor** (`LevelButton`) rend verticale la direction de l'objet la plus proche de
-   la verticale, avec la plus petite rotation possible. Un décor dont *Keep Upright* est coché sur son
-   `DecorConstraints` reste toujours droit (c'est le cas des 7 décors de *La Cage aux Folles* ; pas du Cube).
+   **ROTATE** : autour de la verticale seulement (joystick gauche / droite), autour du centre de l'objet ; son point
+   le plus bas (sol) ou le plus haut (cintre) reste à la même hauteur. La bascule avant / arrière et le bouton
+   *Align with floor* ont été retirés (les objets partaient en l'air).
+
+   **MOVE** : seuil sur le joystick (*Move Axis Snap Angle*, 25° par défaut, `InteractableObject.MoveAxisLock`) :
+   poussé presque droit devant / derrière, il ne décale pas l'objet sur le côté (sinon l'objet tournait autour de soi).
 
    **EXTRUDE** : `DecorInstance.ExtrudeFace` change l'échelle de l'objet sur un seul axe et le recale pour que la face
    opposée ne bouge pas (5 cm minimum, `DecorLimits.MinFaceLength`). `FaceHighlight` colore la face et affiche sa
