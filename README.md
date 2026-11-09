@@ -2,7 +2,7 @@
 
 **Projet MOVIE 2025 - Mines Paris PSL x Théâtre du Châtelet**
 
-![Statut](https://img.shields.io/badge/Statut-Terminé-blue)
+![Statut](https://img.shields.io/badge/Statut-Version_finale-orange)
 ![Platform](https://img.shields.io/badge/Platforme-XR-green)
 
 
@@ -10,7 +10,7 @@
 
 Ce projet s'inscrit dans le cadre de l'unité d'enseignement MOVIE de **Mines Paris - PSL**, en collaboration directe avec le **Théâtre du Châtelet**.
 
-**Bauprobe Immersive II** est une application de réalité augmentée développée sous Unity pour le **Meta Quest 3**. Elle permet de **visualiser un décor de spectacle à l'échelle 1 sur la scène réelle, avant sa construction**. Elle fait suite à l'application **Bauprobe Immersive I** (en réalité virtuelle), dont elle reprend la méthodologie et l'interface de connexion Unity.
+**Bauprobe Immersive II** est une application de réalité mixte développée sous Unity pour le **Meta Quest 3**. Elle permet de **visualiser un décor de spectacle à l'échelle 1 sur la scène réelle, avant sa construction**. Elle fait suite à l'application **Bauprobe Immersive I** (en réalité virtuelle), dont elle reprend la méthodologie et l'interface de connexion Unity.
 
 ### Qu'est-ce qu'une Bauprobe ?
 Au théâtre, la Bauprobe est une étape cruciale qui a lieu plusieurs mois avant l'arrivée du décor final sur le plateau. Elle consiste à simuler l'encombrement spatial du futur décor (historiquement avec des marquages au sol ou des éléments de substitution) afin de :
@@ -190,9 +190,11 @@ Ce projet est réalisé par des élèves de Mines Paris - PSL :
 * Violette Lecuyer
 * Mona Sidhoum
 
-**Commanditaires (Théâtre du Châtelet) :**
+**Collaborateurs :**
 
-* **A RAJOUTER**
+* Marion Delemazure
+* Thomas Lauret (Théâtre du Châtelet)
+* Inès Mimouni (Théâtre du Châtelet)
 
 ##  Crédits et Assets tiers
 

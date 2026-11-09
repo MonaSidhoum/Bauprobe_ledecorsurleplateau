@@ -98,20 +98,19 @@ namespace Bauprobe.Manipulation
 
         static ScaleKeypad Build()
         {
-            // 36 x 52 cm (1 unité = 1 mm). Les textes sont en haut : le bas du panneau peut passer
-            // près du menu général sans rien cacher d'important.
-            var panel = Create<ScaleKeypad>("ScaleKeypad", new Vector2(360f, 520f), 0.001f, clickable: true);
+            // 36 x 55 cm (1 unité = 1 mm). Les textes sont en haut, chacun sur sa ligne, et réduits
+            // automatiquement s'ils sont trop longs : rien ne dépasse du panneau.
+            var panel = Create<ScaleKeypad>("ScaleKeypad", new Vector2(360f, 550f), 0.001f, clickable: true);
 
-            panel.AddText("<b>SCALE</b>  % of original size (100 = original)
-" +
-                          "<size=15>Joystick still scales.  Trigger elsewhere = done,  B = cancel</size>",
-                          20f, 10f, 320f, 70f, 20f);
-            panel._display = panel.AddText("", 20f, 80f, 320f, 50f, 38f, TextAlignmentOptions.Right);
-            panel._status = panel.AddText("", 20f, 132f, 320f, 32f, 18f, TextAlignmentOptions.Center);
+            FitInside(panel.AddText("<b>SCALE</b>", 20f, 10f, 320f, 30f, 24f));
+            FitInside(panel.AddText("% of original size  (100 = original)", 20f, 42f, 320f, 26f, 18f));
+            FitInside(panel.AddText("Joystick still scales.\nTrigger elsewhere = done,  B = cancel", 20f, 70f, 320f, 40f, 14f));
+            panel._display = panel.AddText("", 20f, 112f, 320f, 50f, 38f, TextAlignmentOptions.Right);
+            panel._status = FitInside(panel.AddText("", 20f, 164f, 320f, 28f, 18f, TextAlignmentOptions.Center));
 
             // Touches : 7 8 9 / 4 5 6 / 1 2 3 / . 0 ⌫
             string[] keys = { "7", "8", "9", "4", "5", "6", "1", "2", "3", ".", "0", "<" };
-            const float size = 96f, height = 60f, gap = 10f, left = 27f, top = 168f;
+            const float size = 96f, height = 60f, gap = 10f, left = 27f, top = 198f;
             for (int i = 0; i < keys.Length; i++)
             {
                 string key = keys[i];
@@ -124,6 +123,15 @@ namespace Bauprobe.Manipulation
             float bottom = top + 4 * (height + gap);
             panel.AddButton("APPLY", left, bottom, 3 * size + 2 * gap, 60f, panel.Apply, accent: true);
             return panel;
+        }
+
+        // Le texte rapetisse tout seul s'il est trop long pour son cadre (jamais plus petit que 10).
+        static TextMeshProUGUI FitInside(TextMeshProUGUI text)
+        {
+            text.fontSizeMax = text.fontSize;
+            text.fontSizeMin = 10f;
+            text.enableAutoSizing = true;
+            return text;
         }
     }
 }
