@@ -343,14 +343,16 @@ namespace Bauprobe.Decor
             var fixedWorld = transform.TransformPoint(fixedPoint);
             var height = AttachmentHeight();
 
+            // Taille de référence du Scale en %, lue AVANT de changer l'échelle (sinon, pour un objet sans fiche,
+            // elle serait calculée à partir de la nouvelle échelle et l'étirement compterait deux fois)
+            var baseScale = BaseScale;
             var oldScale = scale[i];
             scale[i] = (scale[i] < 0f ? -1f : 1f) * newLength / size;
             transform.localScale = scale;
 
-            // La taille de référence du Scale en % suit l'étirement (100 % garde la nouvelle forme)
+            // Elle suit l'étirement (100 % garde la nouvelle forme)
             if (Mathf.Abs(oldScale) > 1e-6f)
             {
-                var baseScale = BaseScale;
                 baseScale[i] *= scale[i] / oldScale;
                 BaseScale = baseScale;
             }
