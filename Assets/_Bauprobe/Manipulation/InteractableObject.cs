@@ -18,9 +18,7 @@ namespace Bauprobe.Manipulation
     ///   joystick haut / bas = l'éloigner / le rapprocher le long du laser, gauche / droite = le décaler sur le côté ;
     ///   grip maintenu + joystick haut / bas = monter / descendre. Plus l'objet est loin, plus il va vite.
     ///   Il ne descend pas sous le sol du plateau.
-    /// Rotation : joystick gauche / droite = tourner sur lui-même,
-    ///   haut / bas = le basculer vers l'avant / l'arrière ;
-    ///   le bouton « Align with floor » au-dessus de l'objet le pose parallèle au sol, sur la face la plus proche.
+    /// Rotation : joystick gauche / droite = tourner sur lui-même, autour de la verticale seulement.
     /// Étirer (EXTRUDE) : viser une face au laser (elle s'éclaire en bleu) et appuyer sur la gâchette pour la choisir
     ///   (elle devient orange) ; puis joystick haut = pousser la face (allonger), bas = la rentrer (raccourcir),
     ///   grip maintenu = plus lent, pour être précis. La face opposée ne bouge pas. Gâchette = valider, B = annuler.
@@ -57,6 +55,10 @@ namespace Bauprobe.Manipulation
         [Tooltip("Vitesse en plus, proportionnelle à la distance : à 10 m de la manette, l'objet va " +
                  "1 + 10 × ce facteur m/s. Plus grand = plus d'amplitude au loin.")]
         [SerializeField, Min(0f)] float distanceSpeedFactor = 1f;
+        [Tooltip("Seuil (en degrés) du joystick en Déplacer : poussé à moins de cet angle de l'avant / l'arrière, " +
+                 "seul l'avant / arrière compte (pas de décalage sur le côté) ; à moins de cet angle de la gauche / " +
+                 "droite, seul le côté compte. 0 = pas de seuil.")]
+        [SerializeField, Range(0f, 45f)] float moveAxisSnapAngle = 25f;
         [Tooltip("Distance minimale (m) entre la manette et l'objet.")]
         [SerializeField, Min(0.05f)] float minMoveDistance = 0.3f;
         [Tooltip("Distance maximale (m) entre la manette et l'objet.")]
@@ -71,9 +73,7 @@ namespace Bauprobe.Manipulation
 
         [Header("Rotation")]
         [SerializeField] float rotationSpeed = 90f;  // degrés par seconde
-        [Tooltip("Joystick haut / bas en mode Rotation = basculer l'objet vers l'avant / l'arrière. " +
-                 "Penser aussi à décocher « Keep Upright » sur Decor Constraints, sinon l'objet se redresse aussitôt.")]
-        [SerializeField] bool allowTilt = true;
+        // Rotation seulement autour de la verticale (joystick gauche / droite) : plus de bascule avant / arrière.
 
         [Header("Étirer une face (EXTRUDE)")]
         [Tooltip("Vitesse (m/s) à laquelle la face avance ou recule, joystick à fond. " +
@@ -234,21 +234,14 @@ namespace Bauprobe.Manipulation
             // On cache le menu pendant la manipulation
             if (ObjectMenu.Instance) ObjectMenu.Instance.Hide();
 
-            // En Rotation : bouton « Align with floor » au-dessus de l'objet
-            if (mode == Mode.Rotate && allowTilt) LevelButton.Show(this, LevelWithFloor);
-
             // En Scale : pavé numérique (taper un pourcentage) ; en EXTRUDE : boutons des faces. À la main gauche.
             if (mode == Mode.Scale) ScaleKeypad.Show(this);
             if (mode == Mode.Extrude) FacePicker.Show(this);
         }
 
         /// <summary>
-        /// Pose l'objet parallèle au sol, sur la face la plus proche de sa position actuelle
-        /// (voir DecorInstance.LevelWithStage). Appelé par le bouton « Align with floor ».
-        /// </summary>
-        /// <summary>
-        /// Donne à l'objet un pourcentage de sa taille D'ORIGINE (celle de son prefab dans le catalogue) :
-        /// 100 = taille d'origine (annule aussi les étirements d'EXTRUDE), 150 = 1,5 fois, 50 = moitié.
+        /// Donne à l'objet un pourcentage de sa taille D'ORIGINE (celle de son prefab dans le catalogue, avec les
+        /// étirements faits par EXTRUDE) : 100 = taille d'origine en gardant la forme étirée, 150 = 1,5 fois, 50 = moitié.
         /// Le point d'origine ne bouge pas (un objet au sol reste posé). Appelé par le pavé numérique du Scale.
         /// </summary>
         public void ApplyScalePercentOfOriginal(float percent)
@@ -256,9 +249,7 @@ namespace Bauprobe.Manipulation
             if (percent <= 0f || float.IsNaN(percent) || float.IsInfinity(percent)) return;
             if (!_decor) _decor = GetComponent<DecorInstance>();
 
-            Vector3 original = _decor != null && _decor.Definition != null && _decor.Definition.Prefab != null
-                ? _decor.Definition.Prefab.transform.localScale
-                : _originalScale;
+            Vector3 original = _decor != null ? _decor.BaseScale : _originalScale;
             Vector3 newScale = original * (percent / 100f);
 
             if (_decor) _decor.SetScaleAroundOrigin(newScale);
@@ -291,24 +282,6 @@ namespace Bauprobe.Manipulation
             FaceHighlight.Show(_decor, face, true);
         }
 
-        public void LevelWithFloor()
-        {
-            if (!_decor) _decor = GetComponent<DecorInstance>();
-            if (_decor)
-            {
-                // Autour du centre ; un objet au sol reste posé, un objet au cintre reste accroché.
-                _decor.LevelWithStage();
-            }
-            else
-            {
-                Vector3 up = transform.parent ? transform.parent.up : Vector3.up;
-                Vector3 closest = transform.up;
-                foreach (var axis in new[] { transform.up, -transform.up, transform.right, -transform.right, transform.forward, -transform.forward })
-                    if (Vector3.Dot(axis, up) > Vector3.Dot(closest, up)) closest = axis;
-                transform.rotation = Quaternion.FromToRotation(closest, up) * transform.rotation;
-            }
-        }
-
         // ------------------------------------------------------------------
 
         void Update()
@@ -319,13 +292,13 @@ namespace Bauprobe.Manipulation
             if (Time.frameCount != _startFrame)
             {
                 // La gâchette valide, sauf :
-                //  - si le laser vise un panneau de la main gauche (Align with floor, pavé du Scale, faces
-                //    d'EXTRUDE, INFO) : c'est alors un clic sur ce panneau ;
+                //  - si le laser vise un panneau de la main gauche (pavé du Scale, faces d'EXTRUDE, INFO) :
+                //    c'est alors un clic sur ce panneau ;
                 //  - en EXTRUDE tant qu'aucune face n'est choisie (la gâchette sert alors à choisir la face).
-                bool onLevelButton = controllerAnchor &&
+                bool onPanel = controllerAnchor &&
                                      ManipulationPanels.IsPointerOverAny(new Ray(controllerAnchor.position, controllerAnchor.forward));
                 bool choosingFace = CurrentMode == Mode.Extrude && !_faceSelected;
-                if (!onLevelButton && !choosingFace && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controller)) { EndManipulation(true); return; }
+                if (!onPanel && !choosingFace && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controller)) { EndManipulation(true); return; }
                 if (OVRInput.GetDown(OVRInput.Button.Two, controller)) { EndManipulation(false); return; } // B
             }
 
@@ -350,6 +323,10 @@ namespace Bauprobe.Manipulation
 
                     // Plus l'objet est loin, plus il va vite : assez d'amplitude au loin, assez de précision de près.
                     float speed = (moveSpeed + distanceSpeedFactor * distance) * dt;
+
+                    // Seuil : un joystick poussé presque droit devant / derrière ne décale pas l'objet sur le côté
+                    // (sinon il se met à tourner autour de soi), et inversement.
+                    stick = MoveAxisLock(stick, moveAxisSnapAngle);
 
                     Vector3 delta;
                     if (OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, controller))
@@ -405,24 +382,18 @@ namespace Bauprobe.Manipulation
 
                 case Mode.Rotate:
                 {
-                    // Joystick gauche / droite = tourner sur lui-même (autour de la verticale).
-                    // Joystick haut / bas = basculer vers l'avant / l'arrière (autour de l'axe gauche-droite du regard).
+                    // Joystick gauche / droite = tourner sur lui-même, autour de la verticale SEULEMENT
+                    // (plus de bascule : l'objet ne peut plus partir en l'air).
                     float yaw = -stick.x * rotationSpeed * dt;
-                    float tilt = allowTilt ? stick.y * rotationSpeed * dt : 0f;
-                    Vector3 tiltAxis = _head ? Vector3.ProjectOnPlane(_head.right, Vector3.up) : Vector3.right;
-                    if (tiltAxis.sqrMagnitude < 1e-4f) tiltAxis = Vector3.right;
-                    tiltAxis.Normalize();
 
                     if (_decor)
                     {
                         // Autour du centre de l'objet ; un objet au sol reste posé, un objet au cintre reste accroché.
                         _decor.RotateAroundCenter(Vector3.up, yaw);
-                        _decor.RotateAroundCenter(tiltAxis, tilt);
                     }
                     else
                     {
                         transform.Rotate(Vector3.up, yaw, Space.World);
-                        transform.Rotate(tiltAxis, tilt, Space.World);
                     }
                     break;
                 }
@@ -431,6 +402,22 @@ namespace Bauprobe.Manipulation
                     UpdateExtrude(stick.y, dt);
                     break;
             }
+        }
+
+        /// <summary>
+        /// Seuil du joystick : à moins de <paramref name="snapAngle"/> degrés de l'axe avant / arrière, on garde
+        /// seulement l'avant / arrière ; à moins de snapAngle de l'axe gauche / droite, seulement le côté.
+        /// Entre les deux (vraie diagonale), les deux sont gardés.
+        /// </summary>
+        public static Vector2 MoveAxisLock(Vector2 stick, float snapAngle)
+        {
+            if (snapAngle <= 0f || stick == Vector2.zero) return stick;
+
+            // Angle du joystick par rapport à l'axe avant / arrière (0° = tout droit, 90° = sur le côté)
+            float fromVertical = Mathf.Atan2(Mathf.Abs(stick.x), Mathf.Abs(stick.y)) * Mathf.Rad2Deg;
+            if (fromVertical < snapAngle) return new Vector2(0f, stick.y);
+            if (fromVertical > 90f - snapAngle) return new Vector2(stick.x, 0f);
+            return stick;
         }
 
         // Étirer une face : 1) viser et choisir la face ; 2) la pousser / rentrer au joystick.
@@ -482,7 +469,6 @@ namespace Bauprobe.Manipulation
             CurrentMode = Mode.None;
             Active = null;
             s_lastEndFrame = Time.frameCount;
-            LevelButton.Hide();
             FaceHighlight.Hide();
             ScaleKeypad.Hide();
             FacePicker.Hide();
@@ -512,7 +498,6 @@ namespace Bauprobe.Manipulation
             {
                 Active = null;
                 s_lastEndFrame = Time.frameCount;
-                LevelButton.Hide();
                 FaceHighlight.Hide();
                 ScaleKeypad.Hide();
                 FacePicker.Hide();

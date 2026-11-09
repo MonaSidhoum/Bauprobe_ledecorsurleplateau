@@ -37,6 +37,7 @@ namespace Bauprobe.Persistence
                     position = instance.OriginStagePosition,
                     rotation = t.localRotation,
                     scale = t.localScale,
+                    baseScale = instance.BaseScale,
                     size = instance.StageSize,
                     hasColor = instance.CustomColor.HasValue,
                     color = instance.CustomColor ?? Color.white,

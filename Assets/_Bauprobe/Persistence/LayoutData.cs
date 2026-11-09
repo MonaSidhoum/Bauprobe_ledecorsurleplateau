@@ -16,12 +16,13 @@ namespace Bauprobe.Persistence
     ///   3 : + "scene", "qrOffset" (offset du QR code utilisé), et pour chaque objet "name", "attachment", "size".
     ///       Les positions sont mesurées depuis le point zéro du bureau d'études (= le QR code si l'offset est nul).
     ///   4 : + pour chaque objet "hasColor" et "color" (couleur choisie avec le bouton Color, remise au chargement).
+    ///   5 : + pour chaque objet "baseScale" (taille de référence du Scale en % : celle du prefab avec les étirements).
     /// </summary>
     [Serializable]
     public class LayoutData
     {
         /// <summary>Version écrite par cette version de l'appli.</summary>
-        public const int CurrentVersion = 4;
+        public const int CurrentVersion = 5;
 
         public int version = CurrentVersion;
         public string savedAt;
@@ -56,6 +57,12 @@ namespace Bauprobe.Persistence
         public Vector3 position;
         public Quaternion rotation = Quaternion.identity;
         public Vector3 scale = Vector3.one;
+
+        /// <summary>
+        /// Taille de référence du Scale en % (100 %) : celle du prefab avec les étirements d'EXTRUDE.
+        /// (0, 0, 0) = absente (sauvegardes avant la version 5) : on reprend celle du prefab. Depuis la version 5.
+        /// </summary>
+        public Vector3 baseScale;
 
         /// <summary>
         /// Taille réelle de l'objet, en mètres, le long de ses propres axes (repère Unity) :

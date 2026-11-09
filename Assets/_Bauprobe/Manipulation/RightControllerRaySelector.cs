@@ -83,10 +83,7 @@ namespace Bauprobe.Manipulation
                     ObjectMenu.Instance.Show(hovered);
             }
 
-            // Pendant la Rotation, le laser sert à viser le bouton « Align with floor »
-            bool overLevelButton = LevelButton.IsPointerOver(ray);
-
-            UpdateLaser(ray, endDistance, hovered != null || overMenu || overLevelButton);
+            UpdateLaser(ray, endDistance, hovered != null || overMenu);
         }
 
         void LateUpdate()
@@ -176,11 +173,9 @@ namespace Bauprobe.Manipulation
                 return;
             }
 
-            // Laser visible aussi pendant Scale (pavé numérique), Rotation (bouton « Align with floor »)
-            // et EXTRUDE (viser une face, ou les boutons des faces).
+            // Laser visible aussi pendant Scale (pavé numérique) et EXTRUDE (viser une face, ou les boutons des faces).
             laser.enabled = active == null
                             || active.CurrentMode == InteractableObject.Mode.Scale   // pavé numérique du Scale
-                            || active.CurrentMode == InteractableObject.Mode.Rotate
                             || active.CurrentMode == InteractableObject.Mode.Extrude;
             if (!laser.enabled) return;
 
