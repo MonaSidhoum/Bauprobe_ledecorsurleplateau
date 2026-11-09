@@ -2,7 +2,7 @@
 
 **Projet MOVIE 2025 - Mines Paris PSL x Théâtre du Châtelet**
 
-![Statut](https://img.shields.io/badge/Statut-En_développement-orange)
+![Statut](https://img.shields.io/badge/Statut-Version_finale-orange)
 ![Platform](https://img.shields.io/badge/Platforme-XR-green)
 
 
@@ -10,7 +10,7 @@
 
 Ce projet s'inscrit dans le cadre de l'unité d'enseignement MOVIE de **Mines Paris - PSL**, en collaboration directe avec le **Théâtre du Châtelet**.
 
-**Bauprobe Immersive II** est une application de réalité augmentée développée sous Unity. Elle permet de **visualiser un décor de spectacle à l'échelle 1 sur la scène réelle, avant sa construction**. Elle fait suite à l'application **Bauprobe Immersive I** (en réalité virtuelle), dont elle reprend la méthodologie et l'interface de connexion Unity.
+**Bauprobe Immersive II** est une application de réalité mixte développée sous Unity. Elle permet de **visualiser un décor de spectacle à l'échelle 1 sur la scène réelle, avant sa construction**. Elle fait suite à l'application **Bauprobe Immersive I** (en réalité virtuelle), dont elle reprend la méthodologie et l'interface de connexion Unity.
 
 ### Qu'est-ce qu'une Bauprobe ?
 Au théâtre, la Bauprobe est une étape cruciale qui a lieu plusieurs mois avant l'arrivée du décor final sur le plateau. Elle consiste à simuler l'encombrement spatial du futur décor (historiquement avec des marquages au sol ou des éléments de substitution) afin de :
@@ -32,18 +32,12 @@ D'après le [cahier des charges](#cahier-des-charges) (version 1, 9 octobre 2026
 
 Testé sur Meta Quest 3 :
 
-* ✅ Calage du décor sur un **QR code** posé sur le plateau (au sol, ou en hauteur avec sa distance au sol réglable)
-* ✅ **Importer** un décor depuis le menu (catalogue ; pour l'instant un cube de test)
-* ✅ Sélection au **laser** de la manette droite (l'objet sélectionné est en surbrillance), puis **Déplacer / Scale / Rotation / Couleur / Supprimer**
-* ✅ Les objets se déplacent dans toutes les directions, se tournent et se **basculent** sans s'enfoncer dans le sol
-* ✅ **Étirer une face** (EXTRUDE) : prolonger ou raccourcir un objet par une de ses faces (ex. une porte plus haute)
-* ✅ **Supprimer tout**, **Sauvegarder** / **Charger** une implantation
-* ✅ **Saisie à deux mains** (grab) : l'objet garde ses modifications et reste parallèle au sol ; bouton **INFO** (position,
-  dimensions, hauteur, volume) ; **Scale en %** au pavé numérique ; choix de la face à étirer par boutons ; sélection d'un
-  objet quand on est à l'intérieur
-* ✅ **Tableau CSV** pour le bureau d'études (Excel), écrit à chaque sauvegarde : position X / Y / Z, angle, dimensions, scène ; origine = le point zéro de la scène, au sol (offset du QR code saisi dans le casque). Voir [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#exporter-le-tableau-csv-pour-le-bureau-détudes)
-
-Ce qui reste à faire : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#3-cahier-des-charges--suivi) (suivi du cahier des charges, puis corrections techniques).
+* ✅ Calage du décor sur un **QR code** posé sur le plateau 
+* ✅ **Importer** un décor depuis le menu 
+* ✅ Sélection au **laser** de la manette droite, puis **Déplacer / Scale / Rotation / Extrude / Couleur / Information / Supprimer**
+* ✅ **Sauvegarder** / **Charger** une scène
+* ✅ **Saisie à deux mains** (grab) 
+* ✅ **Tableau CSV** pour le bureau d'études (Excel), écrit à chaque sauvegarde : position X / Y / Z, angle, dimensions, scène ; origine = le point zéro de la scène, au sol (offset du QR code saisi dans le casque). 
 
 ## Cahier des charges
 
@@ -205,14 +199,13 @@ Le détail (premier lancement sur un nouvel ordinateur, installation sur le casq
 
 ### Dans le casque
 
-1. **Calage** : collez le QR code (au moins 15 cm de côté) à la verticale, **face à la salle**, sur un pied ou un
-   support (ou posez-le à plat au sol), et regardez-le. Le menu affiche « QR détectés : 1 » ; le décor est alors calé.
+1. **Calage** : collez le QR code à la verticale, **face à la salle** et regardez-le. Le menu affiche « QR détectés : 1 » ; le décor est alors calé.
    **Au lancement**, l'écran **QR code offset** (en anglais) demande où est le QR code par rapport au **point zéro** de la scène
    (X vers cour, Y vers le lointain, en mètres) et la **hauteur de son bord du bas** au-dessus du sol. Il est
-   pré-rempli avec les dernières valeurs : *Confirm* si le QR code n'a pas bougé. Pas besoin de *Build*.
+   pré-rempli avec les dernières valeurs : *Confirm* si le QR code n'a pas bougé. 
    Marche à suivre détaillée : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#offset-et-hauteur-du-qr-code-dans-le-casque).
 2. **Menu général** : il est attaché à la **main gauche**.
-   * *Importer* > choisir un décor : il apparaît posé au sol, 1,5 m devant vous.
+   * *Importer* > choisir un décor : il apparaît posé au sol devant vous.
    * *Supprimer tout*, *Sauvegarder*, *Charger*.
    * L'écran **QR code offset** est aussi accessible par la première ligne de *Charger*.
 3. **Manipuler un objet** (manette droite) :
@@ -239,9 +232,11 @@ Ce projet est réalisé par des élèves de Mines Paris - PSL :
 * Violette Lecuyer
 * Mona Sidhoum
 
-**Commanditaires (Théâtre du Châtelet) :**
+**Collaborateurs :**
 
-* **A RAJOUTER**
+* Marion Delemazure
+* Thomas Lauret (Théâtre du Châtelet)
+* Inès Mimouni (Théâtre du Châtelet)
 
 ##  Crédits et Assets tiers
 
