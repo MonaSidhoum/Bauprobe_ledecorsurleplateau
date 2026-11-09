@@ -51,7 +51,7 @@ Les textes de l'appli sont **en anglais**. Le premier lancement (permission, cal
 ### Calage
 
 1. Coller le QR code (au moins 15 cm de côté) **à la verticale, face à la salle**, bien parallèle au nez de scène,
-   sur un pied ou un support (ou le poser à plat au sol). **Un seul QR code** visible sur le plateau.
+   sur un pied ou un support (ou le poser à plat au sol). **Un seul QR code** visible sur le plateau. L'idéal est de mettre le QR code vers le fond de la scène et le plus grand possible pour que la détection du QR code soit stable. 
 2. Au lancement, l'écran **QR code offset** demande où est le QR code par rapport au point zéro (X, Y, en mètres) et la
    hauteur de son bord du bas au-dessus du sol. Il est pré-rempli avec les dernières valeurs : **Confirm** si le QR
    code n'a pas bougé.
