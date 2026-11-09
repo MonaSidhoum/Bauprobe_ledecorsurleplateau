@@ -102,8 +102,7 @@ namespace Bauprobe.Manipulation
             // près du menu général sans rien cacher d'important.
             var panel = Create<ScaleKeypad>("ScaleKeypad", new Vector2(360f, 520f), 0.001f, clickable: true);
 
-            panel.AddText("<b>SCALE</b>  % of original size (100 = original)
-" +
+            panel.AddText("<b>SCALE</b>  % of original size (100 = original)\n" +
                           "<size=15>Joystick still scales.  Trigger elsewhere = done,  B = cancel</size>",
                           20f, 10f, 320f, 70f, 20f);
             panel._display = panel.AddText("", 20f, 80f, 320f, 50f, 38f, TextAlignmentOptions.Right);
