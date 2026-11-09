@@ -14,7 +14,7 @@ Ce projet s'inscrit dans le cadre de l'unité d'enseignement MOVIE de **Mines Pa
 
 ### Qu'est-ce qu'une Bauprobe ?
 Au théâtre, la Bauprobe est une étape cruciale qui a lieu plusieurs mois avant l'arrivée du décor final sur le plateau. Elle consiste à simuler l'encombrement spatial du futur décor (historiquement avec des marquages au sol ou des éléments de substitution) afin de :
-* Anticiper le jeu des acteurs et l'espace scénique.
+* Anticiper le jeu des acteurs et le volume de l'espace scénique.
 * Valider les lignes de visibilité depuis la salle (qui compte environ 2000 places avec une configuration complexe à l'italienne).
 
 Notre solution immersive permet aux metteurs en scène et aux équipes techniques de visualiser les maquettes 3D des décors directement à l'échelle sur le plateau.
