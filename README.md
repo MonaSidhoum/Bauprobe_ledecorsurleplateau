@@ -204,6 +204,7 @@ Ce projet est réalisé par des élèves de Mines Paris - PSL :
 
 ##  Licence
 
-Ce projet est réalisé dans un cadre académique pour Mines Paris - PSL et le Théâtre du Châtelet. **A RAJOUTER**
+Ce projet a été réalisé dans un cadre académique par des élèves de Mines Paris - PSL pour le Théâtre du Châtelet.
+Tous droits réservés : son utilisation est réservée au Théâtre du Châtelet. Toute utilisation, copie, modification ou diffusion de l’application, de son code ou des modèles 3D de décor en dehors du Théâtre du Châtelet nécessite son accord préalable.
 
 Le code provenant du [MR Utility Kit Sample](https://github.com/oculus-samples/Unity-MRUtilityKitSample) reste soumis à sa propre licence : voir [Docs/licences/LICENSE-Meta-MRUtilityKitSample.txt](Docs/licences/LICENSE-Meta-MRUtilityKitSample.txt).
