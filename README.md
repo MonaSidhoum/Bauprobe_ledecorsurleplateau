@@ -192,7 +192,7 @@ Ce projet est réalisé par des élèves de Mines Paris - PSL :
 
 **Collaborateurs :**
 
-* Marion Delemazure (experte et consultante française dans le secteur des Industries Culturelles et Créatives)
+* Marion Delemazure (experte et consultante dans le secteur des Industries Culturelles et Créatives)
 * Thomas Lauret (Théâtre du Châtelet)
 * Jean-Philippe Lagarde (Théâtre du Châtelet)
 * Inès Mimouni (Théâtre du Châtelet)
