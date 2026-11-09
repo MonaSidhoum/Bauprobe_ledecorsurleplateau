@@ -2,7 +2,7 @@
 
 **Projet MOVIE 2025 - Mines Paris PSL x Théâtre du Châtelet**
 
-![Statut](https://img.shields.io/badge/Statut-En_développement-orange)
+![Statut](https://img.shields.io/badge/Statut-Terminé-blue)
 ![Platform](https://img.shields.io/badge/Platforme-XR-green)
 
 
@@ -10,7 +10,7 @@
 
 Ce projet s'inscrit dans le cadre de l'unité d'enseignement MOVIE de **Mines Paris - PSL**, en collaboration directe avec le **Théâtre du Châtelet**.
 
-**Bauprobe Immersive II** est une application de réalité augmentée développée sous Unity. Elle permet de **visualiser un décor de spectacle à l'échelle 1 sur la scène réelle, avant sa construction**. Elle fait suite à l'application **Bauprobe Immersive I** (en réalité virtuelle), dont elle reprend la méthodologie et l'interface de connexion Unity.
+**Bauprobe Immersive II** est une application de réalité augmentée développée sous Unity pour le **Meta Quest 3**. Elle permet de **visualiser un décor de spectacle à l'échelle 1 sur la scène réelle, avant sa construction**. Elle fait suite à l'application **Bauprobe Immersive I** (en réalité virtuelle), dont elle reprend la méthodologie et l'interface de connexion Unity.
 
 ### Qu'est-ce qu'une Bauprobe ?
 Au théâtre, la Bauprobe est une étape cruciale qui a lieu plusieurs mois avant l'arrivée du décor final sur le plateau. Elle consiste à simuler l'encombrement spatial du futur décor (historiquement avec des marquages au sol ou des éléments de substitution) afin de :
@@ -21,86 +21,140 @@ Notre solution immersive permet aux metteurs en scène et aux équipes technique
 
 ### Les deux volets du projet
 
-D'après le [cahier des charges](#cahier-des-charges) (version 1, 9 octobre 2026), le projet comporte deux volets :
-
 | Volet | Principe | Ce dépôt |
 |---|---|---|
 | **Le décor sur le plateau** | Un technicien, seul, place et ajuste le décor, scène par scène. | ✅ **C'est ce dépôt.** |
-| **Voir la même chose** | Un groupe de 5 personnes, connecté en réseau, voit le même décor ensemble, sur place ou à distance. | Développé à part. Les formats de décor et de tableau doivent rester **communs** aux deux volets. |
+| **Voir la même chose** | Un groupe de personnes, connecté en réseau, voit le même décor ensemble. | Développé à part. |
 
-## État actuel
+**➡️ Pour installer le projet et l'appli sur le casque : [Docs/INSTALLATION.md](Docs/INSTALLATION.md).**
 
-Testé sur Meta Quest 3 :
+## Fonctionnalités
 
-* ✅ Calage du décor sur un **QR code** posé sur le plateau (au sol, ou en hauteur avec sa distance au sol réglable)
-* ✅ **Importer** un décor depuis le menu (catalogue ; pour l'instant un cube de test)
-* ✅ Sélection au **laser** de la manette droite (l'objet sélectionné est en surbrillance), puis **Déplacer / Scale / Rotation / Couleur / Supprimer**
-* ✅ Les objets se déplacent dans toutes les directions, se tournent et se **basculent** sans s'enfoncer dans le sol
-* ✅ **Étirer une face** (EXTRUDE) : prolonger ou raccourcir un objet par une de ses faces (ex. une porte plus haute)
-* ✅ **Supprimer tout**, **Sauvegarder** / **Charger** une implantation
-* ✅ **Saisie à deux mains** (grab) : l'objet garde ses modifications et reste parallèle au sol ; bouton **INFO** (position,
-  dimensions, hauteur, volume) ; **Scale en %** au pavé numérique ; choix de la face à étirer par boutons ; sélection d'un
-  objet quand on est à l'intérieur
-* ✅ **Tableau CSV** pour le bureau d'études (Excel), écrit à chaque sauvegarde : position X / Y / Z, angle, dimensions, scène ; origine = le point zéro de la scène, au sol (offset du QR code saisi dans le casque). Voir [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#exporter-le-tableau-csv-pour-le-bureau-détudes)
+* **Calage sur un QR code** posé sur le plateau (au sol, ou en hauteur sur un pied). Toutes les positions sont
+  mesurées depuis le **point zéro de la scène** (par ex. le centre du nez de scène), au sol : on saisit dans le casque
+  où est le QR code par rapport à ce point zéro.
+* **Catalogue de décors** : un cube de test et 7 éléments du bureau d'études pour *La Cage aux Folles*
+  (`CafePlagePartieA/B`, `LogesPartieA/B`, `SalonPartieA/B`, `VolumeCentral`, modèles OBJ).
+  On peut y ajouter ses propres modèles ([pas à pas](Docs/INSTALLATION.md#6-ajouter-son-propre-décor)).
+* **Manipulation à la manette droite** : sélection au laser (objet en surbrillance bleue), déplacer, agrandir
+  (au joystick ou en tapant un pourcentage), tourner, étirer une face (EXTRUDE), changer la couleur, supprimer,
+  afficher les infos (position, dimensions, volume).
+* **Saisie à la main** (Interaction SDK), à une ou deux mains, sans perdre les modifications de l'objet.
+* **Sauvegarde / chargement** d'implantations dans le casque (une sauvegarde par scène du spectacle).
+* **Tableau CSV** pour le bureau d'études (s'ouvre dans Excel), écrit à chaque sauvegarde.
 
-Ce qui reste à faire : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#3-cahier-des-charges--suivi) (suivi du cahier des charges, puis corrections techniques).
+## Utilisation dans le casque
 
-## Cahier des charges
+Les textes de l'appli sont **en anglais**. Le premier lancement (permission, calage) est détaillé dans
+[INSTALLATION.md](Docs/INSTALLATION.md#4-premier-lancement-et-calage-sur-le-qr-code).
 
-Résumé du cahier des charges *Bauprobe Immersive II × MOVIE* (version 1, 9 octobre 2026) pour notre volet. Le suivi détaillé, point par point, est dans [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#3-cahier-des-charges--suivi).
+### Calage
 
-### Le parcours de l'utilisateur
+1. Coller le QR code (au moins 15 cm de côté) **à la verticale, face à la salle**, bien parallèle au nez de scène,
+   sur un pied ou un support (ou le poser à plat au sol). **Un seul QR code** visible sur le plateau.
+2. Au lancement, l'écran **QR code offset** demande où est le QR code par rapport au point zéro (X, Y, en mètres) et la
+   hauteur de son bord du bas au-dessus du sol. Il est pré-rempli avec les dernières valeurs : **Confirm** si le QR
+   code n'a pas bougé.
+3. Regarder le QR code : le menu affiche « QR codes detected: 1 », le décor est calé. Le calage est ensuite **figé**
+   (le décor ne tremble pas) : si le QR code est déplacé, relancer l'appli.
 
-Un utilisateur unique (le technicien) travaille ainsi :
+### Menu général (main gauche)
 
-1. **Importer** le décor du bureau d'études et le **tableau de positionnement**.
-2. **Afficher en AR la scène 1**, puis les suivantes.
-3. **Modifier le placement et la transformation** (taille, échelle) des éléments, puis **enregistrer** dans la scène.
-4. **Exporter** le tableau modifié et les nouveaux modèles.
+| Bouton | Action |
+|---|---|
+| **Enable Access** | Demande la permission « données spatiales » (indispensable pour détecter le QR code) |
+| **QR Tracking** | Active / coupe la détection du QR code |
+| **Import** | Liste des décors (écran *Objects*) : un clic fait apparaître le décor posé au sol, 1,5 m devant soi, tourné vers soi |
+| **Erase all** | Supprime tous les décors posés |
+| **Save** | **+ New Save** (nom tapé au clavier du menu ; vide = nom automatique « Save 1 »…) ou clic sur une sauvegarde existante pour l'écraser ; petite croix = la supprimer |
+| **Load** | Recharge une sauvegarde (la plus récente en haut). La première ligne (« QR offset: … ») rouvre l'écran **QR code offset** |
+| **− / +** (au-dessus du menu) | Replie / rouvre le menu |
 
-### Règles sur le décor
+Une sauvegarde par scène du spectacle : placer la scène 1, *Save* « Scene 1 » ; *Erase all*, placer la scène 2,
+*Save* « Scene 2 »… Chaque sauvegarde est écrite sur le casque au moment du clic. Le lendemain, *Load* « Scene 1 »
+remet le décor au même endroit du plateau, même si le QR code a été recollé ailleurs (il suffit de saisir son
+nouvel offset avant de charger).
 
-* **Point d'origine des éléments** : pour un élément posé **au sol**, le point le plus bas, au centre de l'objet ; pour un élément **au cintre**, le point le plus haut.
-* **Échelle du décor réductible** si l'espace manque (pour répéter dans un lieu plus petit que la scène).
-* **Bibliothèque standard** en plus des décors du bureau d'études : praticables, draperie simple, pendrillons et frises, en tailles standard.
-* **Premier jeu de modèles** : le décor de *La Cage aux Folles* (détenu par Thomas).
-* **Vue de dessus** : prévue en V6.
+### Manipuler un objet (manette droite)
 
-### Contraintes
+Viser un objet avec le laser + **gâchette** : il passe en surbrillance et son menu s'ouvre **à la main gauche**, à
+droite du menu général. Pendant une manipulation : **gâchette = valider**, **B = annuler** (retour à l'état d'avant).
 
-* **Exécutable déployable partout**, sous forme de **kit transportable** jusqu'à la Seine Musicale.
-* **Formats de décor et de tableau communs** avec le volet « Voir la même chose ».
+| Bouton du menu objet | Commande |
+|---|---|
+| **MOVE** | L'objet est accroché au bout du laser : tourner la manette le déplace (loin si l'objet est loin). **Joystick haut / bas** = l'éloigner / le rapprocher, **gauche / droite** = le décaler sur le côté, **grip maintenu + joystick haut / bas** = monter / descendre. Plus l'objet est loin, plus il va vite. Il ne descend pas sous le sol |
+| **SCALE** | **Joystick haut / bas** = agrandir / rétrécir (l'objet reste posé au sol, ou accroché par le haut s'il est au cintre) ; ou taper un **pourcentage de la taille d'origine** sur le pavé de la main gauche puis **APPLY** (`100` = taille d'origine, étirements annulés ; `150` = 1,5 fois). Pas de limite de taille |
+| **ROTATE** | **Joystick gauche / droite** = tourner sur lui-même ; **haut / bas** = basculer vers l'avant / l'arrière (seulement pour les décors sans *Keep Upright* : c'est le cas du Cube, pas des 7 décors de *La Cage aux Folles*, qui restent droits). Le bouton **Align with floor** (main gauche, laser + gâchette) pose l'objet à plat sur la face la plus proche |
+| **EXTRUDE** | Viser une face au laser (bleu) + **gâchette** pour la choisir (orange), **ou** cliquer **TOP / BOTTOM / LEFT / RIGHT / FRONT / BACK** à la main gauche (vus depuis soi ; utile pour la face du haut d'un grand décor). Puis **joystick haut / bas** = pousser / rentrer la face (grip maintenu = plus lent). La longueur s'affiche sur la face ; la face opposée ne bouge pas ; 5 cm minimum |
+| **INFO** | Panneau avec la position du point d'origine depuis le point zéro (X, Y, Z, comme le CSV), l'angle, les dimensions, la hauteur (et celle du haut de l'objet) et le volume de la boîte englobante. *INFO* à nouveau pour le fermer |
+| **COLOR** | Palette de 15 teintes de décor (dont le gris d'origine des décors du bureau d'études) ; la couleur est sauvegardée |
+| **DELETE** | Supprime l'objet |
+| **x** | Ferme le menu |
 
-### Comment ajouter un élément de décor dans le projet (première version)
+Autres gestes :
+* **Objet dans lequel on se trouve** (ex. le volume central) : viser le vide (aucun autre objet) + gâchette
+  sélectionne l'objet dans lequel est la manette.
+* **Prendre à la main (grab)**, à une ou deux mains : l'objet garde sa taille et ses étirements et reste parallèle au
+  sol (seule la rotation autour de la verticale suit les mains) ; écarter / rapprocher les deux mains = agrandir /
+  rétrécir.
 
-* Glisser le modèle 3D (OBJ du bureau d'études) dans `Assets/_Bauprobe/Decor/Models/<nom du décor>/`.
-* Clic droit sur le modèle dans la fenêtre Project > **Bauprobe > Ajouter au catalogue** : l'outil crée le prefab
-  (avec son collider et les composants pour le manipuler), sa fiche, et l'ajoute au catalogue.
-  Le bouton apparaît dans le menu *Objects* du casque.
-* Pas à pas, et méthode à la main : [Docs/ARCHITECTURE.md](Docs/ARCHITECTURE.md#ajouter-un-nouveau-décor-sans-code).
+### Le tableau CSV pour le bureau d'études
 
-### Livrables
+À chaque *Save*, l'appli écrit dans le casque `<nom>.json` (relu par *Load*) et `<nom>.csv` (le tableau, qui s'ouvre
+dans Excel). Pour les récupérer sur un ordinateur : [INSTALLATION.md](Docs/INSTALLATION.md#5-récupérer-les-sauvegardes-et-le-tableau-csv).
 
-* **Tableau de positionnement par scène** (Excel en première approche).
-* **Tableau modifié** et **nouveaux modèles 3D**.
-* **Code source** et **documentation utilisateur**.
+Une ligne par élément, colonnes séparées par des **points-virgules**, nombres avec une **virgule** (Excel en
+français ; décocher *Csv Decimal Comma* sur le composant `LayoutManager` de l'objet *Managers* pour avoir des points).
+Repère du bureau d'études, vu depuis la salle : origine = **point zéro de la scène, au sol**.
 
-### Tests prévus
+| Colonne | Contenu |
+|---|---|
+| Scene | Nom de la sauvegarde (une sauvegarde par scène) |
+| Item ID / Item name | Identifiant et nom de l'élément dans le catalogue |
+| Mounting | `Floor` (au sol) ou `Flown` (au cintre) |
+| Reference point | Point dont on donne la position : `Bottom centre` (au sol) ou `Top centre` (au cintre) |
+| X from zero (m) | Positif vers **cour** (à droite vu de la salle), négatif vers jardin |
+| Y from zero (m) | Positif vers le **lointain**, négatif vers la salle |
+| Z above floor (m) | Hauteur du point de référence au-dessus du sol du plateau |
+| Rotation (deg) | Autour de la verticale, + = sens inverse des aiguilles d'une montre vu de dessus (comme AutoCAD). 0 = l'avant du modèle regarde vers le lointain ; 180 = vers la salle |
+| Tilt X / Tilt Y (deg) | Objet penché : + = le haut penche vers la salle (X) / vers cour (Y). 0 si l'objet est droit |
+| Width / Depth / Height (m) | Taille réelle de l'objet, le long de ses propres axes |
+| Scale width / depth / height | Facteur appliqué au modèle 3D (1 = taille d'origine) |
+| Color (hex RGB) | Couleur choisie (ex. `#B23A3A`) ; vide = couleur d'origine du modèle |
 
-1. Une scène de *La Cage aux Folles*.
-2. Puis un décor sans lien avec ce spectacle.
-3. Un test commun avec le volet « Voir la même chose » (date à fixer).
+Le CSV est un **export** : le modifier ne change rien dans le casque (c'est le JSON qui est rechargé).
 
-### Pistes hors cahier des charges
+## Limites connues
 
-* **Points de vue depuis la salle** (orchestre, balcons, corbeille) pour vérifier les visibilités : idée de départ du projet, absente du cahier des charges. À confirmer avec les commanditaires.
-* **Compatibilité avec les outils du bureau d'études** (AutoCAD, SketchUp, Unreal Engine) : à préciser selon le format retenu pour l'import des modèles.
+* Le **tableau CSV n'est pas relu** par l'appli : une scène se recharge depuis sa sauvegarde JSON.
+* **EXTRUDE étire tout le modèle** (sa boîte englobante) : parfait pour un mur, une porte pleine ou un praticable,
+  mais les détails d'un modèle travaillé (moulures, poignée) sont déformés.
+* Le **menu général ne bloque pas le laser** : viser un de ses boutons avec un décor juste derrière sélectionne aussi
+  le décor.
+* Le **calage est figé** à la première détection du QR code : pour recaler après avoir déplacé le QR code, relancer
+  l'appli.
+
+## Pistes d'amélioration
+
+* **Vue de dessus** : un plan du plateau vu de dessus avec les éléments posés (prévu en V6 dans le cahier des
+  charges).
+* **Réduire l'échelle de tout le décor** pour répéter dans un lieu plus petit que la scène (1:2, 1:5…). Tout le
+  décor étant enfant de `StageRoot`, une échelle appliquée à cet objet suffirait, et les sauvegardes resteraient en
+  mètres réels.
+* **Exporter la scène au format OBJ** : écrire dans un seul fichier les modèles posés, avec leur position, rotation,
+  échelle et étirements, pour les rouvrir dans les logiciels du bureau d'études. Il faudra cocher *Read/Write* à
+  l'import des modèles (désactivé aujourd'hui) pour lire leurs maillages dans le casque.
+* **Obstruction par les objets de la vraie vie** : aujourd'hui le décor virtuel est toujours dessiné par-dessus le
+  réel (un comédien qui passe devant est caché par le décor). L'API de profondeur de Meta (*Depth API*, occlusion)
+  permettrait de cacher le décor derrière les personnes et les objets réels.
+* **Extrusion d'un modèle détaillé** : ne prolonger qu'une partie du modèle sans déformer ses détails, en le découpant
+  en morceaux (partie fixe + partie extensible) ou en modifiant son maillage (ProBuilder).
 
 ##  Technologies utilisées
 
-* **Moteur 3D / AR** : Unity 6.3 (version exacte : `6000.3.26f1`)
+* **Moteur 3D / AR** : Unity 6.3 (version exacte : `6000.3.26f1`), Universal Render Pipeline
 * **SDK Réalité Augmentée** : Meta XR Core SDK / Meta MR Utility Kit (MRUK) / Interaction SDK (v207)
-* **Matériel Cible** : Casque Meta Quest 3 (application standalone)
+* **Matériel cible** : casque Meta Quest 3 (application autonome, sans ordinateur)
 * **Gestion de version** : Git + Git LFS / GitHub
 
 ##  Organisation du dépôt
@@ -108,127 +162,24 @@ Un utilisateur unique (le technicien) travaille ainsi :
 ```
 /                         ← le projet Unity (à ouvrir avec Unity Hub)
 ├── Assets/
-│   ├── _Bauprobe/        ← TOUT NOTRE TRAVAIL EST ICI
-│   │   ├── Scenes/       MenuGeneral.unity (la scène du casque) + Sandbox/ (une scène de test par personne)
-│   │   ├── Core/         le repère du plateau (StageSpace), l'offset du QR code (saisi dans le casque)
-│   │   ├── Calibration/  QR code → position du plateau (StageCalibrator)
-│   │   ├── Decor/        catalogue des décors (Catalog/), prefabs, apparition des objets
-│   │   ├── Manipulation/ laser, menu de l'objet, déplacer / agrandir / tourner (à la manette)
-│   │   ├── UI/           menu général (BauprobeMenu) ; prefabs des menus dans UI/Prefabs/
-│   │   ├── Persistence/  sauvegarde / chargement d'une implantation
-│   │   └── Tests/        tests automatiques
-│   ├── ThirdParty/       code repris d'ailleurs (ex. détection QR de Meta), on n'y touche pas
+│   ├── _Bauprobe/        ← tout le code et les contenus du projet
+│   │   ├── Scenes/       MenuGeneral.unity (la scène de l'appli) ; Sandbox/ : scènes de test
+│   │   ├── Core/         le repère du plateau, l'offset du QR code
+│   │   ├── Calibration/  QR code → position du plateau
+│   │   ├── Decor/        catalogue (Catalog/), modèles 3D (Models/), prefabs (Prefabs/)
+│   │   ├── Manipulation/ laser, menu de l'objet, déplacer / agrandir / tourner / étirer, grab
+│   │   ├── UI/           menu général et ses écrans ; prefabs des menus dans UI/Prefabs/
+│   │   ├── Persistence/  sauvegarde / chargement (JSON) et tableau CSV
+│   │   ├── Editor/       outil « Bauprobe > Ajouter au catalogue »
+│   │   └── Tests/        tests automatiques (EditMode)
+│   ├── ThirdParty/       exemple « QR Code Detection » de Meta (voir Crédits)
 │   └── (dossiers créés par les SDK : Oculus, MetaXR, XR, Resources...)
 ├── Packages/             liste des packages Unity
 ├── ProjectSettings/      réglages du projet
-└── Docs/                 documentation de l'équipe
+└── Docs/
+    ├── INSTALLATION.md   installer le projet et l'appli, pas à pas ; ajouter son décor
+    └── ARCHITECTURE.md   comment le code est organisé
 ```
-
-Documentation :
-* **[Docs/ARCHITECTURE.md](Docs/ARCHITECTURE.md)** : comment le code est organisé, ajouter un décor.
-* **[Docs/CONTRIBUER.md](Docs/CONTRIBUER.md)** : travailler à plusieurs avec Git.
-* **[Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md)** : ouvrir le projet sur un nouvel ordi, contenu de la scène, suivi du cahier des charges et reste à faire.
-
-##  Installation et Prérequis
-
-Cette partie s'adresse aussi à quelqu'un qui n'a **jamais utilisé Unity, Git ni un Meta Quest**.
-
-### Ce qu'il faut avant de commencer
-
-* Un **ordinateur Windows ou Mac** avec environ **30 Go libres** (Unity + le projet).
-* **Git** et un **terminal** :
-  * Windows : installer **Git Bash** (c'est dans lui qu'on tape toutes les commandes de ce document) ;
-  * macOS / Linux : l'application **Terminal** suffit, Git s'installe si besoin.
-
-  Tutoriel pas à pas (section « git (et bash sur Windows) ») : [Installations du cours d'informatique des Mines](https://intro.info-mines.paris/1-1-installations/).
-* Un **compte GitHub** (pour cloner le dépôt et, si vous voulez proposer des modifications, pousser des branches).
-* Pour installer l'appli sur le casque :
-  * un **Meta Quest 3** et un **câble USB-C qui transfère les données** (pas un simple câble de charge) ;
-  * un **compte Meta** qui est **propriétaire du casque** (il n'y a qu'un propriétaire par casque, et seul lui peut
-    activer le mode développeur) ;
-  * l'**application mobile Meta Horizon** sur un téléphone (iOS ou Android).
-
-  Détails : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#installer-sur-le-casque).
-
-### Étapes
-
-1. **Installer Unity Hub** : [documentation d'installation de Unity Hub](https://docs.unity.com/en-us/hub/install-hub).
-   Se connecter (ou créer) un compte Unity au premier lancement ; la licence *Personal* (gratuite) suffit.
-2. **Installer l'éditeur Unity 6000.3.26f1** depuis Unity Hub :
-   *Installations > Installer l'éditeur > Archive* (lien vers l'[archive des versions](https://unity.com/releases/editor/archive))
-   > version **6000.3.26f1**, et **cocher le module Android Build Support** (avec *OpenJDK* et *Android SDK & NDK Tools*).
-   Sans ce module, impossible d'installer l'appli sur le casque.
-3. **Ouvrir un terminal** (Git Bash sur Windows, Terminal sur macOS / Linux) et se placer dans le dossier où ranger le
-   projet, par exemple *Documents* :
-
-```bash
-cd ~/Documents
-```
-
-4. **Activer Git LFS** (une seule fois par ordinateur ; il sert aux gros fichiers, comme les modèles 3D) :
-
-```bash
-git lfs install
-```
-
-5. **Cloner le projet** (le télécharger), toujours dans le terminal :
-
-```bash
-git clone https://github.com/MonaSidhoum/Bauprobe_ledecorsurleplateau
-```
-
-```bash
-cd Bauprobe_ledecorsurleplateau
-```
-
-```bash
-git lfs pull
-```
-
-6. Dans **Unity Hub** : *Projects > Add > Add project from disk*, choisir le dossier `Bauprobe_ledecorsurleplateau`
-   (celui qui contient `Assets/`, `Packages/`, `ProjectSettings/`), puis l'ouvrir. La première ouverture prend
-   10 à 20 minutes.
-
-La suite (vérifications, installation sur le casque, **mise à jour d'un clone existant**) est dans
-[Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#1-ouvrir-le-projet-sur-un-nouvel-ordinateur).
-
-## Utilisation
-
-### Lancer l'appli
-
-1. Ouvrez la scène `Assets/_Bauprobe/Scenes/MenuGeneral.unity`.
-2. Branchez le casque (mode développeur activé) et lancez **Build And Run** (`File > Build Profiles`, plateforme Meta Quest / Android).
-3. Au premier lancement, acceptez la permission **« données spatiales »** (sinon : bouton **Enable Access** du menu général).
-
-Le détail (premier lancement sur un nouvel ordinateur, installation sur le casque) est dans
-[Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md).
-
-### Dans le casque
-
-1. **Calage** : collez le QR code (au moins 15 cm de côté) à la verticale, **face à la salle**, sur un pied ou un
-   support (ou posez-le à plat au sol), et regardez-le. Le menu affiche « QR détectés : 1 » ; le décor est alors calé.
-   **Au lancement**, l'écran **QR code offset** (en anglais) demande où est le QR code par rapport au **point zéro** de la scène
-   (X vers cour, Y vers le lointain, en mètres) et la **hauteur de son bord du bas** au-dessus du sol. Il est
-   pré-rempli avec les dernières valeurs : *Confirm* si le QR code n'a pas bougé. Pas besoin de *Build*.
-   Marche à suivre détaillée : [Docs/A_FAIRE_DANS_UNITY.md](Docs/A_FAIRE_DANS_UNITY.md#offset-et-hauteur-du-qr-code-dans-le-casque).
-2. **Menu général** : il est attaché à la **main gauche**.
-   * *Importer* > choisir un décor : il apparaît posé au sol, 1,5 m devant vous.
-   * *Supprimer tout*, *Sauvegarder*, *Charger*.
-   * L'écran **QR code offset** est aussi accessible par la première ligne de *Charger*.
-3. **Manipuler un objet** (manette droite) :
-
-| Action | Commande |
-|---|---|
-| Sélectionner un objet | viser avec le laser + **gâchette** → le menu de l'objet s'ouvre **à la main gauche**, à droite du menu général (au-dessus du bouton « + » si le menu général est replié) |
-| Déplacer | bouton *Déplacer* : l'objet est accroché à la manette et un seul laser le relie à la manette (celui de Meta est caché pendant le déplacement) ; tourner la manette le déplace (loin si l'objet est loin) ; **joystick haut / bas** = l'éloigner / le rapprocher le long du laser, **gauche / droite** = le décaler sur le côté ; **grip maintenu + joystick haut / bas** = monter / descendre. Plus l'objet est loin, plus il va vite |
-| Agrandir / rétrécir | bouton *Scale*, puis joystick haut / bas (l'objet reste posé au sol, ou accroché par le haut s'il est au cintre) ; ou taper un **pourcentage de la taille d'origine** sur le pavé de la main gauche (`100` = taille d'origine, `150` = 1,5 fois la taille d'origine) puis **APPLY** |
-| Tourner | bouton *Rotation*, puis joystick gauche / droite = tourner sur lui-même ; joystick haut / bas = basculer vers l'avant / l'arrière ; laser + gâchette sur le bouton **Align with floor** (à la main gauche, à la place du menu objet) = le poser parallèle au sol, sur la face la plus proche (un objet un peu penché se redresse, un objet très penché se couche sur le côté) |
-| Valider / Annuler | **gâchette** / bouton **B** |
-| Étirer une face | bouton *EXTRUDE*, viser une face au laser (bleu) + **gâchette** pour la choisir (orange), **ou** cliquer **TOP / BOTTOM / LEFT / RIGHT / FRONT / BACK** à la main gauche (vus depuis vous ; utile pour la face du haut d'un grand décor) ; puis joystick haut / bas = pousser / rentrer la face (grip maintenu = plus lent) ; la longueur s'affiche sur la face, la face opposée ne bouge pas |
-| Infos de l'objet | bouton *INFO* du menu objet : panneau (en anglais) avec la position depuis le point zéro (X, Y, Z, comme le CSV), l'angle, les dimensions, la hauteur et le volume (boîte englobante) ; *INFO* à nouveau pour le fermer |
-| Prendre à la main (grab) | à une ou deux mains (Interaction SDK) : l'objet **garde sa taille et ses étirements**, et **reste parallèle au sol** (seule la rotation autour de la verticale suit les mains) ; écarter / rapprocher les deux mains = agrandir / rétrécir |
-| Objet dans lequel on se trouve | quand on est **à l'intérieur** d'un objet (ex. le module central), viser « le vide » (aucun autre objet) + **gâchette** sélectionne cet objet |
-| Couleur, Supprimer | boutons du menu de l'objet ; ✕ pour fermer le menu |
 
 ## L'équipe
 
@@ -246,6 +197,7 @@ Ce projet est réalisé par des élèves de Mines Paris - PSL :
 ##  Crédits et Assets tiers
 
 * **Détection de QR Code** : le dossier `Assets/ThirdParty/MetaQRCodeDetection` provient du dépôt officiel [Unity-MRUtilityKitSample](https://github.com/oculus-samples/Unity-MRUtilityKitSample) fourni par Oculus/Meta. Ses scripts ne sont pas modifiés : notre code (`StageCalibrator`) écoute directement MRUK. Son prefab `QRCodeSampleUI` sert de support au menu général `BauprobeMenu`.
+* **Modèles 3D** de *La Cage aux Folles* : fournis par le bureau d'études du Théâtre du Châtelet.
 
 ##  Licence
 
