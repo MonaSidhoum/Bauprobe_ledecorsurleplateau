@@ -3,8 +3,8 @@
 # =====================================================================
 # 1) Fichiers texte Unity : on les garde en TEXTE normal (pas dans LFS),
 #    pour que Git puisse les comparer et les fusionner.
-#    "unityyamlmerge" utilise l'outil de fusion de Unity s'il est configuré
-#    (voir Docs/CONTRIBUER.md). S'il ne l'est pas, Git fait une fusion normale.
+#    "unityyamlmerge" utilise l'outil de fusion de Unity (UnityYAMLMerge)
+#    s'il est configuré. S'il ne l'est pas, Git fait une fusion normale.
 #    On ne force PAS "text" sur ces fichiers : certains (ex. LightingData.asset)
 #    sont binaires, et une conversion de fins de ligne les abîmerait.
 *.cs          text diff=csharp

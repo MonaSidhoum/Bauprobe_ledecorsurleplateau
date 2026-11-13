@@ -155,7 +155,7 @@ Le CSV est un **export** : le modifier ne change rien dans le casque (c'est le J
 * **Moteur 3D / AR** : Unity 6.3 (version exacte : `6000.3.26f1`), Universal Render Pipeline
 * **SDK Réalité Augmentée** : Meta XR Core SDK / Meta MR Utility Kit (MRUK) / Interaction SDK (v207)
 * **Matériel cible** : casque Meta Quest 3 (application autonome, sans ordinateur)
-* **Gestion de version** : Git + Git LFS / GitHub
+* **Gestion de version** : Git + Git LFS / GitLab
 
 ##  Organisation du dépôt
 
