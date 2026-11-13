@@ -65,18 +65,18 @@ git lfs install
 5. **Cloner le projet** (le télécharger) :
 
 ```bash
-git clone https://git.sophia.minesparis.psl.eu/projets-movie-2026/bauprobe-le-decor-sur-le-plateau
+git clone https://github.com/MonaSidhoum/Bauprobe_ledecorsurleplateau
 ```
 
 ```bash
-cd bauprobe-le-decor-sur-le-plateau
+cd Bauprobe_ledecorsurleplateau
 ```
 
 ```bash
 git lfs pull
 ```
 
-6. Dans **Unity Hub** : *Projects > Add > Add project from disk*, choisir le dossier `bauprobe-le-decor-sur-le-plateau`
+6. Dans **Unity Hub** : *Projects > Add > Add project from disk*, choisir le dossier `Bauprobe_ledecorsurleplateau`
    (celui qui contient `Assets/`, `Packages/`, `ProjectSettings/`), puis l'ouvrir. La première ouverture prend
    10 à 20 minutes (Unity télécharge les packages Meta et importe tout le projet).
 7. **Vérifications** :
